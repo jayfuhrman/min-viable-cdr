@@ -15,9 +15,11 @@ module_energy_batch_hydrogen_xml <- function(command, ...) {
     return(c("L225.Supplysector_h2",
              "L225.SectorUseTrialMarket_h2",
               "L225.SubsectorLogit_h2",
+              "L225.SubsectorShrwt_h2",
               "L225.SubsectorShrwtFllt_h2",
+              "L225.SubsectorInterp_h2",
+              "L225.SubsectorInterpTo_h2",
               "L225.StubTech_h2",
-              "L225.StubTechCost_h2",
               "L225.GlobalTechCoef_h2",
               "L225.GlobalTechCost_h2",
               "L225.GlobalTechShrwt_h2",
@@ -37,7 +39,10 @@ module_energy_batch_hydrogen_xml <- function(command, ...) {
     L225.Supplysector_h2 <- get_data(all_data, "L225.Supplysector_h2")
     L225.SectorUseTrialMarket_h2 <- get_data(all_data, "L225.SectorUseTrialMarket_h2")
     L225.SubsectorLogit_h2 <- get_data(all_data, "L225.SubsectorLogit_h2")
+    L225.SubsectorShrwt_h2 <- get_data(all_data, "L225.SubsectorShrwt_h2")
     L225.SubsectorShrwtFllt_h2 <- get_data(all_data, "L225.SubsectorShrwtFllt_h2")
+    L225.SubsectorInterp_h2 <- get_data(all_data, "L225.SubsectorInterp_h2")
+    L225.SubsectorInterpTo_h2 <- get_data(all_data, "L225.SubsectorInterpTo_h2")
     L225.StubTech_h2 <- get_data(all_data, "L225.StubTech_h2")
     L225.GlobalTechCoef_h2 <- get_data(all_data, "L225.GlobalTechCoef_h2")
     L225.GlobalTechCost_h2 <- get_data(all_data, "L225.GlobalTechCost_h2")
@@ -48,7 +53,6 @@ module_energy_batch_hydrogen_xml <- function(command, ...) {
     L225.GlobalTechInputPMult_h2 <- get_data(all_data, "L225.GlobalTechInputPMult_h2")
     L225.GlobalTechProfitShutdown_h2 <- get_data(all_data, "L225.GlobalTechProfitShutdown_h2")
     L225.GlobalTechSCurve_h2 <- get_data(all_data, "L225.GlobalTechSCurve_h2")
-    L225.StubTechCost_h2 <- get_data(all_data, "L225.StubTechCost_h2")
     # ===================================================
 
     # Produce outputs
@@ -57,10 +61,29 @@ module_energy_batch_hydrogen_xml <- function(command, ...) {
       add_xml_data(L225.SectorUseTrialMarket_h2, "SectorUseTrialMarket") %>%
       add_logit_tables_xml(L225.SubsectorLogit_h2, "SubsectorLogit") -> hydrogen.xml
 
+    if(!is.null(L225.SubsectorShrwt_h2)) {
+      hydrogen.xml %>%
+        add_xml_data(L225.SubsectorShrwt_h2, "SubsectorShrwt") ->
+        hydrogen.xml
+    }
+    if(!is.null(L225.SubsectorShrwtFllt_h2)) {
+      hydrogen.xml %>%
+        add_xml_data(L225.SubsectorShrwtFllt_h2, "SubsectorShrwtFllt") ->
+        hydrogen.xml
+    }
+    if(!is.null(L225.SubsectorInterp_h2)) {
+      hydrogen.xml %>%
+        add_xml_data(L225.SubsectorInterp_h2, "SubsectorInterp") ->
+        hydrogen.xml
+    }
+    if(!is.null(L225.SubsectorInterpTo_h2)) {
+      hydrogen.xml %>%
+        add_xml_data(L225.SubsectorInterpTo_h2, "SubsectorInterpTo") ->
+        hydrogen.xml
+    }
+
     hydrogen.xml <- hydrogen.xml %>%
-      add_xml_data(L225.SubsectorShrwtFllt_h2, "SubsectorShrwtFllt") %>%
       add_xml_data(L225.StubTech_h2, "StubTech") %>%
-      add_xml_data(L225.StubTechCost_h2, "StubTechCost") %>%
       add_xml_data(L225.GlobalTechCoef_h2, "GlobalTechCoef") %>%
       add_xml_data(L225.GlobalTechCost_h2, "GlobalTechCost") %>%
       add_xml_data(L225.GlobalTechShrwt_h2, "GlobalTechShrwt") %>%
@@ -73,9 +96,11 @@ module_energy_batch_hydrogen_xml <- function(command, ...) {
       add_precursors("L225.Supplysector_h2",
                      "L225.SectorUseTrialMarket_h2",
                      "L225.SubsectorLogit_h2",
+                     "L225.SubsectorShrwt_h2",
                      "L225.SubsectorShrwtFllt_h2",
+                     "L225.SubsectorInterp_h2",
+                     "L225.SubsectorInterpTo_h2",
                      "L225.StubTech_h2",
-                     "L225.StubTechCost_h2",
                      "L225.GlobalTechCoef_h2",
                      "L225.GlobalTechCost_h2",
                      "L225.GlobalTechShrwt_h2",
