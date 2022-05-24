@@ -3878,11 +3878,11 @@ element input {
                 <comments/>
             </supplyDemandQuery>
             <supplyDemandQuery title="residue biomass production">
-                <axis1 name="sector">sector[@name]</axis1>
-                <axis2 name="Year">physical-output[@vintage]</axis2>
-                <xPath buildList="false" dataName="output" group="false" sumAll="false">*[@type='sector']//output-residue-biomass/physical-output/node()</xPath>
-                <comments/>
-            </supplyDemandQuery>
+    			<axis1 name="sector">sector[@name]</axis1>
+    			<axis2 name="Year">physical-output[@vintage]</axis2>
+    			<xPath buildList="false" dataName="output" group="false" sumAll="false">*[@type='sector' and not(@name='biomass')]//*[@type='output' and @name='biomass']/physical-output/node()</xPath>
+    			<comments/>
+			</supplyDemandQuery>
             <resourceQuery title="MSW production">
                 <axis1 name="resource">resource</axis1>
                 <axis2 name="Year">output</axis2>
