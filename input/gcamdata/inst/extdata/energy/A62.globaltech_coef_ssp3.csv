@@ -19,3 +19,12 @@ CO2 removal,dac,hightemp DAC elec,water_td_ind_C,0.017233333,0.017233333,0.01723
 CO2 removal,dac,hightemp DAC elec,water_td_ind_W,0.017233333,0.017233333,0.017233333,0.017233333
 CO2 removal,dac,lowtemp DAC heatpump,elect_td_ind,0.0200684,0.0200684,0.0200684,0.0200684
 CO2 removal,dac,lowtemp DAC heatpump,airCO2,1,1,1,1
+refining,dac to liquids,industrial hydrogen,H2 industrial,1.19,1.19,1.19,1.19
+refining,dac to liquids,industrial hydrogen,airCO2,19.6,19.6,19.6,19.6
+refining,dac to liquids,industrial hydrogen,elect_td_ind,0.43128624,0.43128624,0.43128624,0.43128624
+refining,dac to liquids,on-site electrolysis (wind),airCO2,19.6,19.6,19.6,19.6
+refining,dac to liquids,on-site electrolysis (wind),onshore wind resource,2.377074547,2.348319055,2.184493632,2.094353168
+refining,dac to liquids,on-site electrolysis (solar),airCO2,19.6,19.6,19.6,19.6
+refining,dac to liquids,on-site electrolysis (solar),global solar resource,2.377074547,2.348319055,2.184493632,2.094353168
+refining,dac to liquids,on-site electrolysis (grid electricity),airCO2,19.6,19.6,19.6,19.6
+refining,dac to liquids,on-site electrolysis (grid electricity),elect_td_ind,2.377074547,2.348319055,2.184493632,2.094353168
