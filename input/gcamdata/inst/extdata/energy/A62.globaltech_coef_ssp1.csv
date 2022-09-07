@@ -1,6 +1,6 @@
 # File: A62.globaltech_coef_ssp1.csv
-# Title: Default coefficients for DAC
-# Units: airCO2 input is unitless (MtC from the atmosphere per Mt dac demand); all others are GJ per kg C (EJ of energy per Mt C)
+# Title: Default coefficients for DAC. DAC to liquids reflect carbon capture input coefficients only, with H2 production coefs added downstream
+# Units: airCO2 input is unitless (MtC from the atmosphere per Mt dac demand); all others are GJ per kg C (EJ of energy per Mt C). DAC to liquids is also unitless (GJ/GJ)
 # Column types: ccccnnnn
 # ----------
 supplysector,subsector,technology,minicam.energy.input,1971,2020,2050,2100
@@ -28,8 +28,8 @@ refining,dac to liquids,industrial hydrogen,H2 industrial,1.19,1.19,1.19,1.19
 refining,dac to liquids,industrial hydrogen,airCO2,19.6,19.6,19.6,19.6
 refining,dac to liquids,industrial hydrogen,elect_td_ind,0.43128624,0.43128624,0.36531264,0.36531264
 refining,dac to liquids,on-site electrolysis (wind),airCO2,19.6,19.6,19.6,19.6
-refining,dac to liquids,on-site electrolysis (wind),onshore wind resource,2.378659701,2.349880783,2.119948299,2.029734401
+refining,dac to liquids,on-site electrolysis (wind),onshore wind resource,0.43128624,0.43128624,0.36531264,0.36531264
 refining,dac to liquids,on-site electrolysis (solar),airCO2,19.6,19.6,19.6,19.6
-refining,dac to liquids,on-site electrolysis (solar),global solar resource,2.378659701,2.349880783,2.119948299,2.029734401
+refining,dac to liquids,on-site electrolysis (solar),global solar resource,0.43128624,0.43128624,0.36531264,0.36531264
 refining,dac to liquids,on-site electrolysis (grid electricity),airCO2,19.6,19.6,19.6,19.6
-refining,dac to liquids,on-site electrolysis (grid electricity),elect_td_ind,2.378659701,2.349880783,2.119948299,2.029734401
+refining,dac to liquids,on-site electrolysis (grid electricity),elect_td_ind,0.43128624,0.43128624,0.36531264,0.36531264

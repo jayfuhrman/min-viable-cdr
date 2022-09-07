@@ -55,7 +55,9 @@ module_energy_L262.dac <- function(command, ...) {
              FILE = "energy/A62.globaltech_co2capture",
              FILE = "energy/A62.demand",
              FILE = "energy/A62.globaltech_retirement",
-             "L162.out_Mt_R_dac_Yh"))
+             "L162.out_Mt_R_dac_Yh",
+             "L225.GlobalTechCost_h2",
+             "L225.GlobalTechCoef_h2"))
   } else if(command == driver.DECLARE_OUTPUTS) {
     return(c("L262.CarbonCoef_dac",
              "L262.Supplysector_dac",
@@ -113,8 +115,8 @@ module_energy_L262.dac <- function(command, ...) {
     A62.demand <- get_data(all_data, "energy/A62.demand", strip_attributes = TRUE)
     A62.globaltech_retirement <- get_data(all_data, "energy/A62.globaltech_retirement", strip_attributes = TRUE)
     L162.out_Mt_R_dac_Yh <- get_data(all_data, "L162.out_Mt_R_dac_Yh", strip_attributes = TRUE)
-
-
+    L225.GlobalTechCoef_h2 <- get_data(all_data, "L225.GlobalTechCoef_h2", strip_attributes = TRUE)
+    L225.GlobalTechCost_h2 <- get_data(all_data, "L225.GlobalTechCost_h2", strip_attributes = TRUE)
 
     #load ssp parametrizations
     A62.globaltech_coef_ssp1 <- get_data(all_data, "energy/A62.globaltech_coef_ssp1")%>% gather_years %>% mutate(scenario=paste0("ssp1"))
@@ -228,6 +230,34 @@ module_energy_L262.dac <- function(command, ...) {
       select(LEVEL2_DATA_NAMES[["GlobalTechCoef"]],'scenario') ->
       L262.GlobalTechCoef_dac
 
+    H2_elec_for_efuels <- L225.GlobalTechCoef_h2 %>%
+      filter(sector.name == 'H2 industrial',
+             subsector.name == 'forecourt production',
+             minicam.energy.input == 'elect_td_ind') %>%
+      mutate(sector.name = 'refining',
+             subsector.name = 'dac to liquids',
+             coefficient = coefficient*efuels_H2_coef,
+             units = 'GJ elec / GJ refined liquids') %>%
+      select(sector.name,subsector.name,year,coefficient,units)
+
+    on_site_H2_electrolysis_techs <- L262.GlobalTechCoef_dac %>%
+      filter(subsector.name == 'dac to liquids',
+             stringr::str_detect(technology,'on-site electrolysis'),
+             minicam.energy.input %in% c('elect_td_ind','global solar resource','onshore wind resource')) %>%
+      distinct(technology,minicam.energy.input,scenario) %>%
+      mutate(sector.name = 'refining',
+             subsector.name = 'dac to liquids')
+
+    H2_elec_coef_for_efuels <- on_site_H2_electrolysis_techs %>%
+      left_join(H2_elec_for_efuels, by = c('sector.name','subsector.name'))
+
+    L262.GlobalTechCoef_dac <- L262.GlobalTechCoef_dac %>%
+      bind_rows(H2_elec_coef_for_efuels) %>%
+      group_by(sector.name,subsector.name,technology,minicam.energy.input,year,scenario) %>%
+      summarize(coefficient = sum(coefficient)) %>%
+      ungroup()
+
+
     # Carbon capture rates for dac.
     # L262.GlobalTechCapture_dac: defines CO2 capture fractions for dac (by definition 1, as all inputs are defined per tonne C removed from the atmosphere),
     # as well as a separately-defined process heat dac sector, which has slightly lower capture rates for natural gas combustion emissions.
@@ -268,6 +298,29 @@ module_energy_L262.dac <- function(command, ...) {
       select(LEVEL2_DATA_NAMES[["GlobalTechCost"]],'scenario') ->
       L262.GlobalTechCost_dac # intermediate tibble
 
+
+    H2_elec_cost_for_efuels <- L225.GlobalTechCost_h2 %>%
+      filter(sector.name %in% c('H2 central production','H2 industrial'),
+             subsector.name %in% c('forecourt production','solar','wind'),
+             technology == 'electrolysis') %>%
+      mutate(sector.name = 'refining',
+             input.cost = input.cost * efuels_H2_coef,
+             units = '$1975/GJ refined liquids (H2 only)',
+             technology = if_else(subsector.name == 'forecourt production','on-site electrolysis (grid electricity)',
+                                  if_else(subsector.name == 'solar','on-site electrolysis (solar)',
+                                          if_else(subsector.name == 'wind','on-site electrolysis (wind)',NA_character_))),
+             subsector.name = 'dac to liquids') %>%
+      right_join(on_site_H2_electrolysis_techs %>%
+                  select(-minicam.energy.input),by = c('sector.name','subsector.name','technology')) %>%
+      select(sector.name,subsector.name,technology,minicam.non.energy.input,year,input.cost,units,scenario)
+
+
+
+    L262.GlobalTechCost_dac <- L262.GlobalTechCost_dac %>%
+      bind_rows(H2_elec_cost_for_efuels) %>%
+      group_by(sector.name,subsector.name,technology,year,minicam.non.energy.input,scenario) %>%
+      summarize(input.cost = sum(input.cost)) %>%
+      ungroup()
 
 
     L262.GlobalTechCapture_dac %>%

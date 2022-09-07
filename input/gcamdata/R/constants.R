@@ -445,6 +445,10 @@ aglu.FOREST_NODE_NAMES <- "Forest"
 aglu.GRASSLAND_NODE_NAMES <- "Grassland"
 
 
+# Stoichiometric H2 requirements for efuel liquids ======================================
+efuels_H2_coef <- 1.190969444 #https://doi.org/10.1021/es500191g SI Figure S13
+#Units: GJ H2/GJ refined liquids
+
 # Energy constants ======================================================================
 
 # Time
