@@ -21,7 +21,7 @@
 #' @author JF March 2021
 module_energy_L262.dac <- function(command, ...) {
 
-  TECH_PARAMETRIZATION_OUTPUTS <- paste0("ssp", 1:5)
+  TECH_PARAMETRIZATION_OUTPUTS <- append(paste0("ssp", 1:5),c('EMF_ref','EMF_adv'))
 
   if(command == driver.DECLARE_INPUTS) {
     return(c(FILE = "common/GCAM_region_names",
@@ -39,25 +39,35 @@ module_energy_L262.dac <- function(command, ...) {
              FILE = "energy/A62.globaltech_coef_ssp4",
              FILE = "energy/A62.globaltech_coef_ssp5",
 
+             FILE = "energy/A62.globaltech_coef_EMF_ref",
+             FILE = "energy/A62.globaltech_coef_EMF_adv",
+
+
              FILE = "energy/A62.globaltech_cost_ssp1",
              FILE = "energy/A62.globaltech_cost_ssp2",
              FILE = "energy/A62.globaltech_cost_ssp3",
              FILE = "energy/A62.globaltech_cost_ssp4",
              FILE = "energy/A62.globaltech_cost_ssp5",
 
-             FILE = "energy/A62.globaltech_shrwt_ssp1",
-             FILE = "energy/A62.globaltech_shrwt_ssp2",
-             FILE = "energy/A62.globaltech_shrwt_ssp3",
-             FILE = "energy/A62.globaltech_shrwt_ssp4",
-             FILE = "energy/A62.globaltech_shrwt_ssp5",
+             FILE = "energy/A62.globaltech_cost_EMF_ref",
+             FILE = "energy/A62.globaltech_cost_EMF_adv",
+
+             FILE = "energy/A62.globaltech_shrwt",
+
+             FILE = "energy/A62.globaltech_shrwt_EMF",
 
 
              FILE = "energy/A62.globaltech_co2capture",
+
+             FILE = "energy/A62.globaltech_co2capture_EMF",
+
              FILE = "energy/A62.demand",
              FILE = "energy/A62.globaltech_retirement",
+             FILE = "energy/A62.globaltech_retirement_EMF",
              "L162.out_Mt_R_dac_Yh",
              "L225.GlobalTechCost_h2",
-             "L225.GlobalTechCoef_h2"))
+             "L225.GlobalTechCoef_h2",
+             "L225.StubTechCost_h2"))
   } else if(command == driver.DECLARE_OUTPUTS) {
     return(c("L262.CarbonCoef_dac",
              "L262.Supplysector_dac",
@@ -73,15 +83,14 @@ module_energy_L262.dac <- function(command, ...) {
              "L262.GlobalTechCost_dac_ssp3",
              "L262.GlobalTechCost_dac_ssp4",
              "L262.GlobalTechCost_dac_ssp5",
+             "L262.GlobalTechCost_dac_EMF_ref",
+             "L262.GlobalTechCost_dac_EMF_adv",
 
              "L262.StubTech_dac",
              "L262.GlobalTechShrwt_dac",
 
-             "L262.GlobalTechShrwt_dac_ssp1",
-             "L262.GlobalTechShrwt_dac_ssp2",
-             "L262.GlobalTechShrwt_dac_ssp3",
-             "L262.GlobalTechShrwt_dac_ssp4",
-             "L262.GlobalTechShrwt_dac_ssp5",
+             "L262.StubTech_dac_EMF",
+             "L262.GlobalTechShrwt_dac_EMF",
 
 
              'L262.GlobalTechCoef_dac',
@@ -91,14 +100,21 @@ module_energy_L262.dac <- function(command, ...) {
              "L262.GlobalTechCoef_dac_ssp3",
              "L262.GlobalTechCoef_dac_ssp4",
              "L262.GlobalTechCoef_dac_ssp5",
+             "L262.GlobalTechCoef_dac_EMF_ref",
+             "L262.GlobalTechCoef_dac_EMF_adv",
 
              "L262.GlobalTechCapture_dac",
+             "L262.GlobalTechCapture_dac_EMF",
              "L262.PerCapitaBased_dac",
              "L262.PriceElasticity_dac",
              "L262.StubTechProd_dac",
              "L262.BaseService_dac",
              "L262.GlobalTechSCurve_dac",
-             "L262.GlobalTechProfitShutdown_dac"))
+             "L262.GlobalTechProfitShutdown_dac",
+
+             "L262.GlobalTechSCurve_dac_EMF",
+             "L262.GlobalTechProfitShutdown_dac_EMF",
+             "L262.StubTechCost_dac"))
   } else if(command == driver.MAKE) {
 
     all_data <- list(...)[[1]]
@@ -111,12 +127,18 @@ module_energy_L262.dac <- function(command, ...) {
     A62.subsector_interp <- get_data(all_data, "energy/A62.subsector_interp", strip_attributes = TRUE)
     A62.subsector_logit <- get_data(all_data, "energy/A62.subsector_logit", strip_attributes = TRUE)
     A62.subsector_shrwt <- get_data(all_data, "energy/A62.subsector_shrwt", strip_attributes = TRUE)
+
     A62.globaltech_co2capture <- get_data(all_data, "energy/A62.globaltech_co2capture")
+    A62.globaltech_co2capture_EMF <- get_data(all_data, "energy/A62.globaltech_co2capture_EMF")
+
     A62.demand <- get_data(all_data, "energy/A62.demand", strip_attributes = TRUE)
     A62.globaltech_retirement <- get_data(all_data, "energy/A62.globaltech_retirement", strip_attributes = TRUE)
+    A62.globaltech_retirement_EMF <- get_data(all_data, "energy/A62.globaltech_retirement_EMF", strip_attributes = TRUE)
     L162.out_Mt_R_dac_Yh <- get_data(all_data, "L162.out_Mt_R_dac_Yh", strip_attributes = TRUE)
+
     L225.GlobalTechCoef_h2 <- get_data(all_data, "L225.GlobalTechCoef_h2", strip_attributes = TRUE)
     L225.GlobalTechCost_h2 <- get_data(all_data, "L225.GlobalTechCost_h2", strip_attributes = TRUE)
+    L225.StubTechCost_h2 <- get_data(all_data, "L225.StubTechCost_h2", strip_attributes = TRUE)
 
     #load ssp parametrizations
     A62.globaltech_coef_ssp1 <- get_data(all_data, "energy/A62.globaltech_coef_ssp1")%>% gather_years %>% mutate(scenario=paste0("ssp1"))
@@ -124,18 +146,20 @@ module_energy_L262.dac <- function(command, ...) {
     A62.globaltech_coef_ssp3 <- get_data(all_data, "energy/A62.globaltech_coef_ssp3")%>% gather_years %>% mutate(scenario=paste0("ssp3"))
     A62.globaltech_coef_ssp4 <- get_data(all_data, "energy/A62.globaltech_coef_ssp4")%>% gather_years %>% mutate(scenario=paste0("ssp4"))
     A62.globaltech_coef_ssp5 <- get_data(all_data, "energy/A62.globaltech_coef_ssp5")%>% gather_years %>% mutate(scenario=paste0("ssp5"))
+    A62.globaltech_coef_EMF_ref <- get_data(all_data, "energy/A62.globaltech_coef_EMF_ref")%>% gather_years %>% mutate(scenario=paste0("EMF_ref"))
+    A62.globaltech_coef_EMF_adv <- get_data(all_data, "energy/A62.globaltech_coef_EMF_adv")%>% gather_years %>% mutate(scenario=paste0("EMF_adv"))
 
     A62.globaltech_cost_ssp1 <- get_data(all_data, "energy/A62.globaltech_cost_ssp1")%>% gather_years %>% mutate(scenario=paste0("ssp1"))
     A62.globaltech_cost_ssp2 <- get_data(all_data, "energy/A62.globaltech_cost_ssp2")%>% gather_years %>% mutate(scenario=paste0("ssp2"))
     A62.globaltech_cost_ssp3 <- get_data(all_data, "energy/A62.globaltech_cost_ssp3")%>% gather_years %>% mutate(scenario=paste0("ssp3"))
     A62.globaltech_cost_ssp4 <- get_data(all_data, "energy/A62.globaltech_cost_ssp4")%>% gather_years %>% mutate(scenario=paste0("ssp4"))
     A62.globaltech_cost_ssp5 <- get_data(all_data, "energy/A62.globaltech_cost_ssp5")%>% gather_years %>% mutate(scenario=paste0("ssp5"))
+    A62.globaltech_cost_EMF_ref <- get_data(all_data, "energy/A62.globaltech_cost_EMF_ref")%>% gather_years %>% mutate(scenario=paste0("EMF_ref"))
+    A62.globaltech_cost_EMF_adv <- get_data(all_data, "energy/A62.globaltech_cost_EMF_adv")%>% gather_years %>% mutate(scenario=paste0("EMF_adv"))
 
-    A62.globaltech_shrwt_ssp1 <- get_data(all_data, "energy/A62.globaltech_shrwt_ssp1")%>% gather_years %>% mutate(scenario=paste0("ssp1"))
-    A62.globaltech_shrwt_ssp2 <- get_data(all_data, "energy/A62.globaltech_shrwt_ssp2")%>% gather_years %>% mutate(scenario=paste0("ssp2"))
-    A62.globaltech_shrwt_ssp3 <- get_data(all_data, "energy/A62.globaltech_shrwt_ssp3")%>% gather_years %>% mutate(scenario=paste0("ssp3"))
-    A62.globaltech_shrwt_ssp4 <- get_data(all_data, "energy/A62.globaltech_shrwt_ssp4")%>% gather_years %>% mutate(scenario=paste0("ssp4"))
-    A62.globaltech_shrwt_ssp5 <- get_data(all_data, "energy/A62.globaltech_shrwt_ssp5")%>% gather_years %>% mutate(scenario=paste0("ssp5"))
+    A62.globaltech_shrwt <- get_data(all_data, "energy/A62.globaltech_shrwt")%>% gather_years
+    A62.globaltech_shrwt_EMF <- get_data(all_data, "energy/A62.globaltech_shrwt_EMF")%>% gather_years
+
 
 
     # ===================================================
@@ -191,7 +215,6 @@ module_energy_L262.dac <- function(command, ...) {
     # L262.StubTech_dac: Identification of stub technologies of dac
     # Note: assuming that technology list in the shareweight table includes the full set (any others would default to a 0 shareweight)
 
-    A62.globaltech_shrwt <- bind_rows(A62.globaltech_shrwt_ssp1,A62.globaltech_shrwt_ssp2,A62.globaltech_shrwt_ssp3,A62.globaltech_shrwt_ssp4,A62.globaltech_shrwt_ssp5)
 
     A62.globaltech_shrwt %>%
       write_to_all_regions(LEVEL2_DATA_NAMES[["Tech"]], GCAM_region_names) %>%
@@ -201,20 +224,40 @@ module_energy_L262.dac <- function(command, ...) {
     # L262.GlobalTechShrwt_dac: Shareweights of global dac technologies
     A62.globaltech_shrwt %>%
       gather_years %>%
-      complete(nesting(supplysector, subsector, technology,scenario), year = c(year, MODEL_BASE_YEARS, MODEL_FUTURE_YEARS)) %>%
-      arrange(supplysector, subsector, technology, scenario,year) %>%
-      group_by(scenario,supplysector, subsector, technology) %>%
+      complete(nesting(supplysector, subsector, technology), year = c(year, MODEL_BASE_YEARS, MODEL_FUTURE_YEARS)) %>%
+      arrange(supplysector, subsector, technology,year) %>%
+      group_by(supplysector, subsector, technology) %>%
       mutate(share.weight = approx_fun(year, value, rule = 1)) %>%
       ungroup %>%
       filter(year %in% c(MODEL_BASE_YEARS, MODEL_FUTURE_YEARS)) %>%
       rename(sector.name = supplysector,
              subsector.name = subsector) %>%
-      select(LEVEL2_DATA_NAMES[["GlobalTechYr"]], "share.weight","scenario") ->
+      select(LEVEL2_DATA_NAMES[["GlobalTechYr"]], "share.weight") ->
       L262.GlobalTechShrwt_dac
+
+
+    A62.globaltech_shrwt_EMF %>%
+      write_to_all_regions(LEVEL2_DATA_NAMES[["Tech"]], GCAM_region_names) %>%
+      rename(stub.technology = technology) ->
+      L262.StubTech_dac_EMF
+
+    # L262.GlobalTechShrwt_dac: Shareweights of global dac technologies
+    A62.globaltech_shrwt_EMF %>%
+      gather_years %>%
+      complete(nesting(supplysector, subsector, technology), year = c(year, MODEL_BASE_YEARS, MODEL_FUTURE_YEARS)) %>%
+      arrange(supplysector, subsector, technology,year) %>%
+      group_by(supplysector, subsector, technology) %>%
+      mutate(share.weight = approx_fun(year, value, rule = 1)) %>%
+      ungroup %>%
+      filter(year %in% c(MODEL_BASE_YEARS, MODEL_FUTURE_YEARS)) %>%
+      rename(sector.name = supplysector,
+             subsector.name = subsector) %>%
+      select(LEVEL2_DATA_NAMES[["GlobalTechYr"]], "share.weight") ->
+      L262.GlobalTechShrwt_dac_EMF
 
     #L262.GlobalTechCoef_dac: Energy inputs and coefficients of dac technologies
     #concatenate tables of all ssps into one table for later filtering
-    A62.globaltech_coef <- bind_rows(A62.globaltech_coef_ssp1,A62.globaltech_coef_ssp2,A62.globaltech_coef_ssp3,A62.globaltech_coef_ssp4,A62.globaltech_coef_ssp5)
+    A62.globaltech_coef <- bind_rows(A62.globaltech_coef_ssp1,A62.globaltech_coef_ssp2,A62.globaltech_coef_ssp3,A62.globaltech_coef_ssp4,A62.globaltech_coef_ssp5,A62.globaltech_coef_EMF_ref,A62.globaltech_coef_EMF_adv)
 
     A62.globaltech_coef %>%
       gather_years %>%
@@ -231,12 +274,12 @@ module_energy_L262.dac <- function(command, ...) {
       L262.GlobalTechCoef_dac
 
     H2_elec_for_efuels <- L225.GlobalTechCoef_h2 %>%
-      filter(sector.name == 'H2 industrial',
-             subsector.name == 'forecourt production',
+      filter(sector.name == 'H2 central production',
+             subsector.name == 'electricity',
              minicam.energy.input == 'elect_td_ind') %>%
       mutate(sector.name = 'refining',
              subsector.name = 'dac to liquids',
-             coefficient = coefficient*efuels_H2_coef,
+             coefficient = coefficient * efuels_H2_coef,
              units = 'GJ elec / GJ refined liquids') %>%
       select(sector.name,subsector.name,year,coefficient,units)
 
@@ -278,10 +321,26 @@ module_energy_L262.dac <- function(command, ...) {
       mutate(storage.market = energy.CO2.STORAGE.MARKET) ->
       L262.GlobalTechCapture_dac
 
+    A62.globaltech_co2capture_EMF %>%
+      gather_years %>%
+      complete(nesting(supplysector, subsector, technology), year = c(year, MODEL_FUTURE_YEARS)) %>%
+      arrange(supplysector, subsector, technology, year) %>%
+      group_by(supplysector, subsector, technology) %>%
+      mutate(remove.fraction = approx_fun(year, value, rule = 1),
+             remove.fraction = round(remove.fraction, energy.DIGITS_REMOVE.FRACTION)) %>%
+      ungroup %>%
+      filter(year %in% MODEL_FUTURE_YEARS) %>%
+      rename(sector.name = supplysector,
+             subsector.name = subsector) %>%
+      select(LEVEL2_DATA_NAMES[["GlobalTechYr"]], "remove.fraction") %>%
+      mutate(storage.market = energy.CO2.STORAGE.MARKET) ->
+      L262.GlobalTechCapture_dac_EMF
+
+
 
     # L262.GlobalTechCost_dac: Non-energy costs of global dac technologies
     #first we concatenate all the ssp cost parametrizations into one table, for later filtering
-    A62.globaltech_cost <- bind_rows(A62.globaltech_cost_ssp1,A62.globaltech_cost_ssp2,A62.globaltech_cost_ssp3,A62.globaltech_cost_ssp4,A62.globaltech_cost_ssp5)
+    A62.globaltech_cost <- bind_rows(A62.globaltech_cost_ssp1,A62.globaltech_cost_ssp2,A62.globaltech_cost_ssp3,A62.globaltech_cost_ssp4,A62.globaltech_cost_ssp5,A62.globaltech_cost_EMF_ref,A62.globaltech_cost_EMF_adv)
 
 
     A62.globaltech_cost %>%
@@ -300,13 +359,13 @@ module_energy_L262.dac <- function(command, ...) {
 
 
     H2_elec_cost_for_efuels <- L225.GlobalTechCost_h2 %>%
-      filter(sector.name %in% c('H2 central production','H2 industrial'),
-             subsector.name %in% c('forecourt production','solar','wind'),
+      filter(sector.name %in% c('H2 central production'),
+             subsector.name %in% c('electricity','solar','wind'),
              technology == 'electrolysis') %>%
       mutate(sector.name = 'refining',
              input.cost = input.cost * efuels_H2_coef,
              units = '$1975/GJ refined liquids (H2 only)',
-             technology = if_else(subsector.name == 'forecourt production','on-site electrolysis (grid electricity)',
+             technology = if_else(subsector.name == 'electricity','on-site electrolysis (grid electricity)',
                                   if_else(subsector.name == 'solar','on-site electrolysis (solar)',
                                           if_else(subsector.name == 'wind','on-site electrolysis (wind)',NA_character_))),
              subsector.name = 'dac to liquids') %>%
@@ -320,7 +379,9 @@ module_energy_L262.dac <- function(command, ...) {
       bind_rows(H2_elec_cost_for_efuels) %>%
       group_by(sector.name,subsector.name,technology,year,minicam.non.energy.input,scenario) %>%
       summarize(input.cost = sum(input.cost)) %>%
-      ungroup()
+      ungroup() %>%
+      filter(minicam.non.energy.input != 'electrolyzer')
+      #electrolyzer costs will be overwritten by the regionally-defined costs in the stubtech so we remove from the global tech table to avoid confusion in the final xml
 
 
     L262.GlobalTechCapture_dac %>%
@@ -344,6 +405,7 @@ module_energy_L262.dac <- function(command, ...) {
 
     L162.out_Mt_R_dac_Yh %>%
       filter(year %in% MODEL_BASE_YEARS) %>%
+      mutate(value = daccs+weathering) %>% #set scale based on weathering + daccs potential in each region
       mutate(calOutputValue = round(value, energy.DIGITS_CALOUTPUT)) %>%
       left_join_error_no_match(GCAM_region_names, by = "GCAM_region_ID") %>%
       left_join_error_no_match(calibrated_techs_export, by = "sector") %>%
@@ -410,15 +472,53 @@ module_energy_L262.dac <- function(command, ...) {
       L262.GlobalTechProfitShutdown_dac
 
 
+    # Repeat retirement information for EMF
+    A62.globaltech_retirement_EMF %>%
+      set_years %>%
+      mutate(year = as.integer(year)) %>%
+      rename(sector.name = supplysector, subsector.name = subsector) ->
+      A62.globaltech_retirement_with_years
 
+    # Copy the data in the last base year period through to the end year
+    A62.globaltech_retirement_with_years %>%
+      filter(year == max(MODEL_BASE_YEARS)) ->
+      A62.globaltech_retirement_max_baseyear
 
+    A62.globaltech_retirement_with_years %>%
+      filter(year == min(MODEL_FUTURE_YEARS)) %>%
+      select(-year) %>%
+      repeat_add_columns(tibble(year = MODEL_FUTURE_YEARS)) %>%
+      bind_rows(A62.globaltech_retirement_max_baseyear) ->
+      L262.globaltech_retirement
 
+    # Retirement may consist of any of three types of retirement function (phased, s-curve, or none)
+    # All of these options have different headers, and all are allowed
+
+    # L262.GlobalTechSCurve_dac: Global tech lifetime and s-curve retirement function
+    L262.globaltech_retirement %>%
+      filter(!is.na(half.life)) %>%
+      select(LEVEL2_DATA_NAMES[["GlobalTechYr"]], "lifetime", "steepness", "half.life") ->
+      L262.GlobalTechSCurve_dac_EMF
+
+    # L262.GlobalTechProfitShutdown_dac: Global tech profit shutdown decider.
+    L262.globaltech_retirement %>%
+      filter(!is.na(median.shutdown.point)) %>%
+      select(LEVEL2_DATA_NAMES[["GlobalTechYr"]], "median.shutdown.point", "profit.shutdown.steepness") ->
+      L262.GlobalTechProfitShutdown_dac_EMF
+
+    L225.StubTechCost_h2 %>%
+      mutate(input.cost = input.cost * efuels_H2_coef,
+             stub.technology = if_else(subsector == 'forecourt production','on-site electrolysis (grid electricity)',
+                                  if_else(subsector == 'solar','on-site electrolysis (solar)',
+                                          if_else(subsector == 'wind','on-site electrolysis (wind)',NA_character_))),
+             subsector = 'dac to liquids',
+             supplysector = 'refining') -> L262.StubTechCost_dac
 
 
     # ===================================================
     # Produce outputs
 
-    # Extract SSP data and assign to separate tables
+    # Extract SSP and EMF data and assign to separate tables
 
     for(sce in TECH_PARAMETRIZATION_OUTPUTS) {
       L262.GlobalTechCost_dac %>%
@@ -428,10 +528,10 @@ module_energy_L262.dac <- function(command, ...) {
         add_units("1975$/kg for supplysector dac; 1975$/GJ for supplysector process heat dac") %>%
         add_comments(sce) %>%
         add_comments("Includes non-energy related capture costs only per kgC captured from the atmosphere. Storage costs will be computed endogenously through the carbon storage markets. Additional non-energy cost of process heat dac assumed zero.") %>%
-        add_legacy_name(paste0("L262.GlobalTechCost_dac_", tolower(sce))) %>%
-        add_precursors(paste0("energy/A62.globaltech_cost_", tolower(sce))) ->
+        add_legacy_name(paste0("L262.GlobalTechCost_dac_", sce)) %>%
+        add_precursors(paste0("energy/A62.globaltech_cost_", sce)) ->
         x
-      assign(paste0("L262.GlobalTechCost_dac_", tolower(sce)), x)
+      assign(paste0("L262.GlobalTechCost_dac_", sce), x)
     }
 
 
@@ -444,25 +544,22 @@ module_energy_L262.dac <- function(command, ...) {
         add_units("airCO2 input is unitless (Mt airCO2 per Mt dac); all others are GJ per kg (EJ of energy per Mt of dac)") %>%
         add_comments(sce) %>%
         add_comments("For dac sector, the energy use coefficients from A62.globaltech_coef are interpolated into all model years") %>%
-        add_legacy_name(paste0("L262.GlobalTechCoef_dac_", tolower(sce))) %>%
-        add_precursors(paste0("energy/A62.globaltech_coef_", tolower(sce))) ->
+        add_legacy_name(paste0("L262.GlobalTechCoef_dac_", sce)) %>%
+        add_precursors(paste0("energy/A62.globaltech_coef_", sce)) ->
         x
-      assign(paste0("L262.GlobalTechCoef_dac_", tolower(sce)), x)
+      assign(paste0("L262.GlobalTechCoef_dac_", sce), x)
     }
 
 
-    for(sce in TECH_PARAMETRIZATION_OUTPUTS) {
+
       L262.GlobalTechShrwt_dac %>%
-        filter(scenario == sce) %>%
-        select(-c(scenario))%>%
-        add_title("Shareweights of global dac technologies") %>%
         add_units("Unitless") %>%
         add_comments("For dac sector, the share weights from A62.globaltech_shrwt are interpolated into all base years and future years") %>%
-        add_legacy_name(paste0("L262.GlobalTechShrwt_dac_",tolower(sce))) %>%
-        add_precursors(paste0("energy/A62.globaltech_shrwt_",tolower(sce))) ->
-        x
-      assign(paste0("L262.GlobalTechShrwt_dac_", tolower(sce)), x)
-    }
+        add_legacy_name("L262.GlobalTechShrwt_dac_") %>%
+        add_precursors("energy/A62.globaltech_shrwt") ->
+        L262.GlobalTechShrwt_dac
+
+
 
 
 
@@ -519,16 +616,30 @@ module_energy_L262.dac <- function(command, ...) {
       add_units("NA") %>%
       add_comments("For dac sector, the stub technologies from A62.globaltech_shrwt are expanded into all GCAM regions") %>%
       add_legacy_name("L262.StubTech_dac") %>%
-      add_precursors("energy/A62.globaltech_shrwt_ssp1", "energy/A62.globaltech_shrwt_ssp2","energy/A62.globaltech_shrwt_ssp3","energy/A62.globaltech_shrwt_ssp4","energy/A62.globaltech_shrwt_ssp5",
-                     "common/GCAM_region_names") ->
+      add_precursors("energy/A62.globaltech_shrwt","common/GCAM_region_names") ->
       L262.StubTech_dac
+
+    L262.StubTech_dac_EMF %>%
+      add_title("Identification of stub technologies of dac") %>%
+      add_units("NA") %>%
+      add_comments("For dac sector, the stub technologies from A62.globaltech_shrwt are expanded into all GCAM regions") %>%
+      add_legacy_name("L262.StubTech_dac") %>%
+      add_precursors("energy/A62.globaltech_shrwt","common/GCAM_region_names") ->
+      L262.StubTech_dac_EMF
 
     L262.GlobalTechShrwt_dac %>%
       add_title("Shareweights of global dac technologies") %>%
       add_units("Unitless") %>%
       add_comments("For dac sector, the share weights from A62.globaltech_shrwt are interpolated into all base years and future years") %>%
-      add_precursors("energy/A62.globaltech_shrwt_ssp1","energy/A62.globaltech_shrwt_ssp2","energy/A62.globaltech_shrwt_ssp3","energy/A62.globaltech_shrwt_ssp4","energy/A62.globaltech_shrwt_ssp5") ->
+      add_precursors("energy/A62.globaltech_shrwt_EMF") ->
       L262.GlobalTechShrwt_dac
+
+    L262.GlobalTechShrwt_dac_EMF %>%
+      add_title("Shareweights of global dac technologies") %>%
+      add_units("Unitless") %>%
+      add_comments("For dac sector, the share weights from A62.globaltech_shrwt are interpolated into all base years and future years") %>%
+      add_precursors("energy/A62.globaltech_shrwt_EMF") ->
+      L262.GlobalTechShrwt_dac_EMF
 
     L262.GlobalTechCoef_dac %>%
       add_title("Energy inputs and coefficients of dac technologies") %>%
@@ -536,8 +647,6 @@ module_energy_L262.dac <- function(command, ...) {
       add_comments("For dac sector, the energy use coefficients from A62.globaltech_coef are interpolated into all model years") %>%
       add_precursors("energy/A62.globaltech_coef_ssp1","energy/A62.globaltech_coef_ssp2","energy/A62.globaltech_coef_ssp3","energy/A62.globaltech_coef_ssp4","energy/A62.globaltech_coef_ssp5") ->
       L262.GlobalTechCoef_dac
-
-
 
     L262.GlobalTechCost_dac %>%
       add_title("Non-energy costs of global dac manufacturing technologies") %>%
@@ -553,6 +662,14 @@ module_energy_L262.dac <- function(command, ...) {
       add_legacy_name("L262.GlobalTechCapture_dac") %>%
       add_precursors("energy/A62.globaltech_co2capture") ->
       L262.GlobalTechCapture_dac
+
+    L262.GlobalTechCapture_dac_EMF %>%
+      add_title("CO2 capture fractions from global dac production technologies with CCS") %>%
+      add_units("Unitless") %>%
+      add_comments("For dac sector, the remove fractions from A62.globaltech_co2capture are interpolated into all model years") %>%
+      add_legacy_name("L262.GlobalTechCapture_dac_EMF") %>%
+      add_precursors("energy/A62.globaltech_co2capture_EMF") ->
+      L262.GlobalTechCapture_dac_EMF
 
 
     L262.PerCapitaBased_dac %>%
@@ -604,20 +721,50 @@ module_energy_L262.dac <- function(command, ...) {
       add_precursors("energy/A62.globaltech_retirement") ->
       L262.GlobalTechProfitShutdown_dac
 
+    L262.GlobalTechSCurve_dac_EMF %>%
+      add_title("Global tech lifetime and s-curve retirement function") %>%
+      add_units("year for lifetime and halflife; Unitless for steepness") %>%
+      add_comments("The values are extracted from L262.globaltech_retirement for entries that half life value is not NA") %>%
+      add_legacy_name("L262.GlobalTechSCurve_dac_EMF") %>%
+      add_precursors("energy/A62.globaltech_retirement_EMF") ->
+      L262.GlobalTechSCurve_dac_EMF
+
+    L262.GlobalTechProfitShutdown_dac_EMF %>%
+      add_title("Global tech profit shutdown decider") %>%
+      add_units("Unitless") %>%
+      add_comments("The values are extracted from L262.globaltech_retirement for entries that median shutdown point is not NA") %>%
+      add_legacy_name("L262.GlobalTechProfitShutdown_dac_EMF") %>%
+      add_precursors("energy/A62.globaltech_retirement_EMF") ->
+      L262.GlobalTechProfitShutdown_dac_EMF
+
+    L262.StubTechCost_dac %>%
+      add_title("Regional hydrogen production costs for efuels") %>%
+      add_units("$1975/GJ") %>%
+      add_comments("LCOH for the electrolyzer and renewables providing electricity for hydrogen production is multiplied by the H2 input coefficient for efuels") %>%
+      add_precursors("L225.StubTechCost_h2") ->
+      L262.StubTechCost_dac
+
+
+
     return_data(L262.CarbonCoef_dac,
                 L262.Supplysector_dac, L262.FinalEnergyKeyword_dac, L262.SubsectorLogit_dac,
                 L262.SubsectorShrwtFllt_dac, L262.SubsectorInterp_dac,
                 L262.GlobalTechCost_dac,
                 L262.GlobalTechCost_dac_ssp1,L262.GlobalTechCost_dac_ssp2,L262.GlobalTechCost_dac_ssp3,L262.GlobalTechCost_dac_ssp4,L262.GlobalTechCost_dac_ssp5,
-                L262.StubTech_dac,
-                L262.GlobalTechShrwt_dac_ssp1,L262.GlobalTechShrwt_dac_ssp2,L262.GlobalTechShrwt_dac_ssp3,L262.GlobalTechShrwt_dac_ssp4,L262.GlobalTechShrwt_dac_ssp5,
-                L262.GlobalTechShrwt_dac,
+                L262.GlobalTechCost_dac_EMF_ref,L262.GlobalTechCost_dac_EMF_adv,
+                L262.StubTech_dac,L262.StubTech_dac_EMF,
+                L262.GlobalTechShrwt_dac,L262.GlobalTechShrwt_dac_EMF,
                 L262.GlobalTechCoef_dac,
                 L262.GlobalTechCoef_dac_ssp1, L262.GlobalTechCoef_dac_ssp2, L262.GlobalTechCoef_dac_ssp3, L262.GlobalTechCoef_dac_ssp4, L262.GlobalTechCoef_dac_ssp5,
+                L262.GlobalTechCoef_dac_EMF_ref,L262.GlobalTechCoef_dac_EMF_adv,
                 L262.GlobalTechCapture_dac,
+                L262.GlobalTechCapture_dac_EMF,
                 L262.PerCapitaBased_dac,
                 L262.PriceElasticity_dac,L262.StubTechProd_dac,L262.BaseService_dac,L262.GlobalTechSCurve_dac,
-                L262.GlobalTechProfitShutdown_dac)
+                L262.GlobalTechProfitShutdown_dac,
+                L262.GlobalTechSCurve_dac_EMF,
+                L262.GlobalTechProfitShutdown_dac_EMF,
+                L262.StubTechCost_dac)
   } else {
     stop("Unknown command")
   }
