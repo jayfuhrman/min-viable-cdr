@@ -154,7 +154,9 @@ module_energy_batch_dac_xml <- function(command, ...) {
     #Don't add dac to liquids stubtech costs to EMF input xmls for now
     if(!grepl("EMF",sce, fixed=TRUE)) {
       xmlobj <- xmlobj %>%
-        add_xml_data(L262.StubTechCost_dac, "StubTechCost")
+        add_xml_data(L262.StubTechCost_dac %>%
+                       filter(scenario == sce) %>%
+                       select(-scenario), "StubTechCost")
     }
 
 

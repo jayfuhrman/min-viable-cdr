@@ -67,7 +67,8 @@ module_energy_L262.dac <- function(command, ...) {
              "L162.out_Mt_R_dac_Yh",
              "L225.GlobalTechCost_h2",
              "L225.GlobalTechCoef_h2",
-             "L225.StubTechCost_h2"))
+             "L225.StubTechCost_h2",
+             "L223.StubTechCapFactor_elec"))
   } else if(command == driver.DECLARE_OUTPUTS) {
     return(c("L262.CarbonCoef_dac",
              "L262.Supplysector_dac",
@@ -139,6 +140,7 @@ module_energy_L262.dac <- function(command, ...) {
     L225.GlobalTechCoef_h2 <- get_data(all_data, "L225.GlobalTechCoef_h2", strip_attributes = TRUE)
     L225.GlobalTechCost_h2 <- get_data(all_data, "L225.GlobalTechCost_h2", strip_attributes = TRUE)
     L225.StubTechCost_h2 <- get_data(all_data, "L225.StubTechCost_h2", strip_attributes = TRUE)
+    L223.StubTechCapFactor_elec <- get_data(all_data, "L223.StubTechCapFactor_elec", strip_attributes = TRUE)
 
     #load ssp parametrizations
     A62.globaltech_coef_ssp1 <- get_data(all_data, "energy/A62.globaltech_coef_ssp1")%>% gather_years %>% mutate(scenario=paste0("ssp1"))
@@ -508,12 +510,39 @@ module_energy_L262.dac <- function(command, ...) {
 
     L225.StubTechCost_h2 %>%
       mutate(input.cost = input.cost * efuels_H2_coef,
-             stub.technology = if_else(subsector == 'forecourt production','on-site electrolysis (grid electricity)',
+             stub.technology = if_else(subsector == 'electricity','on-site electrolysis (grid electricity)',
                                   if_else(subsector == 'solar','on-site electrolysis (solar)',
                                           if_else(subsector == 'wind','on-site electrolysis (wind)',NA_character_))),
              subsector = 'dac to liquids',
              supplysector = 'refining') -> L262.StubTechCost_dac
 
+    L223.StubTechCapFactor_elec %>%
+      mutate(stub.technology = if_else(stub.technology == 'PV','on-site electrolysis (solar)',
+                                       if_else(stub.technology == 'wind','on-site electrolysis (wind)',NA_character_)),
+             subsector = 'dac to liquids',
+             supplysector = 'refining') -> L262.StubTechCapFactor_dac
+
+    capex_frac_of_dac_NE_cost <- 0.75
+
+    L262.GlobalTechCost_dac %>%
+      filter(technology %in% c('on-site electrolysis (solar)','on-site electrolysis (wind)')) %>%
+      rename(supplysector = sector.name,
+             subsector = subsector.name,
+             stub.technology = technology) %>%
+      right_join(L262.StubTechCapFactor_dac %>%
+                   filter(stub.technology %in% c('on-site electrolysis (solar)','on-site electrolysis (wind)')),
+                   by = c('supplysector','subsector','stub.technology','year')) %>%
+      mutate(input.cost = input.cost * capex_frac_of_dac_NE_cost / capacity.factor + input.cost * (capex_frac_of_dac_NE_cost),
+             minicam.non.energy.input = 'direct air capture') -> L262.GlobalTechCost_dac_renewable_efuels
+
+
+    L262.StubTechCost_dac %>%
+      right_join(L262.GlobalTechCost_dac_renewable_efuels %>% distinct(scenario),by = character()) %>%#repeat for all scenarios
+      bind_rows(L262.GlobalTechCost_dac_renewable_efuels %>% select(-capacity.factor)) -> L262.StubTechCost_dac
+
+    L262.GlobalTechCost_dac <- L262.GlobalTechCost_dac %>%
+      filter(!(technology %in% c('on-site electrolysis (solar)','on-site electrolysis (wind)'))) %>%
+      mutate(minicam.non.energy.input = if_else(sector.name == 'refining','direct air capture',minicam.non.energy.input))
 
     # ===================================================
     # Produce outputs
@@ -529,7 +558,7 @@ module_energy_L262.dac <- function(command, ...) {
         add_comments(sce) %>%
         add_comments("Includes non-energy related capture costs only per kgC captured from the atmosphere. Storage costs will be computed endogenously through the carbon storage markets. Additional non-energy cost of process heat dac assumed zero.") %>%
         add_legacy_name(paste0("L262.GlobalTechCost_dac_", sce)) %>%
-        add_precursors(paste0("energy/A62.globaltech_cost_", sce)) ->
+        add_precursors(paste0("energy/A62.globaltech_cost_", sce),"L225.GlobalTechCost_h2") ->
         x
       assign(paste0("L262.GlobalTechCost_dac_", sce), x)
     }
@@ -545,10 +574,17 @@ module_energy_L262.dac <- function(command, ...) {
         add_comments(sce) %>%
         add_comments("For dac sector, the energy use coefficients from A62.globaltech_coef are interpolated into all model years") %>%
         add_legacy_name(paste0("L262.GlobalTechCoef_dac_", sce)) %>%
-        add_precursors(paste0("energy/A62.globaltech_coef_", sce)) ->
+        add_precursors(paste0("energy/A62.globaltech_coef_", sce),"L225.GlobalTechCoef_h2") ->
         x
       assign(paste0("L262.GlobalTechCoef_dac_", sce), x)
     }
+
+
+    L262.StubTechCost_dac %>%
+      add_title("Regional hydrogen production costs for efuels") %>%
+      add_units("$1975/GJ") %>%
+      add_comments("LCOH for the electrolyzer and renewables providing electricity for hydrogen production is multiplied by the H2 input coefficient for efuels") %>%
+      add_precursors("L225.StubTechCost_h2","L223.StubTechCapFactor_elec") -> L262.StubTechCost_dac
 
 
 
@@ -558,9 +594,6 @@ module_energy_L262.dac <- function(command, ...) {
         add_legacy_name("L262.GlobalTechShrwt_dac_") %>%
         add_precursors("energy/A62.globaltech_shrwt") ->
         L262.GlobalTechShrwt_dac
-
-
-
 
 
     L262.CarbonCoef_dac %>%
@@ -737,12 +770,7 @@ module_energy_L262.dac <- function(command, ...) {
       add_precursors("energy/A62.globaltech_retirement_EMF") ->
       L262.GlobalTechProfitShutdown_dac_EMF
 
-    L262.StubTechCost_dac %>%
-      add_title("Regional hydrogen production costs for efuels") %>%
-      add_units("$1975/GJ") %>%
-      add_comments("LCOH for the electrolyzer and renewables providing electricity for hydrogen production is multiplied by the H2 input coefficient for efuels") %>%
-      add_precursors("L225.StubTechCost_h2") ->
-      L262.StubTechCost_dac
+
 
 
 
