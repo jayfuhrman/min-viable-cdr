@@ -27,7 +27,8 @@ module_socioeconomics_L2323.iron_steel_Inc_Elas_scenarios <- function(command, .
              "L101.Pop_thous_Scen_R_Yfut",
              "L101.Pop_thous_GCAM3_R_Y",
              "L102.gdp_mil90usd_GCAM3_R_Y",
-             "L1323.out_Mt_R_iron_steel_Yh"))
+             "L1323.out_Mt_R_iron_steel_Yh",
+             FILE = "energy/A323.incelas_cwf"))
   } else if(command == driver.DECLARE_OUTPUTS) {
     return(c("L2323.iron_steel_incelas_gssp1",
              "L2323.iron_steel_incelas_gssp2",
@@ -39,7 +40,8 @@ module_socioeconomics_L2323.iron_steel_Inc_Elas_scenarios <- function(command, .
              "L2323.iron_steel_incelas_ssp3",
              "L2323.iron_steel_incelas_ssp4",
              "L2323.iron_steel_incelas_ssp5",
-             "L2323.iron_steel_incelas_gcam3"))
+             "L2323.iron_steel_incelas_gcam3",
+             "L2323.iron_steel_incelas_cwf"))
   } else if(command == driver.MAKE) {
 
     GCAM_region_ID <- value <- year <- pcgdp_90thousUSD <- scenario <-
@@ -56,6 +58,8 @@ module_socioeconomics_L2323.iron_steel_Inc_Elas_scenarios <- function(command, .
     GCAM_region_names <- get_data(all_data, "common/GCAM_region_names")
     A323.inc_elas <- get_data(all_data, "socioeconomics/A323.inc_elas", strip_attributes = TRUE)
     A323.inc_elas_parameter  <- get_data(all_data, "socioeconomics/A323.inc_elas_parameter", strip_attributes = TRUE)
+    A323.incelas_cwf <- get_data(all_data, "energy/A323.incelas_cwf", strip_attributes = TRUE)
+
     L102.pcgdp_thous90USD_Scen_R_Y <- get_data(all_data, "L102.pcgdp_thous90USD_Scen_R_Y", strip_attributes = TRUE) %>%
       ungroup() %>%
       rename(pcgdp_90thousUSD = value) %>%
@@ -180,6 +184,16 @@ module_socioeconomics_L2323.iron_steel_Inc_Elas_scenarios <- function(command, .
       mutate(income.elasticity = replace(income.elasticity,income.elasticity > 10 , 10),
              income.elasticity = replace(income.elasticity,income.elasticity < -10,-10))
 
+    # ===================================================
+    # Make CWF adjustments
+
+    # read in income elasticity values
+    A323.incelas_cwf %>%
+      gather_years(value_col = "income.elasticity") %>%
+      rename(energy.final.demand = `energy-final-demand`) %>%
+      select(LEVEL2_DATA_NAMES[["IncomeElasticity"]]) ->
+      L2323.iron_steel_incelas_cwf
+
 
     # ===================================================
 
@@ -255,6 +269,12 @@ module_socioeconomics_L2323.iron_steel_Inc_Elas_scenarios <- function(command, .
                      "L1323.out_Mt_R_iron_steel_Yh","L102.pcgdp_thous90USD_GCAM3_R_Y") ->
       L2323.iron_steel_incelas_gcam3
 
+    L2323.iron_steel_incelas_cwf %>%
+      add_title("iron_steel Income Elasticity: cwf") %>%
+      add_units("Unitless (% change in service demand / % change in income)") %>%
+      add_precursors("energy/A323.incelas_cwf") ->
+      L2323.iron_steel_incelas_cwf
+
     return_data(L2323.iron_steel_incelas_gssp1,
                 L2323.iron_steel_incelas_gssp2,
                 L2323.iron_steel_incelas_gssp3,
@@ -265,7 +285,8 @@ module_socioeconomics_L2323.iron_steel_Inc_Elas_scenarios <- function(command, .
                 L2323.iron_steel_incelas_ssp3,
                 L2323.iron_steel_incelas_ssp4,
                 L2323.iron_steel_incelas_ssp5,
-                L2323.iron_steel_incelas_gcam3)
+                L2323.iron_steel_incelas_gcam3,
+                L2323.iron_steel_incelas_cwf)
   } else {
     stop("Unknown command")
   }
