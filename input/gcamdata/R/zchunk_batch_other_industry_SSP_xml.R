@@ -11,7 +11,7 @@
 #' the generated outputs: \code{other_industry_incelas_gcam3.xml}, \code{other_industry_incelas_ssp1.xml}, \code{other_industry_incelas_ssp2.xml},
 #' \code{other_industry_incelas_ssp3.xml}, \code{other_industry_incelas_ssp4.xml}, \code{other_industry_incelas_ssp5.xml},
 #' \code{other_industry_incelas_gssp1.xml}, \code{other_industry_incelas_gssp2.xml}, \code{other_industry_incelas_gssp3.xml},
-#' \code{other_industry_incelas_gssp4.xml}, and \code{other_industry_incelas_gssp5.xml}.
+#' \code{other_industry_incelas_gssp4.xml}, and \code{other_industry_incelas_gssp5.xml} and \code{other_industry_incelas_cwf.xml}.
 module_energy_batch_other_industry_incelas_SSP_xml <- function(command, ...) {
 
   INCOME_ELASTICITY_INPUTS <- c("GCAM3",
@@ -19,7 +19,8 @@ module_energy_batch_other_industry_incelas_SSP_xml <- function(command, ...) {
                                 paste0("SSP", 1:5))
 
   if(command == driver.DECLARE_INPUTS) {
-    return(c(paste("L232.IncomeElasticity_ind", tolower(INCOME_ELASTICITY_INPUTS), sep = "_")))
+    return(c(paste("L232.IncomeElasticity_ind", tolower(INCOME_ELASTICITY_INPUTS), sep = "_"),
+             "L232.IncomeElasticity_ind_cwf"))
   } else if(command == driver.DECLARE_OUTPUTS) {
     return(c(XML = "other_industry_incelas_gcam3.xml",
              XML = "other_industry_incelas_gssp1.xml",
@@ -31,13 +32,14 @@ module_energy_batch_other_industry_incelas_SSP_xml <- function(command, ...) {
              XML = "other_industry_incelas_ssp2.xml",
              XML = "other_industry_incelas_ssp3.xml",
              XML = "other_industry_incelas_ssp4.xml",
-             XML = "other_industry_incelas_ssp5.xml"))
+             XML = "other_industry_incelas_ssp5.xml",
+             XML = "other_industry_incelas_cwf.xml"))
   } else if(command == driver.MAKE) {
 
     # Silence package checks
     other_industry_incelas_gcam3.xml <- other_industry_incelas_ssp1.xml <- other_industry_incelas_ssp2.xml <- other_industry_incelas_ssp3.xml <-
       other_industry_incelas_ssp4.xml <- other_industry_incelas_ssp5.xml<- other_industry_incelas_gssp1.xml<- other_industry_incelas_gssp2.xml<-
-      other_industry_incelas_gssp3.xml<- other_industry_incelas_gssp4.xml <- other_industry_incelas_gssp5.xml <- NULL
+      other_industry_incelas_gssp3.xml<- other_industry_incelas_gssp4.xml <- other_industry_incelas_gssp5.xml <- other_industry_incelas_cwf.xml <- NULL
 
     all_data <- list(...)[[1]]
 
@@ -55,9 +57,16 @@ module_energy_batch_other_industry_incelas_SSP_xml <- function(command, ...) {
       assign(xmlfn, xml_obj)
     }
 
+    # do the same for the CWF income elasticity file
+    L232.IncomeElasticity_ind_cwf <- get_data(all_data, 'L232.IncomeElasticity_ind_cwf')
+    create_xml("other_industry_incelas_cwf.xml") %>%
+      add_xml_data(L232.IncomeElasticity_ind_cwf, "IncomeElasticity") %>%
+      add_precursors("L232.IncomeElasticity_ind_cwf") ->
+      other_industry_incelas_cwf.xml
+
     return_data(other_industry_incelas_gcam3.xml, other_industry_incelas_ssp1.xml, other_industry_incelas_ssp2.xml, other_industry_incelas_ssp3.xml,
                 other_industry_incelas_ssp4.xml, other_industry_incelas_ssp5.xml, other_industry_incelas_gssp1.xml, other_industry_incelas_gssp2.xml,
-                other_industry_incelas_gssp3.xml, other_industry_incelas_gssp4.xml, other_industry_incelas_gssp5.xml)
+                other_industry_incelas_gssp3.xml, other_industry_incelas_gssp4.xml, other_industry_incelas_gssp5.xml, other_industry_incelas_cwf.xml)
   } else {
     stop("Unknown command")
   }

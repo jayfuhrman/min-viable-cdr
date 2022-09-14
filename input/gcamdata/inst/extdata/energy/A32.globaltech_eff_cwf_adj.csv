@@ -1,0 +1,21 @@
+# File: A32.globaltech_eff_cwf_adj.csv
+# Title: CWF adjustments to industry default efficiencies (multiplied by defaults to obtain CWF values)
+# Units: Fraction
+# Column types: cccccnnn
+# ----------
+supplysector,subsector,technology,minicam.energy.input,secondary.output,2020,2050,2100
+other industrial energy use,biomass,biomass,delivered biomass,,1,0.9,0.8
+other industrial energy use,biomass,biomass cogen,delivered biomass,electricity,1,0.9,0.8
+other industrial energy use,coal,coal,delivered coal,,1,0.9,0.8
+other industrial energy use,coal,coal cogen,delivered coal,electricity,1,0.9,0.8
+other industrial energy use,district heat,district heat,district heat,,1,0.9,0.8
+other industrial energy use,electricity,electricity,elect_td_ind,,1,0.9,0.8
+other industrial energy use,gas,gas,wholesale gas,,1,0.9,0.8
+other industrial energy use,gas,gas cogen,wholesale gas,electricity,1,0.9,0.8
+other industrial energy use,hydrogen,hydrogen,H2 industrial,,1,0.9,0.8
+other industrial energy use,hydrogen,hydrogen cogen,H2 wholesale delivery,electricity,1,0.9,0.8
+other industrial energy use,refined liquids,refined liquids,refined liquids industrial,,1,0.9,0.8
+other industrial energy use,refined liquids,refined liquids cogen,refined liquids industrial,electricity,1,0.9,0.8
+other industrial feedstocks,coal,coal,delivered coal,,1,0.9,0.8
+other industrial feedstocks,gas,gas,wholesale gas,,1,0.9,0.8
+other industrial feedstocks,refined liquids,refined liquids,refined liquids industrial,,1,0.9,0.8
