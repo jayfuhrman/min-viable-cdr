@@ -1,0 +1,8 @@
+# File: A325.globaltech_coef_cwf_adj.csv
+# Title: CWF adjustments to chemical production default coefficients (multiplied by defaults to obtain CWF values)
+# Units: fraction
+# Column types: ccccn
+# ----------
+supplysector,subsector,technology,minicam.energy.input,terminal_coef_adj
+chemical,chemical,chemical,chemical energy use,0.9
+chemical,chemical,chemical,chemical feedstocks,0.9

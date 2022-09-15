@@ -23,7 +23,8 @@ module_socioeconomics_L2325.chemical_Inc_Elas_scenarios <- function(command, ...
              FILE = "socioeconomics/A325.inc_elas",
              "L102.pcgdp_thous90USD_Scen_R_Y",
              "L101.Pop_thous_GCAM3_R_Y",
-             "L102.gdp_mil90usd_GCAM3_R_Y"))
+             "L102.gdp_mil90usd_GCAM3_R_Y",
+             FILE = "energy/A325.incelas_cwf"))
   } else if(command == driver.DECLARE_OUTPUTS) {
     return(c("L2325.chemical_incelas_gssp1",
              "L2325.chemical_incelas_gssp2",
@@ -35,7 +36,8 @@ module_socioeconomics_L2325.chemical_Inc_Elas_scenarios <- function(command, ...
              "L2325.chemical_incelas_ssp3",
              "L2325.chemical_incelas_ssp4",
              "L2325.chemical_incelas_ssp5",
-             "L2325.chemical_incelas_gcam3"))
+             "L2325.chemical_incelas_gcam3",
+             "L2325.chemical_incelas_cwf"))
   } else if(command == driver.MAKE) {
 
     GCAM_region_ID <- value <- year <- pcgdp_90thousUSD <- scenario <-
@@ -53,6 +55,7 @@ module_socioeconomics_L2325.chemical_Inc_Elas_scenarios <- function(command, ...
       mutate(year = as.integer(year))
     L101.Pop_thous_GCAM3_R_Y <- get_data(all_data, "L101.Pop_thous_GCAM3_R_Y", strip_attributes = TRUE)
     L102.gdp_mil90usd_GCAM3_R_Y <- get_data(all_data, "L102.gdp_mil90usd_GCAM3_R_Y", strip_attributes = TRUE)
+    A325.incelas_cwf <- get_data(all_data, "energy/A325.incelas_cwf", strip_attributes = TRUE)
 
     # ===================================================
     # Linearly interpolate income elasticity for each level of per-capita GDP,
@@ -100,6 +103,15 @@ module_socioeconomics_L2325.chemical_Inc_Elas_scenarios <- function(command, ...
       select(region, energy.final.demand, year, income.elasticity) ->
       L2325.chemical_incelas_gcam3
 
+    # ===================================================
+    # Make CWF adjustments
+
+    # read in income elasticity values
+    A325.incelas_cwf %>%
+      gather_years(value_col = "income.elasticity") %>%
+      rename(energy.final.demand = `energy-final-demand`) %>%
+      select(LEVEL2_DATA_NAMES[["IncomeElasticity"]]) ->
+      L2325.chemical_incelas_cwf
 
     # ===================================================
 
@@ -164,6 +176,12 @@ module_socioeconomics_L2325.chemical_Inc_Elas_scenarios <- function(command, ...
                      "L101.Pop_thous_GCAM3_R_Y", "L102.gdp_mil90usd_GCAM3_R_Y") ->
       L2325.chemical_incelas_gcam3
 
+    L2325.chemical_incelas_cwf %>%
+      add_title("chemical Income Elasticity: cwf") %>%
+      add_units("Unitless (% change in service demand / % change in income)") %>%
+      add_precursors("energy/A325.incelas_cwf") ->
+      L2325.chemical_incelas_cwf
+
     return_data(L2325.chemical_incelas_gssp1,
                 L2325.chemical_incelas_gssp2,
                 L2325.chemical_incelas_gssp3,
@@ -174,7 +192,8 @@ module_socioeconomics_L2325.chemical_Inc_Elas_scenarios <- function(command, ...
                 L2325.chemical_incelas_ssp3,
                 L2325.chemical_incelas_ssp4,
                 L2325.chemical_incelas_ssp5,
-                L2325.chemical_incelas_gcam3)
+                L2325.chemical_incelas_gcam3,
+                L2325.chemical_incelas_cwf)
   } else {
     stop("Unknown command")
   }
