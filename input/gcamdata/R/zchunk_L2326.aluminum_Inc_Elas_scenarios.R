@@ -27,7 +27,8 @@ module_socioeconomics_L2326.aluminum_Inc_Elas_scenarios <- function(command, ...
              "L101.Pop_thous_Scen_R_Yfut",
              "L101.Pop_thous_GCAM3_R_Y",
              "L102.gdp_mil90usd_GCAM3_R_Y",
-             "L1326.out_Mt_R_aluminum_Yh"))
+             "L1326.out_Mt_R_aluminum_Yh",
+             FILE = "energy/A326.incelas_cwf"))
   } else if(command == driver.DECLARE_OUTPUTS) {
     return(c("L2326.aluminum_incelas_gssp1",
              "L2326.aluminum_incelas_gssp2",
@@ -39,7 +40,8 @@ module_socioeconomics_L2326.aluminum_Inc_Elas_scenarios <- function(command, ...
              "L2326.aluminum_incelas_ssp3",
              "L2326.aluminum_incelas_ssp4",
              "L2326.aluminum_incelas_ssp5",
-             "L2326.aluminum_incelas_gcam3"))
+             "L2326.aluminum_incelas_gcam3",
+             "L2326.aluminum_incelas_cwf"))
   } else if(command == driver.MAKE) {
 
     GCAM_region_ID <- value <- year <- pcgdp_90thousUSD <- scenario <-
@@ -53,6 +55,7 @@ module_socioeconomics_L2326.aluminum_Inc_Elas_scenarios <- function(command, ...
     COV_1990USD_2005USD = 1.383
 
     # Load required inputs
+    A326.incelas_cwf <- get_data(all_data, "energy/A326.incelas_cwf", strip_attributes = TRUE)
     GCAM_region_names <- get_data(all_data, "common/GCAM_region_names")
     A326.inc_elas <- get_data(all_data, "socioeconomics/A326.inc_elas", strip_attributes = TRUE)
     A326.inc_elas_parameter  <- get_data(all_data, "socioeconomics/A326.inc_elas_parameter", strip_attributes = TRUE)
@@ -191,6 +194,17 @@ module_socioeconomics_L2326.aluminum_Inc_Elas_scenarios <- function(command, ...
              income.elasticity = replace(income.elasticity,income.elasticity < -3,-3))
 
     # ===================================================
+    # Make CWF adjustments
+
+    # read in income elasticity values
+    A326.incelas_cwf %>%
+      gather_years(value_col = "income.elasticity") %>%
+      rename(energy.final.demand = `energy-final-demand`) %>%
+      select(LEVEL2_DATA_NAMES[["IncomeElasticity"]]) ->
+      L2326.aluminum_incelas_cwf
+
+
+    # ===================================================
 
     # Produce outputs
     L2326.pcgdp_thous90USD_Scen_R_Y[["gSSP1"]] %>%
@@ -263,6 +277,12 @@ module_socioeconomics_L2326.aluminum_Inc_Elas_scenarios <- function(command, ...
                      "L1326.out_Mt_R_aluminum_Yh","L102.pcgdp_thous90USD_GCAM3_R_Y") ->
       L2326.aluminum_incelas_gcam3
 
+    L2326.aluminum_incelas_cwf %>%
+      add_title("aluminum Income Elasticity: cwf") %>%
+      add_units("Unitless (% change in service demand / % change in income)") %>%
+      add_precursors("energy/A326.incelas_cwf") ->
+      L2326.aluminum_incelas_cwf
+
     return_data(L2326.aluminum_incelas_gssp1,
                 L2326.aluminum_incelas_gssp2,
                 L2326.aluminum_incelas_gssp3,
@@ -273,7 +293,8 @@ module_socioeconomics_L2326.aluminum_Inc_Elas_scenarios <- function(command, ...
                 L2326.aluminum_incelas_ssp3,
                 L2326.aluminum_incelas_ssp4,
                 L2326.aluminum_incelas_ssp5,
-                L2326.aluminum_incelas_gcam3)
+                L2326.aluminum_incelas_gcam3,
+                L2326.aluminum_incelas_cwf)
   } else {
     stop("Unknown command")
   }
