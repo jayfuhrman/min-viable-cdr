@@ -483,7 +483,7 @@ module_energy_L2325.chemical <- function(command, ...) {
     # ===================================================
     # Make CWF adjustments
 
-    # EFFICIENCY
+    # EFFICIENCY: L2325.GlobalTechEff_chemical_cwf
     # get efficiency adjustments
     A325.globaltech_eff_cwf_adj %>%
       gather_years(value_col = "efficiency_adj") %>%
@@ -507,7 +507,7 @@ module_energy_L2325.chemical <- function(command, ...) {
       select(LEVEL2_DATA_NAMES[["GlobalTechEff"]]) ->
       L2325.GlobalTechEff_chemical_cwf
 
-    # GLOBAL TECH COEFFICIENT
+    # GLOBAL TECH COEFFICIENT: L2325.GlobalTechCoef_chemical_cwf
     # get coefficient adjustments and apply to the original coefficients
     L2325.GlobalTechCoef_chemical %>%
       left_join(A325.globaltech_coef_cwf_adj %>%
@@ -517,7 +517,7 @@ module_energy_L2325.chemical <- function(command, ...) {
       select(LEVEL2_DATA_NAMES[["GlobalTechCoef"]]) ->
       L2325.GlobalTechCoef_chemical_cwf
 
-    # STUB TECH COEFFICIENT
+    # STUB TECH COEFFICIENT: L2325.StubTechCoef_chemical_cwf
     # note that this also must be updated because these values converge to the global tech coef, so we want
     # them to converge to the corresponding CWF global tech coef
     L2325.StubTechCoef_chemical_base %>%

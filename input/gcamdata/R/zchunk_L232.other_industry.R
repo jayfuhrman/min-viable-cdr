@@ -621,7 +621,7 @@ module_energy_L232.other_industry <- function(command, ...) {
     # ===================================================
     # Make CWF adjustments
 
-    # EFFICIENCY
+    # EFFICIENCY: L232.GlobalTechEff_ind_cwf
     # get efficiency adjustments
     A32.globaltech_eff_cwf_adj %>%
       gather_years(value_col = "efficiency_adj") %>%
@@ -645,7 +645,7 @@ module_energy_L232.other_industry <- function(command, ...) {
       select(LEVEL2_DATA_NAMES[["GlobalTechEff"]]) ->
       L232.GlobalTechEff_ind_cwf
 
-    # GLOBAL TECH COEFFICIENT
+    # GLOBAL TECH COEFFICIENT: L232.GlobalTechCoef_ind_cwf
     # get coefficient adjustments and apply to the original coefficients
     L232.GlobalTechCoef_ind %>%
       left_join(A32.globaltech_coef_cwf_adj %>%
@@ -655,7 +655,7 @@ module_energy_L232.other_industry <- function(command, ...) {
       select(LEVEL2_DATA_NAMES[["GlobalTechCoef"]]) ->
       L232.GlobalTechCoef_ind_cwf
 
-    # STUB TECH COEFFICIENT
+    # STUB TECH COEFFICIENT: L232.StubTechCoef_industry_cwf
     # note that this also must be updated because these values converge to the global tech coef, so we want
     # them to converge to the corresponding CWF global tech coef
     L232.StubTechCoef_industry_base %>%
@@ -679,7 +679,7 @@ module_energy_L232.other_industry <- function(command, ...) {
     # periods, so this should match for CWF. similarly, don't need to adjust L232.StubTechCalInput_indenergy,
     # L232.StubTechCalInput_indfeed, or L232.StubTechProd_industry since these are historical values only
 
-    # INCOME ELASTICITY
+    # INCOME ELASTICITY: L232.IncomeElasticity_ind_cwf
     # read in income elasticity values
     A32.incelas_cwf %>%
       gather_years(value_col = "income.elasticity") %>%

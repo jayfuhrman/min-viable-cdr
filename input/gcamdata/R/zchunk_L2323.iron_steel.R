@@ -340,7 +340,7 @@ module_energy_L2323.iron_steel <- function(command, ...) {
     # ===================================================
     # Make CWF adjustments
 
-    # GLOBAL TECH COEF
+    # GLOBAL TECH COEF: L2323.GlobalTechCoef_iron_steel_cwf
     # get adjustments
     A323.globaltech_coef_cwf_adj %>%
       gather_years %>%
@@ -362,7 +362,7 @@ module_energy_L2323.iron_steel <- function(command, ...) {
       select(LEVEL2_DATA_NAMES[["GlobalTechCoef"]]) ->
       L2323.GlobalTechCoef_iron_steel_cwf
 
-    # STUB TECH COEF
+    # STUB TECH COEF: L2323.StubTechCoef_iron_steel_cwf
     # some of these converge to the global tech values, so the convergence needs to be updated
     L2323.StubTechCoef_iron_steel_tmp %>%
       complete(nesting(region, supplysector, subsector, stub.technology, minicam.energy.input, market.name),
