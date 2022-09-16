@@ -23,7 +23,8 @@ module_socioeconomics_L2324.Off_road_Inc_Elas_scenarios <- function(command, ...
              FILE = "socioeconomics/A324.inc_elas",
              "L102.pcgdp_thous90USD_Scen_R_Y",
              "L101.Pop_thous_GCAM3_R_Y",
-             "L102.gdp_mil90usd_GCAM3_R_Y"))
+             "L102.gdp_mil90usd_GCAM3_R_Y",
+             FILE = "energy/A324.incelas_cwf"))
   } else if(command == driver.DECLARE_OUTPUTS) {
     return(c("L2324.Off_road_incelas_gssp1",
              "L2324.Off_road_incelas_gssp2",
@@ -35,7 +36,8 @@ module_socioeconomics_L2324.Off_road_Inc_Elas_scenarios <- function(command, ...
              "L2324.Off_road_incelas_ssp3",
              "L2324.Off_road_incelas_ssp4",
              "L2324.Off_road_incelas_ssp5",
-             "L2324.Off_road_incelas_gcam3"))
+             "L2324.Off_road_incelas_gcam3",
+             "L2324.Off_road_incelas_cwf"))
   } else if(command == driver.MAKE) {
 
     GCAM_region_ID <- value <- year <- pcgdp_90thousUSD <- scenario <-
@@ -53,6 +55,7 @@ module_socioeconomics_L2324.Off_road_Inc_Elas_scenarios <- function(command, ...
       mutate(year = as.integer(year))
     L101.Pop_thous_GCAM3_R_Y <- get_data(all_data, "L101.Pop_thous_GCAM3_R_Y", strip_attributes = TRUE)
     L102.gdp_mil90usd_GCAM3_R_Y <- get_data(all_data, "L102.gdp_mil90usd_GCAM3_R_Y", strip_attributes = TRUE)
+    A324.incelas_cwf <- get_data(all_data, "energy/A324.incelas_cwf", strip_attributes = TRUE)
 
     # ===================================================
     # Linearly interpolate income elasticity for each level of per-capita GDP,
@@ -160,6 +163,18 @@ module_socioeconomics_L2324.Off_road_Inc_Elas_scenarios <- function(command, ...
       mining_gcam3
 
     L2324.Off_road_incelas_gcam3 <- bind_rows(agriculture_gcam3,construction_gcam3,mining_gcam3)
+
+    # ===================================================
+    # Make CWF adjustments
+
+    # read in income elasticity values
+    A324.incelas_cwf %>%
+      gather_years(value_col = "income.elasticity") %>%
+      rename(energy.final.demand = `energy-final-demand`) %>%
+      select(LEVEL2_DATA_NAMES[["IncomeElasticity"]]) ->
+      L2324.Off_road_incelas_cwf
+
+
     # ===================================================
 
     # Produce outputs
@@ -223,6 +238,12 @@ module_socioeconomics_L2324.Off_road_Inc_Elas_scenarios <- function(command, ...
                      "L101.Pop_thous_GCAM3_R_Y", "L102.gdp_mil90usd_GCAM3_R_Y") ->
       L2324.Off_road_incelas_gcam3
 
+    L2324.Off_road_incelas_cwf %>%
+      add_title("Off_road Income Elasticity: cwf") %>%
+      add_units("Unitless (% change in service demand / % change in income)") %>%
+      add_precursors("energy/A324.incelas_cwf") ->
+      L2324.Off_road_incelas_cwf
+
     return_data(L2324.Off_road_incelas_gssp1,
                 L2324.Off_road_incelas_gssp2,
                 L2324.Off_road_incelas_gssp3,
@@ -233,7 +254,8 @@ module_socioeconomics_L2324.Off_road_Inc_Elas_scenarios <- function(command, ...
                 L2324.Off_road_incelas_ssp3,
                 L2324.Off_road_incelas_ssp4,
                 L2324.Off_road_incelas_ssp5,
-                L2324.Off_road_incelas_gcam3)
+                L2324.Off_road_incelas_gcam3,
+                L2324.Off_road_incelas_cwf)
   } else {
     stop("Unknown command")
   }
