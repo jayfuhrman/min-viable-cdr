@@ -1,0 +1,9 @@
+# File: A_demand_food_nonstaples_cwf_adj.csv
+# Title: CWF adjustments to final demand (gcam-consumer) info
+# Units: Fraction
+# Description: CWF adjustments multiplied by defaults to get CWF values
+# Source: Assumption
+# Column types: cccn
+# ----------
+gcam.consumer,nodeInput,non.staples.food.demand.input,income.elasticity_adj
+FoodDemand,FoodDemand,FoodDemand_NonStaples,0.5

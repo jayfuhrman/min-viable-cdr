@@ -1,0 +1,9 @@
+# File: A_fuelprefElasticity_cwf.csv
+# Title: Fuel preference elasticities for CWF meat demand
+# Unit: NA
+# Description: Fuel preference elasticities for CWF meat demand
+# Source: Assumption
+# Column types: cccn
+# ----------
+supplysector,subsector0,subsector,fuelprefElasticity
+FoodDemand_NonStaples,Protein,Animal,-1
