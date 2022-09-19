@@ -1,0 +1,24 @@
+# File: A_MACC_TechChange_AgAn_cwf.csv
+# Title: CWF technological change values for the CH4 and N2O agriculture and animal sectors
+# Units: Percent
+# Description: Values are used to set the technological change values for each year and region and technology where the tech change values were previously lower than these values
+# Source: Assumption
+# Column types: nn
+# ----------
+year,tech.change
+2025,0.02
+2030,0.02
+2035,0.02
+2040,0.02
+2045,0.02
+2050,0.02
+2055,0.01
+2060,0.01
+2065,0.01
+2070,0.01
+2075,0.01
+2080,0.005
+2085,0.005
+2090,0.005
+2095,0.005
+2100,0.005

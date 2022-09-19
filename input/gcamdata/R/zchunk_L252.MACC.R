@@ -14,8 +14,8 @@
 #' \code{L252.MAC_Ag_TC_SSP1}, \code{L252.MAC_An_TC_SSP1}, \code{L252.MAC_prc_TC_SSP1}, \code{L252.MAC_higwp_TC_SSP1},
 #' \code{L252.MAC_res_TC_SSP1}, \code{L252.MAC_Ag_TC_SSP2}, \code{L252.MAC_An_TC_SSP2}, \code{L252.MAC_prc_TC_SSP2},
 #' \code{L252.MAC_res_TC_SSP2}, \code{L252.MAC_higwp_TC_SSP2}, \code{L252.MAC_Ag_TC_SSP5}, \code{L252.MAC_An_TC_SSP5},
-#' \code{L252.MAC_prc_TC_SSP5}, \code{L252.MAC_res_TC_SSP5}, \code{L252.MAC_higwp_TC_SSP5}. The corresponding file in the
-#' original data system was \code{L252.MACC.R} (emissions level2).
+#' \code{L252.MAC_prc_TC_SSP5}, \code{L252.MAC_res_TC_SSP5}, \code{L252.MAC_higwp_TC_SSP5}, \code{L252.MAC_Ag_TC_SSP1_cwf}, \code{L252.MAC_An_TC_SSP1_cwf}.
+#' The corresponding file in the original data system was \code{L252.MACC.R} (emissions level2).
 #' @details Creates marginal abatement cost curves "MACC", for fossil resources, agriculture, animals, and processing.
 #' @importFrom assertthat assert_that
 #' @importFrom dplyr arrange bind_rows distinct filter left_join matches mutate select slice
@@ -37,7 +37,8 @@ module_emissions_L252.MACC <- function(command, ...) {
              "L211.AGRBio",
              "L232.nonco2_prc",
              "L241.hfc_all",
-             "L241.pfc_all"))
+             "L241.pfc_all",
+             FILE = "emissions/A_MACC_TechChange_AgAn_cwf"))
   } else if(command == driver.DECLARE_OUTPUTS) {
     return(c("L252.ResMAC_fos",
              "L252.AgMAC",
@@ -66,7 +67,9 @@ module_emissions_L252.MACC <- function(command, ...) {
              "L252.MAC_An_TC_SSP5",
              "L252.MAC_prc_TC_SSP5",
              "L252.MAC_res_TC_SSP5",
-             "L252.MAC_higwp_TC_SSP5"))
+             "L252.MAC_higwp_TC_SSP5",
+             "L252.MAC_Ag_TC_SSP1_cwf",
+             "L252.MAC_An_TC_SSP1_cwf"))
   } else if(command == driver.MAKE) {
 
     # Silence package checks
@@ -103,7 +106,7 @@ module_emissions_L252.MACC <- function(command, ...) {
     L241.hfc_all <- get_data(all_data, "L241.hfc_all", strip_attributes = TRUE)
     L241.pfc_all <- get_data(all_data, "L241.pfc_all", strip_attributes = TRUE)
     EPA_MACC_PhaseInTime <- get_data(all_data, "emissions/EPA_MACC_PhaseInTime")
-
+    A_MACC_TechChange_AgAn_cwf <- get_data(all_data, "emissions/A_MACC_TechChange_AgAn_cwf")
 
     # update MAC using 2019 EPA
     # Prepare the table with all MAC curves for matching
@@ -575,6 +578,29 @@ module_emissions_L252.MACC <- function(command, ...) {
           select(-scenario)
       })
 
+
+    # ===================================================
+    # CWF adjustments
+    # animal
+    L252.MAC_An_TC_SSP1_cwf <- L252.MAC_An_TC[["SSP1"]] %>%
+      # join CWF tech change assumptions
+      left_join(A_MACC_TechChange_AgAn_cwf %>% rename(tech.change.cwf = tech.change),
+                by = c("tech.change.year" = "year")) %>%
+      # apply assumptions when the technological change value is less than the CWF value, otherwise keep current values
+      mutate(tech.change = ifelse(tech.change <= tech.change.cwf, tech.change.cwf, tech.change)) %>%
+      # drop CWF added column
+      dplyr::select(-tech.change.cwf)
+
+    # agriculture
+    L252.MAC_Ag_TC_SSP1_cwf <- L252.MAC_Ag_TC[["SSP1"]] %>%
+      # join CWF tech change assumptions
+      left_join(A_MACC_TechChange_AgAn_cwf %>% rename(tech.change.cwf = tech.change),
+                by = c("tech.change.year" = "year")) %>%
+      # apply assumptions when the technological change value is less than the CWF value, otherwise keep current values
+      mutate(tech.change = ifelse(tech.change <= tech.change.cwf, tech.change.cwf, tech.change)) %>%
+      # drop CWF added column
+      dplyr::select(-tech.change.cwf)
+
     # ===================================================
 
     # Produce outputs
@@ -751,13 +777,22 @@ module_emissions_L252.MACC <- function(command, ...) {
       add_legacy_name("L252.MAC_higwp_TC_SSP5") ->
       L252.MAC_higwp_TC_SSP5
 
+    L252.MAC_An_TC_SSP1_cwf %>%
+      add_comments("CWF version") ->
+      L252.MAC_An_TC_SSP1_cwf
+
+    L252.MAC_Ag_TC_SSP1_cwf %>%
+      add_comments("CWF version") ->
+      L252.MAC_Ag_TC_SSP1_cwf
+
     return_data(L252.ResMAC_fos, L252.AgMAC, L252.MAC_an, L252.MAC_prc, L252.MAC_higwp,
                 L252.ResMAC_fos_tc_average, L252.AgMAC_tc_average, L252.MAC_an_tc_average,
                 L252.MAC_prc_tc_average, L252.MAC_higwp_tc_average,
                 L252.ResMAC_fos_phaseInTime, L252.MAC_prc_phaseInTime, L252.MAC_higwp_phaseInTime,
                 L252.MAC_Ag_TC_SSP1, L252.MAC_An_TC_SSP1, L252.MAC_prc_TC_SSP1, L252.MAC_res_TC_SSP1, L252.MAC_higwp_TC_SSP1,
                 L252.MAC_Ag_TC_SSP2, L252.MAC_An_TC_SSP2, L252.MAC_prc_TC_SSP2, L252.MAC_res_TC_SSP2, L252.MAC_higwp_TC_SSP2,
-                L252.MAC_Ag_TC_SSP5, L252.MAC_An_TC_SSP5, L252.MAC_prc_TC_SSP5, L252.MAC_res_TC_SSP5, L252.MAC_higwp_TC_SSP5)
+                L252.MAC_Ag_TC_SSP5, L252.MAC_An_TC_SSP5, L252.MAC_prc_TC_SSP5, L252.MAC_res_TC_SSP5, L252.MAC_higwp_TC_SSP5,
+                L252.MAC_Ag_TC_SSP1_cwf, L252.MAC_An_TC_SSP1_cwf)
   } else {
     stop("Unknown command")
   }
