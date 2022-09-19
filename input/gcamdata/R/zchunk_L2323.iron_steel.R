@@ -363,11 +363,12 @@ module_energy_L2323.iron_steel <- function(command, ...) {
       L2323.GlobalTechCoef_iron_steel_cwf
 
     # STUB TECH COEF: L2323.StubTechCoef_iron_steel_cwf
-    # some of these converge to the global tech values, so the convergence needs to be updated
+    # some of these converge to the global tech values, so the convergence needs to be updated.
+    # also need to apply the reduction in coefficients to these values
     L2323.StubTechCoef_iron_steel_tmp %>%
       complete(nesting(region, supplysector, subsector, stub.technology, minicam.energy.input, market.name),
                year = unique(c(MODEL_YEARS, energy.INDCOEF_CONVERGENCE_YR))) %>%
-      left_join(select(L2323.GlobalTechCoef_iron_steel_cwf %>% rename(terminal_coef = coefficient,supplysector = sector.name,subsector = subsector.name),
+      left_join(select(L2323.GlobalTechCoef_iron_steel %>% rename(terminal_coef = coefficient,supplysector = sector.name,subsector = subsector.name),
                        supplysector, subsector, technology, minicam.energy.input, terminal_coef, year),
                 by = c("supplysector", "subsector", stub.technology = "technology", "minicam.energy.input","year")) %>%
       left_join(L2323.StubTechCoef_iron_steel_tmp %>%mutate(coeff = coefficient,coefficient=NULL),
@@ -382,7 +383,12 @@ module_energy_L2323.iron_steel <- function(command, ...) {
       group_by(region, supplysector, subsector, stub.technology, minicam.energy.input) %>%
       mutate(coefficient = round(approx_fun(year, coefficient,rule = 2), energy.DIGITS_COEFFICIENT)) %>%
       ungroup() %>%
-      filter(year %in% MODEL_YEARS) ->   # drop the terminal coef year if it's outside of the model years
+      # apply CWF adjustments
+      left_join(L2323.globaltech_coef_cwf_adj %>%
+                  rename(supplysector = sector.name, subsector = subsector.name, stub.technology = technology)) %>%
+      mutate(coefficient = round(coefficient * coefficient_adj, energy.DIGITS_COEFFICIENT)) %>%
+      filter(year %in% MODEL_YEARS) %>% # drop the terminal coef year if it's outside of the model years
+      select(LEVEL2_DATA_NAMES[["StubTechCoef"]]) ->
       L2323.StubTechCoef_iron_steel_cwf
 
 

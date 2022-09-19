@@ -10,7 +10,7 @@
 #' a vector of output names, or (if \code{command} is "MAKE") all
 #' the generated outputs: \code{cement_incelas_gcam3.xml}, \code{cement_incelas_ssp1.xml}, \code{cement_incelas_ssp2.xml}, \code{cement_incelas_ssp3.xml},
 #' \code{cement_incelas_ssp4.xml}, \code{cement_incelas_ssp5.xml}, \code{cement_incelas_gssp1.xml}, \code{cement_incelas_gssp2.xml},
-#' \code{cement_incelas_gssp3.xml}, \code{cement_incelas_gssp4.xml}, and \code{cement_incelas_gssp5.xml}.
+#' \code{cement_incelas_gssp3.xml}, \code{cement_incelas_gssp4.xml}, and \code{cement_incelas_gssp5.xml} and \code{cement_incelas_cwf.xml}.
 module_energy_batch_cement_incelas_SSP_xml <- function(command, ...) {
 
   INCOME_ELASTICITY_INPUTS <- c("GCAM3",
@@ -18,7 +18,8 @@ module_energy_batch_cement_incelas_SSP_xml <- function(command, ...) {
                                 paste0("SSP", 1:5))
 
   if(command == driver.DECLARE_INPUTS) {
-    return(c(paste("L2321.IncomeElasticity_cement", tolower(INCOME_ELASTICITY_INPUTS), sep = "_")))
+    return(c(paste("L2321.IncomeElasticity_cement", tolower(INCOME_ELASTICITY_INPUTS), sep = "_"),
+             "L2321.IncomeElasticity_cement_cwf"))
   } else if(command == driver.DECLARE_OUTPUTS) {
     return(c(XML = "cement_incelas_gcam3.xml",
              XML = "cement_incelas_gssp1.xml",
@@ -30,13 +31,14 @@ module_energy_batch_cement_incelas_SSP_xml <- function(command, ...) {
              XML = "cement_incelas_ssp2.xml",
              XML = "cement_incelas_ssp3.xml",
              XML = "cement_incelas_ssp4.xml",
-             XML = "cement_incelas_ssp5.xml"))
+             XML = "cement_incelas_ssp5.xml",
+             XML = "cement_incelas_cwf.xml"))
   } else if(command == driver.MAKE) {
 
     # Silence package checks
     cement_incelas_gcam3.xml <- cement_incelas_ssp1.xml <- cement_incelas_ssp2.xml <- cement_incelas_ssp3.xml <-
       cement_incelas_ssp4.xml <- cement_incelas_ssp5.xml<- cement_incelas_gssp1.xml<- cement_incelas_gssp2.xml<-
-      cement_incelas_gssp3.xml<- cement_incelas_gssp4.xml <- cement_incelas_gssp5.xml <- NULL
+      cement_incelas_gssp3.xml<- cement_incelas_gssp4.xml <- cement_incelas_gssp5.xml <- cement_incelas_cwf.xml <- NULL
 
     all_data <- list(...)[[1]]
 
@@ -54,9 +56,17 @@ module_energy_batch_cement_incelas_SSP_xml <- function(command, ...) {
       assign(xmlfn, xml_obj)
     }
 
+    # do the same for the CWF income elasticity file
+    L2321.IncomeElasticity_cement_cwf <- get_data(all_data, 'L2321.IncomeElasticity_cement_cwf')
+    create_xml("cement_incelas_cwf.xml") %>%
+      add_xml_data(L2321.IncomeElasticity_cement_cwf, "IncomeElasticity") %>%
+      add_precursors("L2321.IncomeElasticity_cement_cwf") ->
+      cement_incelas_cwf.xml
+
     return_data(cement_incelas_gcam3.xml,
                 cement_incelas_ssp1.xml, cement_incelas_ssp2.xml, cement_incelas_ssp3.xml, cement_incelas_ssp4.xml, cement_incelas_ssp5.xml,
-                cement_incelas_gssp1.xml, cement_incelas_gssp2.xml, cement_incelas_gssp3.xml, cement_incelas_gssp4.xml, cement_incelas_gssp5.xml)
+                cement_incelas_gssp1.xml, cement_incelas_gssp2.xml, cement_incelas_gssp3.xml, cement_incelas_gssp4.xml, cement_incelas_gssp5.xml,
+                cement_incelas_cwf.xml)
   } else {
     stop("Unknown command")
   }
