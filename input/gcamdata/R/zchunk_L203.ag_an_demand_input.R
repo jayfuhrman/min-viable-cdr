@@ -10,12 +10,12 @@
 #'   \code{command} is "MAKE") all the generated outputs: \code{L203.Supplysector_demand}, \code{L203.NestingSubsectorAll_demand_food},
 #'   \code{L203.SubsectorAll_demand_food}, \code{L203.SubsectorAll_demand_nonfood},
 #'   \code{L203.StubTech_demand_food}, \code{L203.StubTech_demand_nonfood}, \code{L203.SubregionalShares},
-#'   \code{L203.DemandFunction_food}, \code{L203.DemandStapleParams}, \code{L203.DemandNonStapleParams},
+#'   \code{L203.DemandFunction_food}, \code{L203.DemandStapleParams}, \code{L203.DemandNonStapleParams}, \code{L203.DemandNonStapleParams_cwf},
 #'   \code{L203.DemandStapleRegBias}, \code{L203.DemandNonStapleRegBias}, \code{L203.StapleBaseService},
 #'   \code{L203.NonStapleBaseService}, \code{L203.GlobalTechCoef_demand}, \code{L203.GlobalTechShrwt_demand}, \code{L203.GlobalTechInterp_demand},
 #'   \code{L203.StubTechProd_food}, \code{L203.StubTechProd_nonfood_crop}, \code{L203.StubTechProd_nonfood_meat},
 #'   \code{L203.StubTechProd_For}, \code{L203.StubCalorieContent},
-#'   \code{L203.PerCapitaBased}, \code{L203.BaseService}, \code{L203.IncomeElasticity}, \code{L203.PriceElasticity}. The
+#'   \code{L203.PerCapitaBased}, \code{L203.BaseService}, \code{L203.IncomeElasticity}, \code{L203.PriceElasticity}, \code{L203.FuelPrefElast_cwf}. The
 #'   corresponding file in the original data system was \code{L203.demand_input.R} (aglu level2).
 #' @details This chunk specifies the input tables for agriculture demand: generic information for supply sector, subsector and technology,
 #' food and non-food demand in calibration years, forest product demand, net exports and caloric contents in calibration and future years,
@@ -41,7 +41,9 @@ module_aglu_L203.ag_an_demand_input <- function(command, ...) {
              "L105.an_kcalg_R_C_Y",
              "L109.ag_ALL_Mt_R_C_Y",
              "L109.an_ALL_Mt_R_C_Y",
-             "L110.For_ALL_bm3_R_Y"
+             "L110.For_ALL_bm3_R_Y",
+             FILE = "aglu/A_demand_food_nonstaples_cwf_adj",
+             FILE = "aglu/A_fuelprefElasticity_cwf"
              ))
   } else if(command == driver.DECLARE_OUTPUTS) {
     return(c("L203.Supplysector_demand",
@@ -70,7 +72,9 @@ module_aglu_L203.ag_an_demand_input <- function(command, ...) {
              "L203.IncomeElasticity",
              "L203.PriceElasticity",
              "L203.FuelPrefElast_ssp1",
-             "L203.GlobalTechInterp_demand"))
+             "L203.GlobalTechInterp_demand",
+             "L203.DemandNonStapleParams_cwf",
+             "L203.FuelPrefElast_cwf"))
   } else if(command == driver.MAKE) {
 
     all_data <- list(...)[[1]]
@@ -98,6 +102,8 @@ module_aglu_L203.ag_an_demand_input <- function(command, ...) {
     L109.ag_ALL_Mt_R_C_Y <- get_data(all_data, "L109.ag_ALL_Mt_R_C_Y")
     L109.an_ALL_Mt_R_C_Y <- get_data(all_data, "L109.an_ALL_Mt_R_C_Y")
     L110.For_ALL_bm3_R_Y <- get_data(all_data, "L110.For_ALL_bm3_R_Y")
+    A_demand_food_nonstaples_cwf_adj <- get_data(all_data, "aglu/A_demand_food_nonstaples_cwf_adj", strip_attributes = TRUE)
+    A_fuelprefElasticity_cwf <- get_data(all_data, "aglu/A_fuelprefElasticity_cwf", strip_attributes = TRUE)
 
     # Build L203.Supplysector_demand: generic info for demand sectors by region
     A_demand_supplysector %>%
@@ -383,6 +389,22 @@ module_aglu_L203.ag_an_demand_input <- function(command, ...) {
                                by = c("region", "non.staples.food.demand.input")) %>%
       select(LEVEL2_DATA_NAMES[["NonStapleBaseService"]])
 
+
+    # CWF adjustments ---------------
+    L203.DemandNonStapleParams_cwf <- A_demand_food_nonstaples %>%
+      left_join(A_demand_food_nonstaples_cwf_adj) %>%
+      mutate(income.elasticity = income.elasticity * income.elasticity_adj) %>%
+      dplyr::select(-income.elasticity_adj) %>%
+      write_to_all_regions(LEVEL2_DATA_NAMES[["DemandNonStapleParams"]], GCAM_region_names = GCAM_region_names) %>%
+      filter(!region %in% aglu.NO_AGLU_REGIONS)
+
+    A_fuelprefElasticity_cwf %>%
+      mutate(year.fillout = min(MODEL_BASE_YEARS)) %>%
+      write_to_all_regions(names_FuelPrefElast_nest, GCAM_region_names = GCAM_region_names) %>%
+      filter(!region %in% aglu.NO_AGLU_REGIONS) ->           # Remove any regions for which agriculture and land use are not modeled
+      L203.FuelPrefElast_cwf
+
+
     #FINAL OUTPUT
     L203.Supplysector_demand %>%
       add_title("Generic information for agriculture demand sectors") %>%
@@ -639,6 +661,22 @@ module_aglu_L203.ag_an_demand_input <- function(command, ...) {
       add_precursors("aglu/A_demand_food_nonstaples") ->
       L203.NonStapleBaseService
 
+    L203.DemandNonStapleParams_cwf %>%
+      add_title("Food demand function parameters for non-staples") %>%
+      add_units("Unitless") %>%
+      add_comments("Values copied from assumptions to all regions, with CWF adjustments") %>%
+      add_precursors("aglu/A_demand_food_nonstaples", "aglu/A_demand_food_nonstaples_cwf_adj") ->
+      L203.DemandNonStapleParams_cwf
+
+    L203.FuelPrefElast_cwf %>%
+      add_title("Fuel preference elasticities for meat in CWF") %>%
+      add_units("Unitless") %>%
+      add_comments("Specify the minimum base year value") %>%
+      add_comments("Remove any regions for which agriculture and land use are not modeled") %>%
+      add_legacy_name("L203.FuelPrefElast_ssp1") %>%
+      add_precursors("aglu/A_fuelprefElasticity_cwf") ->
+      L203.FuelPrefElast_cwf
+
     return_data(L203.Supplysector_demand, L203.NestingSubsectorAll_demand_food, L203.SubsectorAll_demand_food,
                 L203.SubsectorAll_demand_nonfood, L203.StubTech_demand_food, L203.StubTech_demand_nonfood,
                 L203.GlobalTechCoef_demand, L203.GlobalTechShrwt_demand, L203.GlobalTechInterp_demand, L203.StubTechProd_food,
@@ -646,7 +684,8 @@ module_aglu_L203.ag_an_demand_input <- function(command, ...) {
                 L203.StubCalorieContent, L203.PerCapitaBased, L203.BaseService,
                 L203.IncomeElasticity, L203.PriceElasticity, L203.FuelPrefElast_ssp1,
                 L203.SubregionalShares, L203.DemandFunction_food, L203.DemandStapleParams, L203.DemandNonStapleParams,
-                L203.DemandStapleRegBias, L203.DemandNonStapleRegBias, L203.StapleBaseService, L203.NonStapleBaseService)
+                L203.DemandStapleRegBias, L203.DemandNonStapleRegBias, L203.StapleBaseService, L203.NonStapleBaseService,
+                L203.DemandNonStapleParams_cwf, L203.FuelPrefElast_cwf)
   } else {
     stop("Unknown command")
   }
