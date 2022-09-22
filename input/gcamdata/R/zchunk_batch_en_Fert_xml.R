@@ -8,7 +8,7 @@
 #' @param ... other optional parameters, depending on command
 #' @return Depends on \code{command}: either a vector of required inputs,
 #' a vector of output names, or (if \code{command} is "MAKE") all
-#' the generated outputs: \code{en_Fert.xml}. The corresponding file in the
+#' the generated outputs: \code{en_Fert.xml} and \code{en_Fert_cwf.xml}. The corresponding file in the
 #' original data system was \code{batch_en_Fert_xml.R} (energy XML).
 module_energy_batch_en_Fert_xml <- function(command, ...) {
   if(command == driver.DECLARE_INPUTS) {
@@ -29,9 +29,12 @@ module_energy_batch_en_Fert_xml <- function(command, ...) {
              "L2322.StubTechFixOut_Fert_imp",
              "L2322.StubTechFixOut_Fert_exp",
              "L2322.PerCapitaBased_Fert",
-             "L2322.BaseService_Fert"))
+             "L2322.BaseService_Fert",
+             "L2322.SubsectorShrwtFllt_Fert_cwf",
+             "L2322.SubsectorInterp_Fert_cwf"))
   } else if(command == driver.DECLARE_OUTPUTS) {
-    return(c(XML = "en_Fert.xml"))
+    return(c(XML = "en_Fert.xml",
+             XML = "en_Fert_cwf.xml"))
   } else if(command == driver.MAKE) {
 
     all_data <- list(...)[[1]]
@@ -56,6 +59,8 @@ module_energy_batch_en_Fert_xml <- function(command, ...) {
     L2322.StubTechFixOut_Fert_exp <- get_data(all_data, "L2322.StubTechFixOut_Fert_exp")
     L2322.PerCapitaBased_Fert <- get_data(all_data, "L2322.PerCapitaBased_Fert")
     L2322.BaseService_Fert <- get_data(all_data, "L2322.BaseService_Fert")
+    L2322.SubsectorShrwtFllt_Fert_cwf <- get_data(all_data, "L2322.SubsectorShrwtFllt_Fert_cwf")
+    L2322.SubsectorInterp_Fert_cwf <- get_data(all_data, "L2322.SubsectorInterp_Fert_cwf")
 
     # ===================================================
 
@@ -99,7 +104,46 @@ module_energy_batch_en_Fert_xml <- function(command, ...) {
                      "L2322.BaseService_Fert") ->
       en_Fert.xml
 
-    return_data(en_Fert.xml)
+    create_xml("en_Fert_cwf.xml") %>%
+      add_logit_tables_xml(L2322.Supplysector_Fert, "Supplysector") %>%
+      add_xml_data(L2322.FinalEnergyKeyword_Fert, "FinalEnergyKeyword") %>%
+      add_logit_tables_xml(L2322.SubsectorLogit_Fert, "SubsectorLogit") %>%
+      add_xml_data(L2322.SubsectorShrwtFllt_Fert_cwf, "SubsectorShrwtFllt") %>% # CWF version
+      add_xml_data(L2322.SubsectorInterp_Fert_cwf, "SubsectorInterp") %>% # CWF version
+      add_xml_data(L2322.StubTech_Fert, "StubTech") %>%
+      add_xml_data(L2322.GlobalTechShrwt_Fert, "GlobalTechShrwt") %>%
+      add_xml_data(L2322.GlobalTechCoef_Fert, "GlobalTechCoef") %>%
+      add_xml_data(L2322.GlobalTechCost_Fert, "GlobalTechCost") %>%
+      add_xml_data(L2322.GlobalTechCapture_Fert, "GlobalTechCapture") %>%
+      add_xml_data(L2322.GlobalTechSCurve_Fert, "GlobalTechSCurve") %>%
+      add_xml_data(L2322.GlobalTechProfitShutdown_Fert, "GlobalTechProfitShutdown") %>%
+      add_xml_data(L2322.StubTechProd_Fert, "StubTechProd") %>%
+      add_xml_data(L2322.StubTechCoef_Fert, "StubTechCoef") %>%
+      add_xml_data(L2322.StubTechFixOut_Fert_imp, "StubTechFixOut") %>%
+      add_xml_data(L2322.StubTechFixOut_Fert_exp, "StubTechFixOut") %>%
+      add_xml_data(L2322.PerCapitaBased_Fert, "PerCapitaBased") %>%
+      add_xml_data(L2322.BaseService_Fert, "BaseService") %>%
+      add_precursors("L2322.Supplysector_Fert",
+                     "L2322.FinalEnergyKeyword_Fert",
+                     "L2322.SubsectorLogit_Fert",
+                     "L2322.SubsectorShrwtFllt_Fert_cwf",
+                     "L2322.SubsectorInterp_Fert_cwf",
+                     "L2322.StubTech_Fert",
+                     "L2322.GlobalTechShrwt_Fert",
+                     "L2322.GlobalTechCoef_Fert",
+                     "L2322.GlobalTechCost_Fert",
+                     "L2322.GlobalTechCapture_Fert",
+                     "L2322.GlobalTechSCurve_Fert",
+                     "L2322.GlobalTechProfitShutdown_Fert",
+                     "L2322.StubTechProd_Fert",
+                     "L2322.StubTechCoef_Fert",
+                     "L2322.StubTechFixOut_Fert_imp",
+                     "L2322.StubTechFixOut_Fert_exp",
+                     "L2322.PerCapitaBased_Fert",
+                     "L2322.BaseService_Fert") ->
+      en_Fert_cwf.xml
+
+    return_data(en_Fert.xml, en_Fert_cwf.xml)
   } else {
     stop("Unknown command")
   }
