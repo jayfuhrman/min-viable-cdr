@@ -9,7 +9,7 @@
 #' @param ... other optional parameters, depending on command
 #' @return Depends on \code{command}: either a vector of required inputs,
 #' a vector of output names, or (if \code{command} is "MAKE") all
-#' the generated outputs:  \code{L2322.Supplysector_Fert}, \code{L2322.FinalEnergyKeyword_Fert}, \code{L2322.SubsectorLogit_Fert}, \code{L2322.SubsectorShrwtFllt_Fert}, \code{L2322.SubsectorInterp_Fert}, \code{L2322.StubTech_Fert}, \code{L2322.GlobalTechShrwt_Fert}, \code{L2322.GlobalTechCoef_Fert}, \code{L2322.GlobalTechCost_Fert}, \code{L2322.GlobalTechCapture_Fert}, \code{L2322.GlobalTechSCurve_Fert}, \code{L2322.GlobalTechProfitShutdown_Fert}, \code{L2322.StubTechProd_Fert}, \code{L2322.StubTechCoef_Fert}, \code{L2322.StubTechFixOut_Fert_imp}, \code{L2322.StubTechFixOut_Fert_exp}, \code{L2322.PerCapitaBased_Fert}, \code{L2322.BaseService_Fert}. The corresponding file in the
+#' the generated outputs:  \code{L2322.Supplysector_Fert}, \code{L2322.FinalEnergyKeyword_Fert}, \code{L2322.SubsectorLogit_Fert}, \code{L2322.SubsectorShrwtFllt_Fert}, \code{L2322.SubsectorInterp_Fert}, \code{L2322.StubTech_Fert}, \code{L2322.GlobalTechShrwt_Fert}, \code{L2322.GlobalTechCoef_Fert}, \code{L2322.GlobalTechCost_Fert}, \code{L2322.GlobalTechCapture_Fert}, \code{L2322.GlobalTechSCurve_Fert}, \code{L2322.GlobalTechProfitShutdown_Fert}, \code{L2322.StubTechProd_Fert}, \code{L2322.StubTechCoef_Fert}, \code{L2322.StubTechFixOut_Fert_imp}, \code{L2322.StubTechFixOut_Fert_exp}, \code{L2322.PerCapitaBased_Fert}, \code{L2322.BaseService_Fert},  \code{L2322.SubsectorShrwtFllt_Fert_cwf}, \code{L2322.SubsectorInterp_Fert_cwf}. The corresponding file in the
 #' original data system was \code{L2322.Fert.R} (energy level2).
 #' @details This chunk provides supply sector information/keywords, subsector shareweights, global technology lifetime,
 #' energy inputs and coefficients, global fertilizer manufacturing technologies, etc. for the fertilizer sector.
@@ -33,7 +33,9 @@ module_energy_L2322.Fert <- function(command, ...) {
              "L1322.Fert_Prod_MtN_R_F_Y",
              "L1322.IO_R_Fert_F_Yh",
              "L1322.Fert_NEcost_75USDkgN_F",
-             "L142.ag_Fert_NetExp_MtN_R_Y"))
+             "L142.ag_Fert_NetExp_MtN_R_Y",
+             FILE = "energy/A322.subsector_interp_cwf_adj",
+             FILE = "energy/A322.subsector_shrwt_cwf_adj"))
   } else if(command == driver.DECLARE_OUTPUTS) {
     return(c("L2322.Supplysector_Fert",
              "L2322.FinalEnergyKeyword_Fert",
@@ -52,7 +54,9 @@ module_energy_L2322.Fert <- function(command, ...) {
              "L2322.StubTechFixOut_Fert_imp",
              "L2322.StubTechFixOut_Fert_exp",
              "L2322.PerCapitaBased_Fert",
-             "L2322.BaseService_Fert"))
+             "L2322.BaseService_Fert",
+             "L2322.SubsectorShrwtFllt_Fert_cwf",
+             "L2322.SubsectorInterp_Fert_cwf"))
   } else if(command == driver.MAKE) {
 
     all_data <- list(...)[[1]]
@@ -73,6 +77,8 @@ module_energy_L2322.Fert <- function(command, ...) {
     L1322.IO_R_Fert_F_Yh <- get_data(all_data, "L1322.IO_R_Fert_F_Yh", strip_attributes = TRUE)
     L1322.Fert_NEcost_75USDkgN_F <- get_data(all_data, "L1322.Fert_NEcost_75USDkgN_F")
     L142.ag_Fert_NetExp_MtN_R_Y <- get_data(all_data, "L142.ag_Fert_NetExp_MtN_R_Y", strip_attributes = TRUE)
+    A322.subsector_interp_cwf_adj <- get_data(all_data, "energy/A322.subsector_interp_cwf_adj", strip_attributes = TRUE)
+    A322.subsector_shrwt_cwf_adj <- get_data(all_data, "energy/A322.subsector_shrwt_cwf_adj", strip_attributes = TRUE)
 
     # ===================================================
     # 0. Give binding for variable names used in pipeline
@@ -294,6 +300,27 @@ module_energy_L2322.Fert <- function(command, ...) {
       L2322.BaseService_Fert
 
     # ===================================================
+    # CWF adjustments
+
+    # L2322.SubsectorShrwtFllt_Fert_cwf
+    L2322.SubsectorShrwtFllt_Fert_cwf <- L2322.SubsectorShrwtFllt_Fert %>%
+      # keep only default values that we don't want to overwrite with CWF ones
+      filter(! subsector %in% unique(A322.subsector_shrwt_cwf_adj$subsector)) %>%
+      # add CWF values
+      bind_rows(A322.subsector_shrwt_cwf_adj %>%
+                  write_to_all_regions(LEVEL2_DATA_NAMES[["SubsectorShrwtFllt"]],
+                                       GCAM_region_names))
+
+    # L2322.SubsectorInterp_Fert_cwf
+    L2322.SubsectorInterp_Fert_cwf <- L2322.SubsectorInterp_Fert %>%
+      # keep only default values that we don't want to overwrite with CWF ones
+      filter(! subsector %in% unique(A322.subsector_interp_cwf_adj$subsector)) %>%
+      # add CWF values
+      bind_rows(A322.subsector_interp_cwf_adj %>%
+                  write_to_all_regions(LEVEL2_DATA_NAMES[["SubsectorInterp"]],
+                                       GCAM_region_names))
+
+    # ===================================================
     # Produce outputs
 
     L2322.Supplysector_Fert %>%
@@ -440,6 +467,22 @@ module_energy_L2322.Fert <- function(command, ...) {
       add_precursors("L142.ag_Fert_NetExp_MtN_R_Y", "common/GCAM_region_names", "energy/A322.globaltech_shrwt") ->
       L2322.BaseService_Fert
 
+    L2322.SubsectorShrwtFllt_Fert_cwf %>%
+      add_title("Subsector shareweights of fertilizer") %>%
+      add_units("Unitless") %>%
+      add_comments("For fertilizer sector, the subsector shareweights from A322.subsector_shrwt are expanded into all GCAM regions, with CWF adjustments") %>%
+      add_legacy_name("L2322.SubsectorShrwtFllt_Fert") %>%
+      add_precursors("energy/A322.subsector_shrwt", "energy/A322.subsector_shrwt_cwf_adj", "common/GCAM_region_names") ->
+      L2322.SubsectorShrwtFllt_Fert_cwf
+
+    L2322.SubsectorInterp_Fert_cwf %>%
+      add_title("Subsector shareweight interpolation of fertilizer sector") %>%
+      add_units("NA") %>%
+      add_comments("For fertilizer sector, the subsector shareweight interpolation function infromation from A322.subsector_interp is expanded into all GCAM regions, with CWF adjustments") %>%
+      add_legacy_name("L2322.SubsectorInterp_Fert") %>%
+      add_precursors("energy/A322.subsector_interp", "energy/A322.subsector_interp_cwf_adj", "common/GCAM_region_names") ->
+      L2322.SubsectorInterp_Fert_cwf
+
     return_data(L2322.Supplysector_Fert, L2322.FinalEnergyKeyword_Fert, L2322.SubsectorLogit_Fert,
                 L2322.SubsectorShrwtFllt_Fert, L2322.SubsectorInterp_Fert,
                 L2322.StubTech_Fert, L2322.GlobalTechShrwt_Fert,
@@ -447,7 +490,7 @@ module_energy_L2322.Fert <- function(command, ...) {
                 L2322.GlobalTechSCurve_Fert,
                 L2322.GlobalTechProfitShutdown_Fert, L2322.StubTechProd_Fert, L2322.StubTechCoef_Fert,
                 L2322.StubTechFixOut_Fert_imp, L2322.StubTechFixOut_Fert_exp, L2322.PerCapitaBased_Fert,
-                L2322.BaseService_Fert)
+                L2322.BaseService_Fert, L2322.SubsectorShrwtFllt_Fert_cwf, L2322.SubsectorInterp_Fert_cwf)
   } else {
     stop("Unknown command")
   }

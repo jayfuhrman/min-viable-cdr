@@ -17,15 +17,18 @@ module_emissions_batch_MACC_TC_SSP_xml <- function(command, ...) {
     return(c(paste0("L252.MAC_Ag_TC_SSP", SSP_NUMS),
              paste0("L252.MAC_An_TC_SSP", SSP_NUMS),
              paste0("L252.MAC_prc_TC_SSP", SSP_NUMS),
-             paste0("L252.MAC_res_TC_SSP", SSP_NUMS)))
+             paste0("L252.MAC_res_TC_SSP", SSP_NUMS),
+             "L252.MAC_Ag_TC_SSP1_cwf",
+             "L252.MAC_An_TC_SSP1_cwf"))
   } else if(command == driver.DECLARE_OUTPUTS) {
     return(c(XML = "MACC_TC_SSP1.xml",
              XML = "MACC_TC_SSP2.xml",
-             XML = "MACC_TC_SSP5.xml"))
+             XML = "MACC_TC_SSP5.xml",
+             XML = "MACC_TC_SSP1_cwf.xml"))
   } else if(command == driver.MAKE) {
 
     # silence package checks
-    MACC_TC_SSP1.xml <- MACC_TC_SSP2.xml <- MACC_TC_SSP5.xml <- NULL
+    MACC_TC_SSP1.xml <- MACC_TC_SSP2.xml <- MACC_TC_SSP5.xml <- MACC_TC_SSP1_cwf.xml <- NULL
 
     all_data <- list(...)[[1]]
 
@@ -56,8 +59,22 @@ module_emissions_batch_MACC_TC_SSP_xml <- function(command, ...) {
       assign(xmlfn, xml_obj)
     }
 
+    # repeat for CWF versions
+    L252.MAC_Ag_TC_SSP1_cwf <- get_data(all_data, "L252.MAC_Ag_TC_SSP1_cwf")
+    L252.MAC_An_TC_SSP1_cwf <- get_data(all_data, "L252.MAC_An_TC_SSP1_cwf")
+    L252.MAC_prc_TC_SSP1 <- get_data(all_data, "L252.MAC_prc_TC_SSP1")
+    L252.MAC_res_TC_SSP1 <- get_data(all_data, "L252.MAC_res_TC_SSP1")
+
+    create_xml("MACC_TC_SSP1_cwf.xml") %>%
+      add_xml_data(L252.MAC_Ag_TC_SSP1_cwf, "AgMACTC") %>%
+      add_xml_data(L252.MAC_An_TC_SSP1_cwf, "MACTC") %>%
+      add_xml_data(L252.MAC_prc_TC_SSP1, "MACTC") %>%
+      add_xml_data(L252.MAC_res_TC_SSP1, "ResMACTC") %>%
+      add_precursors("L252.MAC_Ag_TC_SSP1_cwf", "L252.MAC_An_TC_SSP1_cwf", "L252.MAC_prc_TC_SSP1", "L252.MAC_res_TC_SSP1") ->
+      MACC_TC_SSP1_cwf.xml
+
     return_data(MACC_TC_SSP1.xml, MACC_TC_SSP2.xml,
-                MACC_TC_SSP5.xml)
+                MACC_TC_SSP5.xml, MACC_TC_SSP1_cwf.xml)
   } else {
     stop("Unknown command")
   }

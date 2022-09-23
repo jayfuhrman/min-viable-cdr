@@ -1,0 +1,8 @@
+# File: A322.subsector_shrwt_cwf_adj.csv
+# Title: Fertilizer CWF subsector shareweights
+# Units: Unitless
+# Column types: ccccn 
+# ----------
+supplysector,subsector,year.fillout,year,share.weight
+N fertilizer,coal,start-year,,0
+N fertilizer,gas,start-year,,0.5
