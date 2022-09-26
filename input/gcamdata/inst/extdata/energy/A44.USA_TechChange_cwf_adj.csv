@@ -1,0 +1,42 @@
+# File: A44.USA_TechChange_cwf_adj.csv
+# Title: Adjustment to improvement rates of technologies with CWF assumptions
+# Units: Unitless (fraction improvement)
+# Column types: ccnnnnn
+# ----------
+supplysector,technology,1971,1990,2020,2025,2100
+resid,resid shell,1,1,1,1,1
+resid heating,biomass,1,1,1,2,2
+resid heating,coal,1,1,1,2,2
+resid heating,electricity,1,1,1,2,2
+resid heating,gas,1,1,1,2,2
+resid heating,refined liquids,1,1,1,2,2
+resid heating,traditional biomass,1,1,1,2,2
+resid heating,district heat,1,1,1,1,1
+resid cooling,electricity,1,1,1,2,2
+resid cooling,gas,1,1,1,2,2
+resid others,biomass,1,1,1,2,2
+resid others,coal,1,1,1,2,2
+resid others,electricity,1,1,1,2,2
+resid others,gas,1,1,1,2,2
+resid others,refined liquids,1,1,1,2,2
+resid others,traditional biomass,1,1,1,2,2
+resid others,district heat,1,1,1,1,1
+comm,comm shell,1,1,1,1,1
+comm heating,biomass,1,1,1,2,2
+comm heating,coal,1,1,1,2,2
+comm heating,electricity,1,1,1,2,2
+comm heating,gas,1,1,1,2,2
+comm heating,refined liquids,1,1,1,2,2
+comm heating,district heat,1,1,1,1,1
+comm cooling,electricity,1,1,1,2,2
+comm cooling,gas,1,1,1,2,2
+comm others,biomass,1,1,1,2,2
+comm others,coal,1,1,1,2,2
+comm others,electricity,1,1,1,2,2
+comm others,gas,1,1,1,2,2
+comm others,refined liquids,1,1,1,2,2
+comm others,district heat,1,1,1,1,1
+resid heating,hydrogen,1,1,1,1,1
+resid others,hydrogen,1,1,1,1,1
+comm heating,hydrogen,1,1,1,1,1
+comm others,hydrogen,1,1,1,1,1
