@@ -438,6 +438,11 @@ aglu.DIGITS_MATUREAGE     <- 0
 aglu.DIGITS_RES_ENERGY    <- 4
 aglu.DIGITS_WATER_CONTENT <- 2
 
+# Biochar constants ======================================================================
+
+km2.to.ha <- 100 # From  km2 to ha
+biochar.rate <- 20 # Assumed applicaiton rate of 10 tons of biochar per acre, in line with literature
+assumed.biochar.years <- 80 # We use 80 since biochar application begins in 2020
 
 #Land leaf names used in the data system for different land types
 aglu.PASTURE_NODE_NAMES <- "Pasture"
@@ -478,6 +483,7 @@ energy.GAS_PRICE  <- 2
 energy.GAS_PIPELINE_COST_ADDER_75USDGJ  <- 0.1  # estimated cost mark-up from "regional natural gas" to "wholesale gas" (1975$/GJ)
 
 energy.CO2.STORAGE.MARKET <- "carbon-storage"
+energy.CO2.STORAGE.MARKET.biochar <- "carbon-storage-biochar"
 
 # the year for the ratio of industrial energy:feedstocks convergence in all regions
 # in the old data system this was intended to be 2150 but was actually 2100
