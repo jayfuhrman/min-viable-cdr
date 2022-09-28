@@ -1,0 +1,7 @@
+# File: UCD_trn_data_CORE_cwf_adj.csv
+# Title: Adjustment factors to apply to UCD_trn_data_CORE variables; currently implemented uniformly for all regions but could be differentiated
+# Units: Fractional adjustment factor
+# Column types: ccnnnn
+# ----------
+variable,mode,2015,2020,2050,2100
+load factor,LDV_4W,1,1,1.25,1.25

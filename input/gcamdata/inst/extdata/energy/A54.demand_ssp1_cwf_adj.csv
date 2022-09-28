@@ -1,0 +1,10 @@
+# File: A54.demand_ssp1_cwf_adj.csv
+# Title: CWF adjustments to transportation final demand income elasticity
+# Units: Unitless fractional adjustment factors
+# Column types: cn
+# ----------
+energy.final.demand,income.elasticity_adj
+trn_pass,1
+trn_freight,1
+trn_aviation_intl,0.75
+trn_shipping_intl,0.75

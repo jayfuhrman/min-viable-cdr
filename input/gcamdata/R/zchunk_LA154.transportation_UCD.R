@@ -39,7 +39,8 @@ module_energy_LA154.transportation_UCD <- function(command, ...) {
              "L101.in_EJ_ctry_trn_Fi_Yh",
              "L1011.in_EJ_ctry_intlship_TOT_Yh",
              "L131.in_EJ_R_Senduse_F_Yh",
-             "L100.Pop_thous_ctry_Yh"))
+             "L100.Pop_thous_ctry_Yh",
+             FILE =  "energy/UCD_trn_data_CORE_cwf_adj"))
   } else if(command == driver.DECLARE_OUTPUTS) {
     return(c("L154.in_EJ_R_trn_m_sz_tech_F_Yh",
              "L154.in_EJ_ctry_trn_m_sz_tech_F",
@@ -87,6 +88,26 @@ module_energy_LA154.transportation_UCD <- function(command, ...) {
 
     #kbn 2019-10-07: Read new size class assignments
     Size_class_New<- get_data(all_data, "energy/mappings/UCD_size_class_revisions")
+
+    UCD_trn_data_CORE_cwf_adj <- get_data(all_data, "energy/UCD_trn_data_CORE_cwf_adj")
+
+    # ===================================================
+    # add CWF adjustments as a separate scenario
+    UCD_trn_data_CORE_cwf_adj_expanded <- UCD_trn_data_CORE_cwf_adj %>%
+      gather_years(value_col = "adj") %>%
+      complete(nesting(variable, mode), year = c(year, MODEL_BASE_YEARS, MODEL_FUTURE_YEARS)) %>%
+      group_by(variable) %>%
+      mutate(adj = approx_fun(year, adj, rule = 2))
+
+    UCD_trn_data_CWF <- UCD_trn_data_CORE %>%
+      left_join(UCD_trn_data_CORE_cwf_adj_expanded) %>%
+      mutate(value = ifelse(!is.na(adj), value * adj, value),
+             sce = "CWF") %>%
+      dplyr::select(-adj)
+
+    # add to UCD data
+    UCD_trn_data <- bind_rows(UCD_trn_data, UCD_trn_data_CWF)
+
     # ===================================================
     # Prepare EMF37 data for merging: first, repeat by the full set of scenarios
     OTAQ_trn_data_EMF37 %>%
