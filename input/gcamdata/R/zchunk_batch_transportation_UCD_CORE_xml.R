@@ -186,7 +186,7 @@ module_energy_batch_transportation_UCD_CORE_xml <- function(command, ...) {
         L254.StubTranTech_SSP <- L254.StubTranTech %>% filter(sce== "CORE")
         L254.tranSubsectorSpeed_passthru_SSP <- L254.tranSubsectorSpeed_passthru %>% filter(sce=="CORE")
 
-        L254.tranSubsectorVOTT_SSP<- L254.tranSubsectorVOTT_cwf # CWF version
+        L254.tranSubsectorVOTT_SSP<- L254.tranSubsectorVOTT_cwf # CWF version (for all high/med/low)
         L254.tranSubsectorFuelPref_SSP <- L254.tranSubsectorFuelPref %>% filter(sce=="SSP1") # SSP1
         L254.PerCapitaBased_trn_SSP<- L254.PerCapitaBased_trn %>% filter(sce=="SSP1") # SSP1
         L254.PriceElasticity_trn_SSP <- L254.PriceElasticity_trn %>%  filter(sce=="SSP1") # SSP1
