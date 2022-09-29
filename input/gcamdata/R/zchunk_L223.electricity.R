@@ -1651,7 +1651,7 @@ module_energy_L223.electricity <- function(command, ...) {
       add_comments("Global interpolation rules subset to those using a to.year, applied regionally, ") %>%
       add_comments("and then replaced by regional interpolation rules where found in A23.subsector.interp_R, with CWF adjustments") %>%
       add_legacy_name("L223.SubsectorInterp_elec") %>%
-      add_precursors("energy/A23.subsector_interp_cwf", "energy/A23.subsector_interp_R") ->
+      add_precursors("energy/A23.subsector_interp", "energy/A23.subsector_interp_cwf_adj", "energy/A23.subsector_interp_R") ->
       L223.SubsectorInterp_elec_cwf
 
     L223.SubsectorInterpTo_elec_cwf %>%
