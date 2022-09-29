@@ -122,7 +122,7 @@ module_energy_batch_transportation_UCD_CORE_xml <- function(command, ...) {
     curr_env <- environment()
 
     #for (i in c("CORE","SSP1","SSP3","SSP5", "highEV")){
-    for (i in c("CORE","SSP1","SSP3","SSP5", "CWF")){
+    for (i in c("CORE","SSP1","SSP3","SSP5", "CWF", "CWF_low", "CWF_high")){
       xml_name <- paste0("transportation_UCD_", i, ".xml")
       #Read SSP specific data
       L254.tranSubsectorSpeed_SSP <- L254.tranSubsectorSpeed %>% filter(sce== i)
@@ -179,8 +179,8 @@ module_energy_batch_transportation_UCD_CORE_xml <- function(command, ...) {
 
       L254.BaseService_trn_SSP <- L254.BaseService_trn %>% filter(sce =="CORE")
 
-      # for CWF scenario, pull in CORE (or SSP1) values for some of these variables and also pull in base year data as needed
-      if (i == "CWF") {
+      # for CWF scenarios, pull in CORE (or SSP1) values for some of these variables and also pull in base year data as needed
+      if (grepl("CWF", i)) {
 
         L254.tranSubsectorSpeed_SSP <- L254.tranSubsectorSpeed %>% filter(sce== "CORE")
         L254.StubTranTech_SSP <- L254.StubTranTech %>% filter(sce== "CORE")
@@ -190,7 +190,7 @@ module_energy_batch_transportation_UCD_CORE_xml <- function(command, ...) {
         L254.tranSubsectorFuelPref_SSP <- L254.tranSubsectorFuelPref %>% filter(sce=="SSP1") # SSP1
         L254.PerCapitaBased_trn_SSP<- L254.PerCapitaBased_trn %>% filter(sce=="SSP1") # SSP1
         L254.PriceElasticity_trn_SSP <- L254.PriceElasticity_trn %>%  filter(sce=="SSP1") # SSP1
-        L254.IncomeElasticity_trn_SSP <- L254.IncomeElasticity_trn %>% filter(sce==i) # CWF version
+        L254.IncomeElasticity_trn_SSP <- L254.IncomeElasticity_trn %>% filter(sce== "CWF") # CWF version (for all high/med/low)
 
         L254.StubTech_passthru_SSP <- L254.StubTech_passthru %>% filter(sce=="CORE")
         L254.StubTech_nonmotor_SSP <- L254.StubTech_nonmotor %>% filter(sce=="CORE")
@@ -201,11 +201,12 @@ module_energy_batch_transportation_UCD_CORE_xml <- function(command, ...) {
         L254.tranSubsectorInterp_SSP <- L254.tranSubsectorInterp %>%  filter(sce =="CORE")
         L254.StubTranTechCalInput_SSP <-  L254.StubTranTechCalInput %>% filter(sce =="CORE")
 
-        # CWF versions for share weights
+        # CWF versions for share weights for the respective scenarios
         L254.GlobalTranTechInterp_SSP <- L254.GlobalTranTechInterp_cwf %>% filter(sce==i)
         L254.GlobalTranTechShrwt_SSP <- L254.GlobalTranTechShrwt_cwf %>%  filter(sce==i)
 
         # CWF versions that need base years added
+        L254.StubTranTechLoadFactor_SSP <- L254.StubTranTechLoadFactor %>%  filter(sce== "CWF") %>% filter(year>MODEL_FINAL_BASE_YEAR)
         L254.StubTranTechLoadFactor_SSP <- rbind(L254.StubTranTechLoadFactor_SSP,
                                                  L254.StubTranTechLoadFactor %>%
                                                    filter(sce == "CORE") %>%
@@ -214,6 +215,7 @@ module_energy_batch_transportation_UCD_CORE_xml <- function(command, ...) {
                                                    filter(is.na(loadFactor.y)) %>%
                                                    dplyr::select(-loadFactor.y) %>%
                                                    rename(loadFactor = loadFactor.x))
+        L254.StubTranTechCost_SSP <- L254.StubTranTechCost %>%  filter(sce== "CWF") %>% filter(year>MODEL_FINAL_BASE_YEAR)
         L254.StubTranTechCost_SSP <- rbind(L254.StubTranTechCost_SSP,
                                            L254.StubTranTechCost %>%
                                              filter(sce == "CORE") %>%
@@ -222,6 +224,7 @@ module_energy_batch_transportation_UCD_CORE_xml <- function(command, ...) {
                                              filter(is.na(input.cost.y)) %>%
                                              dplyr::select(-input.cost.y) %>%
                                              rename(input.cost = input.cost.x))
+        L254.StubTranTechCoef_SSP <- L254.StubTranTechCoef %>%  filter(sce== "CWF") %>% filter(year>MODEL_FINAL_BASE_YEAR)
         L254.StubTranTechCoef_SSP <- rbind(L254.StubTranTechCoef_SSP,
                                            L254.StubTranTechCoef %>%
                                              filter(sce == "CORE") %>%
@@ -305,150 +308,6 @@ module_energy_batch_transportation_UCD_CORE_xml <- function(command, ...) {
       ret_data <- c(ret_data, xml_name)
 
     }
-
-    # make the CWF low and high xmls - use all the default CWF XML data (which are the ones currently stored in all the _SSP variables)
-    # except for share weights and interpolation rules
-    L254.GlobalTranTechInterp_cwf_high <- L254.GlobalTranTechInterp_cwf %>% filter(sce=="CWF_high")
-    L254.GlobalTranTechShrwt_cwf_high <- L254.GlobalTranTechShrwt_cwf %>%  filter(sce=="CWF_high")
-
-    create_xml("transportation_UCD_CWF_high.xml") %>%
-      add_logit_tables_xml(L254.Supplysector_trn_SSP, "Supplysector") %>%
-      add_xml_data(L254.FinalEnergyKeyword_trn_SSP, "FinalEnergyKeyword") %>%
-      add_logit_tables_xml(L254.tranSubsectorLogit_SSP, "tranSubsectorLogit", "tranSubsector") %>%
-      add_xml_data(L254.tranSubsectorShrwtFllt_SSP, "tranSubsectorShrwtFllt") %>%
-      add_xml_data(L254.tranSubsectorInterp_SSP, "tranSubsectorInterp") %>%
-      add_xml_data(L254.tranSubsectorSpeed_SSP, "tranSubsectorSpeed") %>%
-      add_xml_data(L254.tranSubsectorSpeed_passthru_SSP, "tranSubsectorSpeed") %>%
-      add_xml_data(L254.tranSubsectorSpeed_noVOTT, "tranSubsectorSpeed") %>%
-      add_xml_data(L254.tranSubsectorSpeed_nonmotor, "tranSubsectorSpeed") %>%
-      add_xml_data(L254.tranSubsectorVOTT_SSP, "tranSubsectorVOTT") %>%
-      add_xml_data(L254.tranSubsectorFuelPref_SSP, "tranSubsectorFuelPref") %>%
-      add_xml_data(L254.StubTranTech_SSP, "StubTranTech") %>%
-      add_xml_data(L254.StubTech_passthru_SSP, "StubTranTech") %>%
-      add_xml_data(L254.StubTech_nonmotor_SSP, "StubTranTech") %>%
-      add_xml_data(L254.GlobalTechShrwt_passthru, "GlobalTechShrwt") %>%
-      add_xml_data(L254.GlobalTechShrwt_nonmotor, "GlobalTechShrwt") %>%
-      add_xml_data(L254.GlobalTechCoef_passthru, "GlobalTechCoef") %>%
-      add_xml_data(L254.GlobalRenewTech_nonmotor, "GlobalRenewTech") %>%
-      add_xml_data(L254.GlobalTranTechInterp_cwf_high, "GlobalTranTechInterp") %>% # high
-      add_xml_data(L254.GlobalTranTechShrwt_cwf_high, "GlobalTranTechShrwt") %>% # high
-      add_xml_data(L254.GlobalTranTechSCurve, "GlobalTranTechSCurve") %>%
-      add_xml_data(L254.GlobalTranTechProfitShutdown, "GlobalTranTechProfitShutdown") %>%
-      add_xml_data(L254.StubTranTechCalInput_SSP, "StubTranTechCalInput") %>%
-      add_xml_data(L254.StubTranTechLoadFactor_SSP, "StubTranTechLoadFactor") %>%
-      add_xml_data(L254.StubTranTechCost_SSP, "StubTranTechCost") %>%
-      add_xml_data(L254.StubTranTechCoef_SSP, "StubTranTechCoef") %>%
-      add_xml_data(L254.StubTechCalInput_passthru, "StubTranTechCalInput") %>%
-      add_xml_data(L254.StubTechProd_nonmotor, "StubTranTechProd") %>%
-      add_xml_data(L254.PerCapitaBased_trn_SSP, "PerCapitaBased") %>%
-      add_xml_data(L254.PriceElasticity_trn_SSP, "PriceElasticity") %>%
-      add_xml_data(L254.IncomeElasticity_trn_SSP, "IncomeElasticity") %>%
-      add_xml_data(L254.BaseService_trn_SSP, "BaseService") %>%
-      add_precursors("L254.Supplysector_trn",
-                     "L254.FinalEnergyKeyword_trn",
-                     "L254.tranSubsectorLogit",
-                     "L254.tranSubsectorShrwtFllt",
-                     "L254.tranSubsectorInterp",
-                     "L254.tranSubsectorSpeed",
-                     "L254.tranSubsectorSpeed_passthru",
-                     "L254.tranSubsectorSpeed_noVOTT",
-                     "L254.tranSubsectorSpeed_nonmotor",
-                     "L254.tranSubsectorVOTT",
-                     "L254.tranSubsectorFuelPref",
-                     "L254.StubTranTech",
-                     "L254.StubTech_passthru",
-                     "L254.StubTech_nonmotor",
-                     "L254.GlobalTechShrwt_passthru",
-                     "L254.GlobalTechShrwt_nonmotor",
-                     "L254.GlobalTechCoef_passthru",
-                     "L254.GlobalRenewTech_nonmotor",
-                     "L254.GlobalTranTechInterp",
-                     "L254.GlobalTranTechShrwt",
-                     "L254.GlobalTranTechSCurve",
-                     "L254.GlobalTranTechProfitShutdown",
-                     "L254.StubTranTechCalInput",
-                     "L254.StubTranTechLoadFactor",
-                     "L254.StubTranTechCost",
-                     "L254.StubTranTechCoef",
-                     "L254.StubTechCalInput_passthru",
-                     "L254.StubTechProd_nonmotor",
-                     "L254.PerCapitaBased_trn",
-                     "L254.PriceElasticity_trn",
-                     "L254.IncomeElasticity_trn",
-                     "L254.BaseService_trn") ->
-      transportation_UCD_CWF_high.xml
-
-    L254.GlobalTranTechInterp_cwf_low <- L254.GlobalTranTechInterp_cwf %>% filter(sce=="CWF_low")
-    L254.GlobalTranTechShrwt_cwf_low <- L254.GlobalTranTechShrwt_cwf %>%  filter(sce=="CWF_low")
-
-    create_xml("transportation_UCD_CWF_low.xml") %>%
-      add_logit_tables_xml(L254.Supplysector_trn_SSP, "Supplysector") %>%
-      add_xml_data(L254.FinalEnergyKeyword_trn_SSP, "FinalEnergyKeyword") %>%
-      add_logit_tables_xml(L254.tranSubsectorLogit_SSP, "tranSubsectorLogit", "tranSubsector") %>%
-      add_xml_data(L254.tranSubsectorShrwtFllt_SSP, "tranSubsectorShrwtFllt") %>%
-      add_xml_data(L254.tranSubsectorInterp_SSP, "tranSubsectorInterp") %>%
-      add_xml_data(L254.tranSubsectorSpeed_SSP, "tranSubsectorSpeed") %>%
-      add_xml_data(L254.tranSubsectorSpeed_passthru_SSP, "tranSubsectorSpeed") %>%
-      add_xml_data(L254.tranSubsectorSpeed_noVOTT, "tranSubsectorSpeed") %>%
-      add_xml_data(L254.tranSubsectorSpeed_nonmotor, "tranSubsectorSpeed") %>%
-      add_xml_data(L254.tranSubsectorVOTT_SSP, "tranSubsectorVOTT") %>%
-      add_xml_data(L254.tranSubsectorFuelPref_SSP, "tranSubsectorFuelPref") %>%
-      add_xml_data(L254.StubTranTech_SSP, "StubTranTech") %>%
-      add_xml_data(L254.StubTech_passthru_SSP, "StubTranTech") %>%
-      add_xml_data(L254.StubTech_nonmotor_SSP, "StubTranTech") %>%
-      add_xml_data(L254.GlobalTechShrwt_passthru, "GlobalTechShrwt") %>%
-      add_xml_data(L254.GlobalTechShrwt_nonmotor, "GlobalTechShrwt") %>%
-      add_xml_data(L254.GlobalTechCoef_passthru, "GlobalTechCoef") %>%
-      add_xml_data(L254.GlobalRenewTech_nonmotor, "GlobalRenewTech") %>%
-      add_xml_data(L254.GlobalTranTechInterp_cwf_low, "GlobalTranTechInterp") %>% # low
-      add_xml_data(L254.GlobalTranTechShrwt_cwf_low, "GlobalTranTechShrwt") %>% # low
-      add_xml_data(L254.GlobalTranTechSCurve, "GlobalTranTechSCurve") %>%
-      add_xml_data(L254.GlobalTranTechProfitShutdown, "GlobalTranTechProfitShutdown") %>%
-      add_xml_data(L254.StubTranTechCalInput_SSP, "StubTranTechCalInput") %>%
-      add_xml_data(L254.StubTranTechLoadFactor_SSP, "StubTranTechLoadFactor") %>%
-      add_xml_data(L254.StubTranTechCost_SSP, "StubTranTechCost") %>%
-      add_xml_data(L254.StubTranTechCoef_SSP, "StubTranTechCoef") %>%
-      add_xml_data(L254.StubTechCalInput_passthru, "StubTranTechCalInput") %>%
-      add_xml_data(L254.StubTechProd_nonmotor, "StubTranTechProd") %>%
-      add_xml_data(L254.PerCapitaBased_trn_SSP, "PerCapitaBased") %>%
-      add_xml_data(L254.PriceElasticity_trn_SSP, "PriceElasticity") %>%
-      add_xml_data(L254.IncomeElasticity_trn_SSP, "IncomeElasticity") %>%
-      add_xml_data(L254.BaseService_trn_SSP, "BaseService") %>%
-      add_precursors("L254.Supplysector_trn",
-                     "L254.FinalEnergyKeyword_trn",
-                     "L254.tranSubsectorLogit",
-                     "L254.tranSubsectorShrwtFllt",
-                     "L254.tranSubsectorInterp",
-                     "L254.tranSubsectorSpeed",
-                     "L254.tranSubsectorSpeed_passthru",
-                     "L254.tranSubsectorSpeed_noVOTT",
-                     "L254.tranSubsectorSpeed_nonmotor",
-                     "L254.tranSubsectorVOTT",
-                     "L254.tranSubsectorFuelPref",
-                     "L254.StubTranTech",
-                     "L254.StubTech_passthru",
-                     "L254.StubTech_nonmotor",
-                     "L254.GlobalTechShrwt_passthru",
-                     "L254.GlobalTechShrwt_nonmotor",
-                     "L254.GlobalTechCoef_passthru",
-                     "L254.GlobalRenewTech_nonmotor",
-                     "L254.GlobalTranTechInterp",
-                     "L254.GlobalTranTechShrwt",
-                     "L254.GlobalTranTechSCurve",
-                     "L254.GlobalTranTechProfitShutdown",
-                     "L254.StubTranTechCalInput",
-                     "L254.StubTranTechLoadFactor",
-                     "L254.StubTranTechCost",
-                     "L254.StubTranTechCoef",
-                     "L254.StubTechCalInput_passthru",
-                     "L254.StubTechProd_nonmotor",
-                     "L254.PerCapitaBased_trn",
-                     "L254.PriceElasticity_trn",
-                     "L254.IncomeElasticity_trn",
-                     "L254.BaseService_trn") ->
-      transportation_UCD_CWF_low.xml
-
-    ret_data <- c(ret_data, "transportation_UCD_CWF_high.xml", "transportation_UCD_CWF_low.xml")
 
     #Return all xmls
     ret_data %>%
