@@ -1642,7 +1642,7 @@ module_energy_L223.electricity <- function(command, ...) {
       add_units("unitless") %>%
       add_comments("CWF assumptions") %>%
       add_legacy_name("L223.SubsectorShrwt_renew") %>%
-      add_precursors("energy/A23.subsector_shrwt_renew_R_cwf") ->
+      add_precursors("energy/A23.subsector_shrwt_renew_R_cwf_adj", "energy/A23.subsector_shrwt_renew_R") ->
       L223.SubsectorShrwt_renew_cwf
 
     L223.SubsectorInterp_elec_cwf %>%
