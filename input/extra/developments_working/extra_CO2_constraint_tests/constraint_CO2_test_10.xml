@@ -5,22 +5,22 @@
          <ghgpolicy name="CO2_TOTAL">
             <market>global</market>
           
-            <constraint year="2025">8543.566</constraint>
-                <constraint year="2030">6832.853</constraint>
-                <constraint year="2035">5122.139</constraint>
-                <constraint year="2040">3411.426</constraint>
-                <constraint year="2045">1700.713</constraint>
-                <constraint year="2050">-10</constraint>
-                <constraint year="2055">-360</constraint>
-                <constraint year="2060">-560</constraint>
-                <constraint year="2065">-700</constraint>
-                <constraint year="2070">-810</constraint>
-                <constraint year="2075">-900</constraint>
-                <constraint year="2080">-985</constraint>
-                <constraint year="2085">-1065</constraint>
-                <constraint year="2090">-1140</constraint>
-                <constraint year="2095">-1210</constraint>
-                <constraint year="2100">-1275</constraint>
+            <constraint year="2025">8153</constraint>
+            <constraint year="2030">5776</constraint>
+            <constraint year="2035">3600</constraint>
+            <constraint year="2040">2100</constraint>
+            <constraint year="2045">1100</constraint>
+			<constraint year="2050">500</constraint>
+            <constraint year="2055">-200</constraint>
+            <constraint year="2060">-800</constraint>
+            <constraint year="2065">-1200</constraint>
+            <constraint year="2070">-1400</constraint>
+        	<constraint year="2075">-1600</constraint>
+			<constraint year="2080">-1700</constraint>
+			<constraint year="2085">-1800</constraint>
+			<constraint year="2090">-1900</constraint>
+			<constraint year="2095">-2000</constraint>
+			<constraint year="2100">-2100</constraint>
          </ghgpolicy>
       </region>
         <region name="Canada">
