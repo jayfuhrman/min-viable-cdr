@@ -9,9 +9,6 @@ CO2 removal,dac,hightemp DAC NG,elect_td_ind,0.006526667,0.006526667,0.004766667
 CO2 removal,dac,hightemp DAC NG,airCO2,1,1,1,1
 CO2 removal,dac,hightemp DAC NG,water_td_ind_C,0.017233333,0.017233333,0.017233333,0.017233333
 CO2 removal,dac,hightemp DAC NG,water_td_ind_W,0.017233333,0.017233333,0.017233333,0.017233333
-CO2 removal,dac,no DAC,process heat dac,0,0,0,0
-CO2 removal,dac,no DAC,elect_td_ind,0,0,0,0
-CO2 removal,dac,no DAC,airCO2,0,0,0,0
 process heat dac,gas CCS,gas CCS,wholesale gas,1,1,1,1
 CO2 removal,dac,hightemp DAC elec,elect_td_ind,0.0220044,0.0220044,0.0186384,0.0186384
 CO2 removal,dac,hightemp DAC elec,airCO2,1,1,1,1
