@@ -1,0 +1,12 @@
+# File: kigali_phasedown_schedules.csv
+# Title: Kigali HFC Phasedown Schedule
+# Units: Unitless
+# Description: Values are based on the phasedown schedules for each Kigali Amendment Group, and used to scale emissions coefficients
+# Source: Assumption
+# Column types: ccnnnnnnnnnnnnnnnnnnnnnnn
+# ----------
+Kigali_Amendment_Party,baseline_years,GCAM_year,1975,1990,2005,2010,2015,2020,2025,2030,2035,2040,2045,2050,2055,2060,2065,2070,2075,2080,2085,2090,2095,2100
+Article 5 Group 1,2020-2022,2020,1,1,1,1,1,1,1,0.9,0.7,0.5,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2
+Article 5 Group 2,2024-2026,2025,1,1,1,1,1,1,1,1,0.9,0.8,0.7,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15
+Non-Article 5 Main,2011-2013,2010,1,1,1,1,1,0.9,0.6,0.3,0.2,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15
+Non-Article 5 Other,2011-2013,2010,1,1,1,1,1,0.95,0.65,0.3,0.2,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15,0.15

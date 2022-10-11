@@ -1,0 +1,39 @@
+# File: GCAM_region_names_Montreal_Protocol.csv
+# Title: Mapping of GCAM Regions onto Montreal Protocol Party
+# Units: NA
+# Description: Maps GCAM region IDs to region names
+# Column types: icc
+# ----------
+GCAM_region_ID,region,Kigali_Amendment_Party
+1,USA,Non-Article 5 Main
+2,Africa_Eastern,Article 5 Group 1
+3,Africa_Northern,Article 5 Group 1
+4,Africa_Southern,Article 5 Group 1
+5,Africa_Western,Article 5 Group 1
+6,Australia_NZ,Non-Article 5 Main
+7,Brazil,Article 5 Group 1
+8,Canada,Non-Article 5 Main
+9,Central America and Caribbean,Article 5 Group 1
+10,Central Asia,Non-Article 5 Other
+11,China,Article 5 Group 1
+12,EU-12,Non-Article 5 Main
+13,EU-15,Non-Article 5 Main
+14,Europe_Eastern,Non-Article 5 Main
+15,Europe_Non_EU,Non-Article 5 Main
+16,European Free Trade Association,Non-Article 5 Main
+17,India,Article 5 Group 2
+18,Indonesia,Article 5 Group 1
+19,Japan,Non-Article 5 Main
+20,Mexico,Article 5 Group 1 
+21,Middle East,Article 5 Group 2
+22,Pakistan,Article 5 Group 1 
+23,Russia,Non-Article 5 Other
+24,South Africa,Article 5 Group 1 
+25,South America_Northern,Article 5 Group 1 
+26,South America_Southern,Article 5 Group 1 
+27,South Asia,Article 5 Group 1 
+28,South Korea,Non-Article 5 Main
+29,Southeast Asia,Article 5 Group 1
+30,Taiwan,Non-Article 5 Main
+31,Argentina,Article 5 Group 1
+32,Colombia,Article 5 Group 1

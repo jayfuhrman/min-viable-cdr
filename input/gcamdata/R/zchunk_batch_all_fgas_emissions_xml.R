@@ -19,9 +19,11 @@ module_emissions_batch_all_fgas_emissions_xml <- function(command, ...) {
              "L241.fgas_all_units",
              "L252.MAC_higwp",
              "L252.MAC_higwp_phaseInTime",
-             "L252.MAC_higwp_tc_average"))
+             "L252.MAC_higwp_tc_average",
+             "L241.hfc_future_kigali"))
   } else if(command == driver.DECLARE_OUTPUTS) {
     return(c(XML = "all_fgas_emissions.xml",
+             XML = "all_fgas_emissions_kigali.xml",
              XML = "all_fgas_emissions_MAC.xml"))
   } else if(command == driver.MAKE) {
 
@@ -33,6 +35,7 @@ module_emissions_batch_all_fgas_emissions_xml <- function(command, ...) {
     L241.hfc_all <- get_data(all_data, "L241.hfc_all")
     L241.pfc_all <- get_data(all_data, "L241.pfc_all")
     L241.hfc_future <- get_data(all_data, "L241.hfc_future")
+    L241.hfc_future_kigali <- get_data(all_data, "L241.hfc_future_kigali")
     L241.fgas_all_units <- get_data(all_data, "L241.fgas_all_units")
     L252.MAC_higwp <- get_data(all_data, "L252.MAC_higwp")
     L252.MAC_higwp_phaseInTime <- get_data(all_data, "L252.MAC_higwp_phaseInTime")
@@ -50,6 +53,15 @@ module_emissions_batch_all_fgas_emissions_xml <- function(command, ...) {
                      "L241.hfc_future", "L241.fgas_all_units") ->
       all_fgas_emissions.xml
 
+    create_xml("all_fgas_emissions_kigali.xml") %>%
+      add_xml_data(L241.hfc_all, "StbTechOutputEmissions") %>%
+      add_xml_data(L241.pfc_all, "StbTechOutputEmissions") %>%
+      add_xml_data(L241.hfc_future_kigali, "OutputEmissCoeff") %>%
+      add_xml_data(L241.fgas_all_units, "StubTechEmissUnits") %>%
+      add_precursors("L241.hfc_all", "L241.pfc_all",
+                     "L241.hfc_future_kigali", "L241.fgas_all_units") ->
+      all_fgas_emissions_kigali.xml
+
     create_xml("all_fgas_emissions_MAC.xml") %>%
       add_xml_data(L252.MAC_higwp, "MAC") %>%
       add_xml_data(L252.MAC_higwp_tc_average, "MACTC") %>%
@@ -58,6 +70,7 @@ module_emissions_batch_all_fgas_emissions_xml <- function(command, ...) {
       all_fgas_emissions_MAC.xml
 
     return_data(all_fgas_emissions.xml,
+                all_fgas_emissions_kigali.xml,
                 all_fgas_emissions_MAC.xml)
   } else {
     stop("Unknown command")
