@@ -13,8 +13,8 @@
 #' \code{L2325.SubsectorInterp_chemical}, \code{L2325.StubTech_chemical}, \code{L2325.GlobalTechShrwt_chemical}, \code{L2325.GlobalTechCoef_chemical},
 #' \code{L2325.GlobalTechCost_chemical}, \code{L2325.GlobalTechCapture_chemical}, \code{L2325.StubTechProd_chemical}, \code{L2325.StubTechCalInput_chemical},
 #' \code{L2325.StubTechCoef_chemical}, \code{L2325.PerCapitaBased_chemical}, \code{L2325.BaseService_chemical}, \code{L2325.PriceElasticity_chemical},
-#' \code{L2325.GlobalTechCapture_chemical}, \code{L2325.GlobalTechEff_chemical},\code{L2325.GlobalTechCSeq_ind}, \code{L2325.GlobalTechCoef_chemical_cwf},
-#' \code{L2325.StubTechCoef_chemical_cwf}, \code{L2325.GlobalTechEff_chemical_cwf}, \code{object}. The corresponding file in the
+#' \code{L2325.GlobalTechCapture_chemical}, \code{L2325.GlobalTechEff_chemical},\code{L2325.GlobalTechCSeq_ind},
+#' \code{L2325.GlobalTechEff_chemical_cwf}, \code{object}. The corresponding file in the
 #' @details The chunk provides final energy keyword, supplysector/subsector information, supplysector/subsector interpolation information, global technology share weight, global technology efficiency, global technology coefficients, global technology cost, price elasticity, stub technology information, stub technology interpolation information, stub technology calibrated inputs, and etc for chemical sector.
 #' @importFrom assertthat assert_that
 #' @importFrom dplyr arrange bind_rows distinct filter if_else group_by lag left_join mutate pull select
@@ -44,7 +44,6 @@ module_energy_L2325.chemical <- function(command, ...) {
              FILE = "energy/A325.globaltech_shrwt",
              FILE = "energy/A325.demand",
              "L1325.in_EJ_R_chemical_F_Y",
-             FILE = "energy/A325.globaltech_coef_cwf_adj",
              FILE = "energy/A325.globaltech_eff_cwf_adj"))
   } else if(command == driver.DECLARE_OUTPUTS) {
     return(c("L2325.Supplysector_chemical",
@@ -70,9 +69,7 @@ module_energy_L2325.chemical <- function(command, ...) {
              "L2325.BaseService_chemical",
 			 "L2325.PriceElasticity_chemical",
 			 "L2325.GlobalTechSecOut_chemical",
-			 "L2325.GlobalTechCoef_chemical_cwf",
-			 "L2325.GlobalTechEff_chemical_cwf",
-			 "L2325.StubTechCoef_chemical_cwf"))
+			 "L2325.GlobalTechEff_chemical_cwf"))
   } else if(command == driver.MAKE) {
 
     all_data <- list(...)[[1]]
@@ -95,7 +92,6 @@ module_energy_L2325.chemical <- function(command, ...) {
     A325.demand <- get_data(all_data, "energy/A325.demand", strip_attributes = TRUE)
     A23.chp_elecratio  <- get_data(all_data, "energy/A23.chp_elecratio", strip_attributes = TRUE)
     L1325.in_EJ_R_chemical_F_Y <- get_data(all_data, "L1325.in_EJ_R_chemical_F_Y")
-    A325.globaltech_coef_cwf_adj <- get_data(all_data, "energy/A325.globaltech_coef_cwf_adj", strip_attributes = TRUE)
     A325.globaltech_eff_cwf_adj <- get_data(all_data, "energy/A325.globaltech_eff_cwf_adj", strip_attributes = TRUE)
     # ===================================================
     # 0. Give binding for variable names used in pipeline
@@ -507,36 +503,6 @@ module_energy_L2325.chemical <- function(command, ...) {
       select(LEVEL2_DATA_NAMES[["GlobalTechEff"]]) ->
       L2325.GlobalTechEff_chemical_cwf
 
-    # GLOBAL TECH COEFFICIENT: L2325.GlobalTechCoef_chemical_cwf
-    # get coefficient adjustments and apply to the original coefficients
-    L2325.GlobalTechCoef_chemical %>%
-      left_join(A325.globaltech_coef_cwf_adj %>%
-                  rename(sector.name = supplysector,
-                         subsector.name = subsector)) %>%
-      mutate(coefficient = round(coefficient * terminal_coef_adj, energy.DIGITS_COEFFICIENT)) %>%
-      select(LEVEL2_DATA_NAMES[["GlobalTechCoef"]]) ->
-      L2325.GlobalTechCoef_chemical_cwf
-
-    # STUB TECH COEFFICIENT: L2325.StubTechCoef_chemical_cwf
-    # note that this also must be updated because these values converge to the global tech coef, so we want
-    # them to converge to the corresponding CWF global tech coef
-    L2325.StubTechCoef_chemical_base %>%
-      complete(nesting(region, supplysector, subsector, stub.technology, minicam.energy.input, market.name),
-               year = unique(c(MODEL_YEARS, energy.INDCOEF_CONVERGENCE_YR))) %>%
-      left_join(select(A325.globaltech_coef, supplysector, subsector, technology, minicam.energy.input, terminal_coef),
-                by = c("supplysector", "subsector", stub.technology = "technology", "minicam.energy.input")) %>%
-      # join the CWF adjustment
-      left_join(select(A325.globaltech_coef_cwf_adj, supplysector, subsector, technology, minicam.energy.input, terminal_coef_adj),
-                by = c("supplysector", "subsector", stub.technology = "technology", "minicam.energy.input")) %>%
-      mutate(terminal_coef = terminal_coef * terminal_coef_adj,
-             coefficient = if_else(year == energy.INDCOEF_CONVERGENCE_YR, terminal_coef, coefficient)) %>%
-      select(-c(terminal_coef, terminal_coef_adj)) %>%
-      group_by(region, supplysector, subsector, stub.technology, minicam.energy.input) %>%
-      mutate(coefficient = round(approx_fun(year, coefficient, rule = 2), energy.DIGITS_COEFFICIENT)) %>%
-      ungroup() %>%
-      filter(year %in% MODEL_YEARS) ->   # drop the terminal coef year if it's outside of the model years
-      L2325.StubTechCoef_chemical_cwf
-
 
     # ===================================================
     # Produce outputs
@@ -750,22 +716,6 @@ module_energy_L2325.chemical <- function(command, ...) {
       add_precursors("energy/A23.chp_elecratio", "energy/A325.globaltech_eff") ->
       L2325.GlobalTechSecOut_chemical
 
-    L2325.GlobalTechCoef_chemical_cwf %>%
-      add_title("Energy inputs and coefficients of chemical technologies") %>%
-      add_units("Unitless") %>%
-      add_comments("For chemical sector, the energy use coefficients from A325.globaltech_coef are interpolated into all model years, with CWF adjustments") %>%
-      add_legacy_name("L2325.GlobalTechCoef_chemical") %>%
-      add_precursors("energy/A325.globaltech_coef", "energy/A325.globaltech_coef_cwf_adj") ->
-      L2325.GlobalTechCoef_chemical_cwf
-
-    L2325.StubTechCoef_chemical_cwf %>%
-      add_title("region-specific coefficients of chemical production technologies") %>%
-      add_units("unitless") %>%
-      add_comments("Coefficients from literature") %>%
-      add_legacy_name("L2325.StubTechCoef_chemical") %>%
-      add_precursors("energy/calibrated_techs", "common/GCAM_region_names","energy/A325.globaltech_coef", "energy/A325.globaltech_coef_cwf_adj") ->
-      L2325.StubTechCoef_chemical_cwf
-
     L2325.GlobalTechEff_chemical_cwf %>%
       add_title("Energy inputs and efficiency of global chemical energy use and feedstocks technologies") %>%
       add_units("Unitless") %>%
@@ -782,7 +732,7 @@ module_energy_L2325.chemical <- function(command, ...) {
                   L2325.StubTechCalInput_chemical,L2325.StubTechCoef_chemical,L2325.StubTechProd_chemical,
                   L2325.PerCapitaBased_chemical, L2325.BaseService_chemical,L2325.GlobalTechSecOut_chemical,
                   L2325.PriceElasticity_chemical,L2325.GlobalTechCapture_chemical,L2325.GlobalTechEff_chemical,
-                  L2325.GlobalTechCoef_chemical_cwf, L2325.StubTechCoef_chemical_cwf, L2325.GlobalTechEff_chemical_cwf)
+                  L2325.GlobalTechEff_chemical_cwf)
 
 
   } else {

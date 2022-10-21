@@ -33,8 +33,6 @@ module_energy_batch_chemical_xml <- function(command, ...) {
              "L2325.GlobalTechCapture_chemical",
              "L2325.GlobalTechEff_chemical",
              "L2325.GlobalTechSecOut_chemical",
-			 "L2325.GlobalTechCoef_chemical_cwf",
-			 "L2325.StubTechCoef_chemical_cwf",
 			 "L2325.GlobalTechEff_chemical_cwf"))
   } else if(command == driver.DECLARE_OUTPUTS) {
     return(c(XML = "chemical.xml",
@@ -66,8 +64,6 @@ module_energy_batch_chemical_xml <- function(command, ...) {
     L2325.GlobalTechSecOut_chemical <- get_data(all_data, "L2325.GlobalTechSecOut_chemical")
     L2325.GlobalTechCSeq_ind <- get_data(all_data, "L2325.GlobalTechCSeq_ind")
     L2325.GlobalTechEff_chemical_cwf <- get_data(all_data, "L2325.GlobalTechEff_chemical_cwf")
-    L2325.GlobalTechCoef_chemical_cwf <- get_data(all_data, "L2325.GlobalTechCoef_chemical_cwf")
-    L2325.StubTechCoef_chemical_cwf <- get_data(all_data, "L2325.StubTechCoef_chemical_cwf")
     # ===================================================
 
     # Produce outputs
@@ -113,7 +109,7 @@ module_energy_batch_chemical_xml <- function(command, ...) {
       add_xml_data(L2325.StubTech_chemical, "StubTech") %>%
       add_xml_data(L2325.GlobalTechShrwt_chemical, "GlobalTechShrwt") %>%
       add_xml_data(L2325.GlobalTechEff_chemical_cwf, "GlobalTechEff") %>% # CWF version
-      add_xml_data(L2325.GlobalTechCoef_chemical_cwf, "GlobalTechCoef") %>% # CWF version
+      add_xml_data(L2325.GlobalTechCoef_chemical, "GlobalTechCoef") %>%
       add_xml_data(L2325.GlobalTechCost_chemical, "GlobalTechCost") %>%
       add_xml_data(L2325.GlobalTechSCurve_chemical, "GlobalTechSCurve") %>%
       add_xml_data(L2325.GlobalTechProfitShutdown_chemical, "GlobalTechProfitShutdown") %>%
@@ -121,7 +117,7 @@ module_energy_batch_chemical_xml <- function(command, ...) {
       add_xml_data(L2325.GlobalTechCapture_chemical, "GlobalTechCapture") %>%
       add_xml_data(L2325.StubTechProd_chemical, "StubTechProd") %>%
       add_xml_data(L2325.StubTechCalInput_chemical, "StubTechCalInput") %>%
-      add_xml_data(L2325.StubTechCoef_chemical_cwf, "StubTechCoef") %>% # CWF version
+      add_xml_data(L2325.StubTechCoef_chemical, "StubTechCoef") %>%
       add_xml_data(L2325.PerCapitaBased_chemical, "PerCapitaBased") %>%
       add_xml_data(L2325.BaseService_chemical, "BaseService") %>%
       add_xml_data(L2325.PriceElasticity_chemical, "PriceElasticity") %>%
@@ -129,8 +125,8 @@ module_energy_batch_chemical_xml <- function(command, ...) {
       add_precursors("L2325.Supplysector_chemical", "L2325.FinalEnergyKeyword_chemical", "L2325.SubsectorLogit_chemical",
                      "L2325.SubsectorShrwtFllt_chemical","L2325.GlobalTechEff_chemical_cwf",
                      "L2325.SubsectorInterp_chemical","L2325.StubTechProd_chemical",
-                     "L2325.StubTech_chemical","L2325.StubTechCoef_chemical_cwf","L2325.GlobalTechCSeq_ind",
-                     "L2325.GlobalTechShrwt_chemical", "L2325.GlobalTechCoef_chemical_cwf", "L2325.GlobalTechCost_chemical",
+                     "L2325.StubTech_chemical","L2325.StubTechCoef_chemical","L2325.GlobalTechCSeq_ind",
+                     "L2325.GlobalTechShrwt_chemical", "L2325.GlobalTechCoef_chemical", "L2325.GlobalTechCost_chemical",
                      "L2325.GlobalTechProfitShutdown_chemical", "L2325.GlobalTechSCurve_chemical",
                      "L2325.StubTechCalInput_chemical","L2325.GlobalTechCapture_chemical",
                      "L2325.PerCapitaBased_chemical", "L2325.BaseService_chemical",

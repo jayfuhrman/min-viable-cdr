@@ -1,8 +1,0 @@
-# File: A324.globaltech_coef_cwf_adj.csv
-# Title: CWF adjustments to off road default coefficients (multiplied by defaults to obtain CWF values)
-# Units: fraction
-# Column types: ccccn
-# ----------
-supplysector,subsector,technology,minicam.energy.input,terminal_coef_adj
-construction,construction,construction,construction energy use,0.9
-construction,construction,construction,construction feedstocks,0.9

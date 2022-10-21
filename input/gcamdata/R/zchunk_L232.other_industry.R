@@ -14,12 +14,11 @@
 #' \code{L232.SubsectorShrwtFllt_ind}, \code{L232.SubsectorInterp_ind},
 #' \code{L232.StubTech_ind}, \code{L232.GlobalTechShrwt_ind}, \code{L232.StubTechInterp_ind},
 #' \code{L232.GlobalTechEff_ind}, \code{L232.GlobalTechCoef_ind},
-#' \code{L232.GlobalTechEff_ind_cwf}, \code{L232.GlobalTechCoef_ind_cwf},
+#' \code{L232.GlobalTechEff_ind_cwf},
 #' \code{L232.GlobalTechCost_ind},
 #' \code{L232.GlobalTechSecOut_ind}, \code{L232.GlobalTechCSeq_ind},
 #' \code{L232.StubTechCalInput_indenergy}, \code{L232.StubTechCalInput_indfeed},
 #' \code{L232.StubTechProd_industry}, \code{L232.StubTechCoef_industry},
-#' \code{L232.StubTechCoef_industry_cwf},
 #' \code{L232.FuelPrefElast_indenergy}, \code{L232.PerCapitaBased_ind},
 #' \code{L232.PriceElasticity_ind}, \code{L232.BaseService_ind},
 #' \code{L232.IncomeElasticity_ind_gcam3}, \code{L232.IncomeElasticity_ind_gssp1},
@@ -51,7 +50,6 @@ module_energy_L232.other_industry <- function(command, ...) {
              FILE = "energy/A32.subsector_logit",
              FILE = "energy/A32.subsector_shrwt",
              FILE = "energy/A32.globaltech_coef",
-             FILE = "energy/A32.globaltech_coef_cwf_adj",
              FILE = "energy/A32.globaltech_cost",
              FILE = "energy/A32.globaltech_eff",
              FILE = "energy/A32.globaltech_eff_cwf_adj",
@@ -81,7 +79,6 @@ module_energy_L232.other_industry <- function(command, ...) {
              "L232.GlobalTechEff_ind",
              "L232.GlobalTechCoef_ind",
              "L232.GlobalTechEff_ind_cwf",
-             "L232.GlobalTechCoef_ind_cwf",
              "L232.GlobalTechCost_ind",
              "L232.GlobalTechSecOut_ind",
              "L232.GlobalTechCSeq_ind",
@@ -89,7 +86,6 @@ module_energy_L232.other_industry <- function(command, ...) {
              "L232.StubTechCalInput_indfeed",
              "L232.StubTechProd_industry",
              "L232.StubTechCoef_industry",
-             "L232.StubTechCoef_industry_cwf",
              "L232.GlobalTechShutdown_en",
              "L232.GlobalTechSCurve_en",
              "L232.GlobalTechLifetime_en",
@@ -114,7 +110,6 @@ module_energy_L232.other_industry <- function(command, ...) {
     A32.subsector_logit <- get_data(all_data, "energy/A32.subsector_logit", strip_attributes = TRUE)
     A32.subsector_shrwt <- get_data(all_data, "energy/A32.subsector_shrwt", strip_attributes = TRUE)
     A32.globaltech_coef <- get_data(all_data, "energy/A32.globaltech_coef", strip_attributes = TRUE)
-    A32.globaltech_coef_cwf_adj <- get_data(all_data, "energy/A32.globaltech_coef_cwf_adj", strip_attributes = TRUE)
     A32.globaltech_cost <- get_data(all_data, "energy/A32.globaltech_cost")
     A32.globaltech_eff <- get_data(all_data, "energy/A32.globaltech_eff")
     A32.globaltech_eff_cwf_adj <- get_data(all_data, "energy/A32.globaltech_eff_cwf_adj")
@@ -645,36 +640,6 @@ module_energy_L232.other_industry <- function(command, ...) {
       select(LEVEL2_DATA_NAMES[["GlobalTechEff"]]) ->
       L232.GlobalTechEff_ind_cwf
 
-    # GLOBAL TECH COEFFICIENT: L232.GlobalTechCoef_ind_cwf
-    # get coefficient adjustments and apply to the original coefficients
-    L232.GlobalTechCoef_ind %>%
-      left_join(A32.globaltech_coef_cwf_adj %>%
-                  rename(sector.name = supplysector,
-                         subsector.name = subsector)) %>%
-      mutate(coefficient = round(coefficient * terminal_coef_adj, energy.DIGITS_COEFFICIENT)) %>%
-      select(LEVEL2_DATA_NAMES[["GlobalTechCoef"]]) ->
-      L232.GlobalTechCoef_ind_cwf
-
-    # STUB TECH COEFFICIENT: L232.StubTechCoef_industry_cwf
-    # note that this also must be updated because these values converge to the global tech coef, so we want
-    # them to converge to the corresponding CWF global tech coef
-    L232.StubTechCoef_industry_base %>%
-      complete(nesting(region, supplysector, subsector, stub.technology, minicam.energy.input, market.name),
-               year = unique(c(MODEL_YEARS, energy.INDCOEF_CONVERGENCE_YR))) %>%
-      left_join(select(A32.globaltech_coef, supplysector, subsector, technology, minicam.energy.input, terminal_coef),
-                by = c("supplysector", "subsector", stub.technology = "technology", "minicam.energy.input")) %>%
-      # join the CWF adjustment
-      left_join(select(A32.globaltech_coef_cwf_adj, supplysector, subsector, technology, minicam.energy.input, terminal_coef_adj),
-                by = c("supplysector", "subsector", stub.technology = "technology", "minicam.energy.input")) %>%
-      mutate(terminal_coef = terminal_coef * terminal_coef_adj,
-             coefficient = if_else(year == energy.INDCOEF_CONVERGENCE_YR, terminal_coef, coefficient)) %>%
-      select(-c(terminal_coef, terminal_coef_adj)) %>%
-      group_by(region, supplysector, subsector, stub.technology, minicam.energy.input) %>%
-      mutate(coefficient = round(approx_fun(year, coefficient), energy.DIGITS_COEFFICIENT)) %>%
-      ungroup() %>%
-      filter(year %in% MODEL_YEARS) ->   # drop the terminal coef year if it's outside of the model years
-      L232.StubTechCoef_industry_cwf
-
     # note we don't need to adjust L232.GlobalTechSecOut_ind since it carries over historical data into future
     # periods, so this should match for CWF. similarly, don't need to adjust L232.StubTechCalInput_indenergy,
     # L232.StubTechCalInput_indfeed, or L232.StubTechProd_industry since these are historical values only
@@ -800,13 +765,6 @@ module_energy_L232.other_industry <- function(command, ...) {
       add_precursors("energy/A32.globaltech_eff", "energy/A32.globaltech_eff_cwf_adj") ->
       L232.GlobalTechEff_ind_cwf
 
-    L232.GlobalTechCoef_ind_cwf %>%
-      add_title("Energy inputs and coefficients of global industry technologies") %>%
-      add_units("Unitless") %>%
-      add_comments("For industry sector, the coefficients from A32.globaltech_coef are interpolated into all base years and future years") %>%
-      add_precursors("energy/A32.globaltech_coef", "energy/A32.globaltech_coef_cwf_adj") ->
-      L232.GlobalTechCoef_ind_cwf
-
     L232.GlobalTechCost_ind %>%
       add_title("Capital costs of global industrial technologies") %>%
       add_units("1975$/GJ") %>%
@@ -862,14 +820,6 @@ module_energy_L232.other_industry <- function(command, ...) {
       add_legacy_name("L232.StubTechCoef_industry") %>%
       add_precursors("L1326.in_EJ_R_indenergy_F_Yh", "L123.in_EJ_R_indchp_F_Yh", "common/GCAM_region_names", "energy/calibrated_techs", "L1324.in_EJ_R_indfeed_F_Yh", "energy/A32.globaltech_eff", "energy/A32.globaltech_shrwt") ->
       L232.StubTechCoef_industry
-
-    L232.StubTechCoef_industry_cwf %>%
-      add_title("Calibrated output of industrial sector") %>%
-      add_units("Unitless") %>%
-      add_comments("Service output values were first aggregated by sector to calculate the portion of each input as coefficients, then the coefficients were interpolated to cover last base year, future years and industry coefficient convergence year") %>%
-      add_legacy_name("L232.StubTechCoef_industry") %>%
-      add_precursors("L1326.in_EJ_R_indenergy_F_Yh", "L123.in_EJ_R_indchp_F_Yh", "common/GCAM_region_names", "energy/calibrated_techs", "L1324.in_EJ_R_indfeed_F_Yh", "energy/A32.globaltech_eff", "energy/A32.globaltech_shrwt") ->
-      L232.StubTechCoef_industry_cwf
 
     L232.FuelPrefElast_indenergy %>%
       add_title("Fuel preference elasticities of industrial energy use") %>%
@@ -964,10 +914,10 @@ module_energy_L232.other_industry <- function(command, ...) {
                 L232.SubsectorShrwtFllt_ind, L232.SubsectorInterp_ind,
                 L232.StubTech_ind, L232.GlobalTechShrwt_ind,
                 L232.StubTechInterp_ind, L232.GlobalTechEff_ind, L232.GlobalTechCoef_ind,
-                L232.GlobalTechEff_ind_cwf, L232.GlobalTechCoef_ind_cwf,
+                L232.GlobalTechEff_ind_cwf,
                 L232.GlobalTechCost_ind, L232.GlobalTechSecOut_ind, L232.GlobalTechCSeq_ind,
                 L232.StubTechCalInput_indenergy, L232.StubTechCalInput_indfeed, L232.StubTechProd_industry,
-                L232.StubTechCoef_industry, L232.StubTechCoef_industry_cwf,
+                L232.StubTechCoef_industry,
                 L232.FuelPrefElast_indenergy, L232.PerCapitaBased_ind,
                 L232.PriceElasticity_ind, L232.BaseService_ind, L232.GlobalTechShutdown_en,
                 L232.GlobalTechSCurve_en, L232.GlobalTechLifetime_en, L232.GlobalTechProfitShutdown_en,

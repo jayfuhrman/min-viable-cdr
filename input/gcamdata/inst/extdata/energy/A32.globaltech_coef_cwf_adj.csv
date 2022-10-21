@@ -1,8 +1,0 @@
-# File: A32.globaltech_coef_cwf_adj.csv
-# Title: CWF adjustments to industry default coefficients (multiplied by defaults to obtain CWF values)
-# Units: fraction
-# Column types: ccccn
-# ----------
-supplysector,subsector,technology,minicam.energy.input,terminal_coef_adj
-other industry,other industry,other industry,other industrial energy use,0.9
-other industry,other industry,other industry,other industrial feedstocks,0.9

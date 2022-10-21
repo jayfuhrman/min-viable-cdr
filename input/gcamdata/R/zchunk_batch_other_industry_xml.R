@@ -37,9 +37,7 @@ module_energy_batch_other_industry_xml <- function(command, ...) {
              "L232.BaseService_ind",
              "L232.SubsectorShrwtFllt_ind",
              "L232.Supplysector_ind",
-             "L232.GlobalTechEff_ind_cwf",
-             "L232.GlobalTechCoef_ind_cwf",
-             "L232.StubTechCoef_industry_cwf"))
+             "L232.GlobalTechEff_ind_cwf"))
   } else if(command == driver.DECLARE_OUTPUTS) {
     return(c(XML = "other_industry.xml",
              XML = "other_industry_cwf.xml"))
@@ -74,8 +72,6 @@ module_energy_batch_other_industry_xml <- function(command, ...) {
     L232.SubsectorShrwtFllt_ind <- get_data(all_data, "L232.SubsectorShrwtFllt_ind")
     L232.Supplysector_ind <- get_data(all_data, "L232.Supplysector_ind")
     L232.GlobalTechEff_ind_cwf <- get_data(all_data, "L232.GlobalTechEff_ind_cwf")
-    L232.GlobalTechCoef_ind_cwf <- get_data(all_data, "L232.GlobalTechCoef_ind_cwf")
-    L232.StubTechCoef_industry_cwf <- get_data(all_data, "L232.StubTechCoef_industry_cwf")
 
     # ===================================================
 
@@ -132,14 +128,14 @@ module_energy_batch_other_industry_xml <- function(command, ...) {
       add_xml_data(L232.GlobalTechProfitShutdown_en, "GlobalTechProfitShutdown") %>%
       add_xml_data(L232.StubTechInterp_ind, "StubTechInterp") %>%
       add_xml_data(L232.GlobalTechEff_ind_cwf, "GlobalTechEff") %>% # CWF version
-      add_xml_data(L232.GlobalTechCoef_ind_cwf, "GlobalTechCoef") %>% # CWF version
+      add_xml_data(L232.GlobalTechCoef_ind, "GlobalTechCoef") %>%
       add_xml_data(L232.GlobalTechCost_ind, "GlobalTechCost") %>%
       add_xml_data(L232.GlobalTechSecOut_ind, "GlobalTechSecOut") %>%
       add_xml_data(L232.GlobalTechCSeq_ind, "GlobalTechCSeq") %>%
       add_xml_data(L232.StubTechCalInput_indenergy, "StubTechCalInput") %>%
       add_xml_data(L232.StubTechCalInput_indfeed, "StubTechCalInput") %>%
       add_xml_data(L232.StubTechProd_industry, "StubTechProd") %>%
-      add_xml_data(L232.StubTechCoef_industry_cwf, "StubTechCoef") %>% # CWF version
+      add_xml_data(L232.StubTechCoef_industry, "StubTechCoef") %>%
       add_xml_data(L232.FuelPrefElast_indenergy, "FuelPrefElast") %>%
       add_xml_data(L232.PerCapitaBased_ind, "PerCapitaBased") %>%
       add_xml_data(L232.PriceElasticity_ind, "PriceElasticity") %>%
@@ -148,10 +144,10 @@ module_energy_batch_other_industry_xml <- function(command, ...) {
                      "L232.SubsectorInterp_ind", #"L232.SubsectorInterpTo_ind",
                      "L232.StubTech_ind",
                      "L232.GlobalTechShrwt_ind", "L232.StubTechInterp_ind", "L232.GlobalTechEff_ind_cwf",
-                     "L232.GlobalTechCoef_ind_cwf", "L232.GlobalTechCost_ind", "L232.GlobalTechSecOut_ind",
+                     "L232.GlobalTechCoef_ind", "L232.GlobalTechCost_ind", "L232.GlobalTechSecOut_ind",
                      "L232.GlobalTechCSeq_ind", "L232.StubTechCalInput_indenergy", "L232.StubTechCalInput_indfeed",
                      "L232.GlobalTechSCurve_en", "L232.GlobalTechProfitShutdown_en",
-                     "L232.StubTechProd_industry", "L232.StubTechCoef_industry_cwf", "L232.FuelPrefElast_indenergy",
+                     "L232.StubTechProd_industry", "L232.StubTechCoef_industry", "L232.FuelPrefElast_indenergy",
                      "L232.PerCapitaBased_ind", "L232.PriceElasticity_ind", "L232.BaseService_ind",
                      "L232.SubsectorShrwtFllt_ind", "L232.Supplysector_ind") ->
       other_industry_cwf.xml
