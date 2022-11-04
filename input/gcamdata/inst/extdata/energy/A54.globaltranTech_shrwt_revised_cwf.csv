@@ -13,7 +13,7 @@ trn_pass_road,Bus,Liquids,1,1,1,1,1,1,1,1,0,0,0,0,CWF
 trn_pass_road,Bus,NG,0,0,1,1,1,1,1,1,0,0,0,0,CWF
 trn_pass_road,Bus,BEV,0,0,0,0,0,0,1,1,1,1,1,1,CWF
 trn_pass_road,Bus,FCEV,0,0,0,0,0,0,1,1,1,1,1,1,CWF
-trn_pass_road,Bus,Hybrid Liquids,0,0,0,0,0,0,0,0,0,0,0,0,CWF
+trn_pass_road,Bus,Hybrid Liquids,0,0,0,0,0,1,1,1,0,0,0,0,CWF
 trn_pass_road_LDV_4W,Car,BEV,0,0,0,0,0,0,1,1,1,1,1,1,CWF
 trn_pass_road_LDV_4W,Car,FCEV,0,0,0,0,0,0,1,1,1,1,1,1,CWF
 trn_pass_road_LDV_4W,Car,Hybrid Liquids,0,0,1,1,1,1,1,1,0,0,0,0,CWF
@@ -26,18 +26,18 @@ trn_pass,Domestic Aviation,Hydrogen,0,0,0,0,0,0,0,0,0,0,0,0.75,CWF
 trn_freight,Domestic Ship,Liquids,1,1,1,1,1,1,1,1,1,1,1,1,CWF
 trn_freight,Domestic Ship,BEV,0,0,0,0,0,0,0,0,1,1,1,1,CWF
 trn_freight,Domestic Ship,FCEV,0,0,0,0,0,0,0,0,1,1,1,1,CWF
-trn_freight,Domestic Ship,Hybrid Liquids,0,0,0,0,0,0,0,0,0,0,0,1,CWF
+trn_freight,Domestic Ship,Hybrid Liquids,0,0,0,0,0,0,0,1,1,1,1,1,CWF
 trn_freight,Freight Rail,Coal,1,1,0,0,0,0,0,0,0,0,0,0,CWF
 trn_freight,Freight Rail,Electric,1,1,1,1,1,1,1,1,1,1,1,1,CWF
 trn_freight,Freight Rail,Liquids,1,1,1,1,1,1,1,1,1,1,0,0,CWF
 trn_freight,Freight Rail,BEV,0,0,0,0,0,0,0,0,0,0,1,1,CWF
 trn_freight,Freight Rail,FCEV,0,0,0,0,0,0,0,0,0,0,1,1,CWF
-trn_freight,Freight Rail,Hybrid Liquids,0,0,0,0,0,0,0,0,0,0,0,0,CWF
+trn_freight,Freight Rail,Hybrid Liquids,0,0,0,0,0,0,0,1,1,1,0,0,CWF
 trn_freight_road,Heavy truck,Liquids,1,1,1,1,1,1,1,1,1,0,0,0,CWF
 trn_freight_road,Heavy truck,NG,0,0,1,1,1,1,1,1,1,0,0,0,CWF
 trn_freight_road,Heavy truck,BEV,0,0,0,0,0,0,0,0,1,1,1,1,CWF
 trn_freight_road,Heavy truck,FCEV,0,0,0,0,0,0,0,0,1,1,1,1,CWF
-trn_freight_road,Heavy truck,Hybrid Liquids,0,0,0,0,0,0,0,0,0,0,0,0,CWF
+trn_freight_road,Heavy truck,Hybrid Liquids,0,0,0,0,0,0,0,1,1,0,0,0,CWF
 trn_pass,HSR,Electric,0,0,1,1,1,1,1,1,1,1,1,1,CWF
 trn_aviation_intl,International Aviation,Liquids,1,1,1,1,1,1,1,1,1,1,1,1,CWF
 trn_aviation_intl,International Aviation,BEV,0,0,0,0,0,0,0,0,0,0,0,0.75,CWF
@@ -45,7 +45,7 @@ trn_aviation_intl,International Aviation,Hydrogen,0,0,0,0,0,0,0,0,0,0,0,0.75,CWF
 trn_shipping_intl,International Ship,Liquids,1,1,1,1,1,1,1,1,1,1,1,1,CWF
 trn_shipping_intl,International Ship,BEV,0,0,0,0,0,0,0,0,1,1,1,1,CWF
 trn_shipping_intl,International Ship,FCEV,0,0,0,0,0,0,0,0,1,1,1,1,CWF
-trn_shipping_intl,International Ship,Hybrid Liquids,0,0,0,0,0,0,0,0,0,0,0,1,CWF
+trn_shipping_intl,International Ship,Hybrid Liquids,0,0,0,0,0,0,0,1,1,1,1,1,CWF
 trn_pass_road_LDV_4W,Large Car and Truck,BEV,0,0,0,0,0,0,1,1,1,1,1,1,CWF
 trn_pass_road_LDV_4W,Large Car and Truck,FCEV,0,0,0,0,0,0,1,1,1,1,1,1,CWF
 trn_pass_road_LDV_4W,Large Car and Truck,Hybrid Liquids,0,0,1,1,1,1,1,1,0,0,0,0,CWF
@@ -55,12 +55,12 @@ trn_freight_road,Light truck,Liquids,1,1,1,1,1,1,1,1,1,0,0,0,CWF
 trn_freight_road,Light truck,NG,0,0,1,1,1,1,1,1,1,0,0,0,CWF
 trn_freight_road,Light truck,BEV,0,0,0,0,0,0,0,0,1,1,1,1,CWF
 trn_freight_road,Light truck,FCEV,0,0,0,0,0,0,0,0,1,1,1,1,CWF
-trn_freight_road,Light truck,Hybrid Liquids,0,0,0,0,0,0,0,0,0,0,0,0,CWF
+trn_freight_road,Light truck,Hybrid Liquids,0,0,0,0,0,0,0,1,1,0,0,0,CWF
 trn_freight_road,Medium truck,Liquids,1,1,1,1,1,1,1,1,1,0,0,0,CWF
 trn_freight_road,Medium truck,NG,0,0,1,1,1,1,1,1,1,0,0,0,CWF
 trn_freight_road,Medium truck,BEV,0,0,0,0,0,0,0,0,1,1,1,1,CWF
 trn_freight_road,Medium truck,FCEV,0,0,0,0,0,0,0,0,1,1,1,1,CWF
-trn_freight_road,Medium truck,Hybrid Liquids,0,0,0,0,0,0,0,0,0,0,0,0,CWF
+trn_freight_road,Medium truck,Hybrid Liquids,0,0,0,0,0,0,0,1,1,0,0,0,CWF
 trn_pass_road_LDV_4W,Mini Car,BEV,0,0,0,0,0,0,1,1,1,1,1,1,CWF
 trn_pass_road_LDV_4W,Mini Car,FCEV,0,0,0,0,0,0,1,1,1,1,1,1,CWF
 trn_pass_road_LDV_4W,Mini Car,Hybrid Liquids,0,0,1,1,1,1,1,1,0,0,0,0,CWF
@@ -77,7 +77,7 @@ trn_pass_road,Bus,Liquids,1,1,1,1,1,1,1,1,1,1,1,1,CWF_low
 trn_pass_road,Bus,NG,0,0,1,1,1,1,1,1,1,1,1,1,CWF_low
 trn_pass_road,Bus,BEV,0,0,0,0,0,0,0,0,1,1,1,1,CWF_low
 trn_pass_road,Bus,FCEV,0,0,0,0,0,0,0,0,1,1,1,1,CWF_low
-trn_pass_road,Bus,Hybrid Liquids,0,0,0,0,0,0,0,0,0,0,0,0,CWF_low
+trn_pass_road,Bus,Hybrid Liquids,0,0,0,0,0,0,1,1,1,1,1,1,CWF_low
 trn_pass_road_LDV_4W,Car,BEV,0,0,0,0,0,0,0,0,1,1,1,1,CWF_low
 trn_pass_road_LDV_4W,Car,FCEV,0,0,0,0,0,0,0,0,1,1,1,1,CWF_low
 trn_pass_road_LDV_4W,Car,Hybrid Liquids,0,0,1,1,1,1,1,1,1,1,1,1,CWF_low
@@ -96,12 +96,12 @@ trn_freight,Freight Rail,Electric,1,1,1,1,1,1,1,1,1,1,1,1,CWF_low
 trn_freight,Freight Rail,Liquids,1,1,1,1,1,1,1,1,1,1,1,1,CWF_low
 trn_freight,Freight Rail,BEV,0,0,0,0,0,0,0,0,0,0,0,1,CWF_low
 trn_freight,Freight Rail,FCEV,0,0,0,0,0,0,0,0,0,0,0,1,CWF_low
-trn_freight,Freight Rail,Hybrid Liquids,0,0,0,0,0,0,0,0,0,0,0,0,CWF_low
+trn_freight,Freight Rail,Hybrid Liquids,0,0,0,0,0,0,0,0,0,1,1,1,CWF_low
 trn_freight_road,Heavy truck,Liquids,1,1,1,1,1,1,1,1,1,1,1,1,CWF_low
 trn_freight_road,Heavy truck,NG,0,0,1,1,1,1,1,1,1,1,1,1,CWF_low
 trn_freight_road,Heavy truck,BEV,0,0,0,0,0,0,0,0,0,0,1,1,CWF_low
 trn_freight_road,Heavy truck,FCEV,0,0,0,0,0,0,0,0,0,0,1,1,CWF_low
-trn_freight_road,Heavy truck,Hybrid Liquids,0,0,0,0,0,0,0,0,0,0,0,0,CWF_low
+trn_freight_road,Heavy truck,Hybrid Liquids,0,0,0,0,0,0,0,0,1,1,1,1,CWF_low
 trn_pass,HSR,Electric,0,0,1,1,1,1,1,1,1,1,1,1,CWF_low
 trn_aviation_intl,International Aviation,Liquids,1,1,1,1,1,1,1,1,1,1,1,1,CWF_low
 trn_aviation_intl,International Aviation,BEV,0,0,0,0,0,0,0,0,0,0,0,0.25,CWF_low
@@ -119,12 +119,12 @@ trn_freight_road,Light truck,Liquids,1,1,1,1,1,1,1,1,1,1,1,1,CWF_low
 trn_freight_road,Light truck,NG,0,0,1,1,1,1,1,1,1,1,1,1,CWF_low
 trn_freight_road,Light truck,BEV,0,0,0,0,0,0,0,0,0,0,1,1,CWF_low
 trn_freight_road,Light truck,FCEV,0,0,0,0,0,0,0,0,0,0,1,1,CWF_low
-trn_freight_road,Light truck,Hybrid Liquids,0,0,0,0,0,0,0,0,0,0,0,0,CWF_low
+trn_freight_road,Light truck,Hybrid Liquids,0,0,0,0,0,0,0,0,1,1,1,1,CWF_low
 trn_freight_road,Medium truck,Liquids,1,1,1,1,1,1,1,1,1,1,1,1,CWF_low
 trn_freight_road,Medium truck,NG,0,0,1,1,1,1,1,1,1,1,1,1,CWF_low
 trn_freight_road,Medium truck,BEV,0,0,0,0,0,0,0,0,0,0,1,1,CWF_low
 trn_freight_road,Medium truck,FCEV,0,0,0,0,0,0,0,0,0,0,1,1,CWF_low
-trn_freight_road,Medium truck,Hybrid Liquids,0,0,0,0,0,0,0,0,0,0,0,0,CWF_low
+trn_freight_road,Medium truck,Hybrid Liquids,0,0,0,0,0,0,0,0,1,1,1,1,CWF_low
 trn_pass_road_LDV_4W,Mini Car,BEV,0,0,0,0,0,0,0,0,1,1,1,1,CWF_low
 trn_pass_road_LDV_4W,Mini Car,FCEV,0,0,0,0,0,0,0,0,1,1,1,1,CWF_low
 trn_pass_road_LDV_4W,Mini Car,Hybrid Liquids,0,0,1,1,1,1,1,1,1,1,1,1,CWF_low
@@ -141,7 +141,7 @@ trn_pass_road,Bus,Liquids,1,1,1,1,1,1,0,0,0,0,0,0,CWF_high
 trn_pass_road,Bus,NG,0,0,1,1,1,1,0,0,0,0,0,0,CWF_high
 trn_pass_road,Bus,BEV,0,0,0,0,0,1,1,1,1,1,1,1,CWF_high
 trn_pass_road,Bus,FCEV,0,0,0,0,0,1,1,1,1,1,1,1,CWF_high
-trn_pass_road,Bus,Hybrid Liquids,0,0,0,0,0,0,0,0,0,0,0,0,CWF_high
+trn_pass_road,Bus,Hybrid Liquids,0,0,0,0,1,1,0,0,0,0,0,0,CWF_high
 trn_pass_road_LDV_4W,Car,BEV,0,0,0,0,0,1,1,1,1,1,1,1,CWF_high
 trn_pass_road_LDV_4W,Car,FCEV,0,0,0,0,0,1,1,1,1,1,1,1,CWF_high
 trn_pass_road_LDV_4W,Car,Hybrid Liquids,0,0,1,1,1,1,0,0,0,0,0,0,CWF_high
@@ -154,18 +154,18 @@ trn_pass,Domestic Aviation,Hydrogen,0,0,0,0,0,0,0,0,2,2,2,2,CWF_high
 trn_freight,Domestic Ship,Liquids,1,1,1,1,1,1,1,1,1,1,1,1,CWF_high
 trn_freight,Domestic Ship,BEV,0,0,0,0,0,0,0,0,2,2,2,2,CWF_high
 trn_freight,Domestic Ship,FCEV,0,0,0,0,0,0,0,0,2,2,2,2,CWF_high
-trn_freight,Domestic Ship,Hybrid Liquids,0,0,0,0,0,0,0,0,0,0,0,1,CWF_high
+trn_freight,Domestic Ship,Hybrid Liquids,0,0,0,0,0,0,1,1,1,1,1,1,CWF_high
 trn_freight,Freight Rail,Coal,1,1,0,0,0,0,0,0,0,0,0,0,CWF_high
 trn_freight,Freight Rail,Electric,1,1,1,1,1,1,1,1,1,1,1,1,CWF_high
 trn_freight,Freight Rail,Liquids,1,1,1,1,1,1,1,1,0,0,0,0,CWF_high
 trn_freight,Freight Rail,BEV,0,0,0,0,0,0,0,0,1,1,1,1,CWF_high
 trn_freight,Freight Rail,FCEV,0,0,0,0,0,0,0,0,1,1,1,1,CWF_high
-trn_freight,Freight Rail,Hybrid Liquids,0,0,0,0,0,0,0,0,0,0,0,0,CWF_high
+trn_freight,Freight Rail,Hybrid Liquids,0,0,0,0,0,0,1,1,0,0,0,0,CWF_high
 trn_freight_road,Heavy truck,Liquids,1,1,1,1,0.3,0.03,0.003,0,0,0,0,0,CWF_high
 trn_freight_road,Heavy truck,NG,0,0,1,1,1,1,1,0,0,0,0,0,CWF_high
 trn_freight_road,Heavy truck,BEV,0,0,0,0,0,0,0,1,1,1,1,1,CWF_high
 trn_freight_road,Heavy truck,FCEV,0,0,0,0,0,0,0,1,1,1,1,1,CWF_high
-trn_freight_road,Heavy truck,Hybrid Liquids,0,0,0,0,0,0,0,0,0,0,0,0,CWF_high
+trn_freight_road,Heavy truck,Hybrid Liquids,0,0,0,0,0,1,1,0,0,0,0,0,CWF_high
 trn_pass,HSR,Electric,0,0,1,1,1,1,1,1,1,1,1,1,CWF_high
 trn_aviation_intl,International Aviation,Liquids,1,1,1,1,1,1,1,1,1,1,1,1,CWF_high
 trn_aviation_intl,International Aviation,BEV,0,0,0,0,0,0,0,0,2,2,2,2,CWF_high
@@ -173,7 +173,7 @@ trn_aviation_intl,International Aviation,Hydrogen,0,0,0,0,0,0,0,0,2,2,2,2,CWF_hi
 trn_shipping_intl,International Ship,Liquids,1,1,1,1,1,1,1,1,1,1,1,1,CWF_high
 trn_shipping_intl,International Ship,BEV,0,0,0,0,0,0,0,0,2,2,2,2,CWF_high
 trn_shipping_intl,International Ship,FCEV,0,0,0,0,0,0,0,0,2,2,2,2,CWF_high
-trn_shipping_intl,International Ship,Hybrid Liquids,0,0,0,0,0,0,0,0,0,0,0,1,CWF_high
+trn_shipping_intl,International Ship,Hybrid Liquids,0,0,0,0,0,0,1,1,1,1,1,1,CWF_high
 trn_pass_road_LDV_4W,Large Car and Truck,BEV,0,0,0,0,0,1,1,1,1,1,1,1,CWF_high
 trn_pass_road_LDV_4W,Large Car and Truck,FCEV,0,0,0,0,0,1,1,1,1,1,1,1,CWF_high
 trn_pass_road_LDV_4W,Large Car and Truck,Hybrid Liquids,0,0,1,1,1,1,0,0,0,0,0,0,CWF_high
@@ -183,12 +183,12 @@ trn_freight_road,Light truck,Liquids,1,1,1,1,0.3,0.03,0.003,0,0,0,0,0,CWF_high
 trn_freight_road,Light truck,NG,0,0,1,1,1,1,1,0,0,0,0,0,CWF_high
 trn_freight_road,Light truck,BEV,0,0,0,0,0,0,0,1,1,1,1,1,CWF_high
 trn_freight_road,Light truck,FCEV,0,0,0,0,0,0,0,1,1,1,1,1,CWF_high
-trn_freight_road,Light truck,Hybrid Liquids,0,0,0,0,0,0,0,0,0,0,0,0,CWF_high
+trn_freight_road,Light truck,Hybrid Liquids,0,0,0,0,0,1,1,0,0,0,0,0,CWF_high
 trn_freight_road,Medium truck,Liquids,1,1,1,1,0.3,0.03,0.003,0,0,0,0,0,CWF_high
 trn_freight_road,Medium truck,NG,0,0,1,1,1,1,1,0,0,0,0,0,CWF_high
 trn_freight_road,Medium truck,BEV,0,0,0,0,0,0,0,1,1,1,1,1,CWF_high
 trn_freight_road,Medium truck,FCEV,0,0,0,0,0,0,0,1,1,1,1,1,CWF_high
-trn_freight_road,Medium truck,Hybrid Liquids,0,0,0,0,0,0,0,0,0,0,0,0,CWF_high
+trn_freight_road,Medium truck,Hybrid Liquids,0,0,0,0,0,1,1,0,0,0,0,0,CWF_high
 trn_pass_road_LDV_4W,Mini Car,BEV,0,0,0,0,0,1,1,1,1,1,1,1,CWF_high
 trn_pass_road_LDV_4W,Mini Car,FCEV,0,0,0,0,0,1,1,1,1,1,1,1,CWF_high
 trn_pass_road_LDV_4W,Mini Car,Hybrid Liquids,0,0,1,1,1,1,0,0,0,0,0,0,CWF_high
