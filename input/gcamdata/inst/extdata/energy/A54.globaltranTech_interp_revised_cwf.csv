@@ -18,7 +18,8 @@ trn_pass_road,Bus,BEV,share-weight,2020,2035,s-curve,CWF
 trn_pass_road,Bus,FCEV,share-weight,final-calibration-year,2020,fixed,CWF
 trn_pass_road,Bus,FCEV,share-weight,2020,2035,s-curve,CWF
 trn_pass_road,Bus,Hybrid Liquids,share-weight,final-calibration-year,2020,fixed,CWF
-trn_pass_road,Bus,Hybrid Liquids,share-weight,2020,2050,linear,CWF
+trn_pass_road,Bus,Hybrid Liquids,share-weight,2020,2030,s-curve,CWF
+trn_pass_road,Bus,Hybrid Liquids,share-weight,2030,2050,linear,CWF
 trn_pass_road,Bus,Liquids,share-weight,final-calibration-year,2020,fixed,CWF
 trn_pass_road,Bus,Liquids,share-weight,2020,2050,linear,CWF
 trn_pass_road,Bus,NG,share-weight,final-calibration-year,2020,fixed,CWF
@@ -28,7 +29,8 @@ trn_pass_road_LDV_4W,Car,BEV,share-weight,2020,2035,s-curve,CWF
 trn_pass_road_LDV_4W,Car,FCEV,share-weight,final-calibration-year,2020,fixed,CWF
 trn_pass_road_LDV_4W,Car,FCEV,share-weight,2020,2035,s-curve,CWF
 trn_pass_road_LDV_4W,Car,Hybrid Liquids,share-weight,final-calibration-year,2020,fixed,CWF
-trn_pass_road_LDV_4W,Car,Hybrid Liquids,share-weight,2020,2050,linear,CWF
+trn_pass_road_LDV_4W,Car,Hybrid Liquids,share-weight,2020,2030,s-curve,CWF
+trn_pass_road_LDV_4W,Car,Hybrid Liquids,share-weight,2030,2050,linear,CWF
 trn_pass_road_LDV_4W,Car,Liquids,share-weight,final-calibration-year,2020,fixed,CWF
 trn_pass_road_LDV_4W,Car,Liquids,share-weight,2020,2050,linear,CWF
 trn_pass_road_LDV_4W,Car,NG,share-weight,final-calibration-year,2020,fixed,CWF
@@ -46,7 +48,7 @@ trn_freight,Domestic Ship,BEV,share-weight,2020,2050,s-curve,CWF
 trn_freight,Domestic Ship,FCEV,share-weight,final-calibration-year,2020,fixed,CWF
 trn_freight,Domestic Ship,FCEV,share-weight,2020,2050,s-curve,CWF
 trn_freight,Domestic Ship,Hybrid Liquids,share-weight,final-calibration-year,2020,fixed,CWF
-trn_freight,Domestic Ship,Hybrid Liquids,share-weight,2020,2100,fixed,CWF
+trn_freight,Domestic Ship,Hybrid Liquids,share-weight,2020,2040,s-curve,CWF
 trn_freight,Domestic Ship,Liquids,share-weight,final-calibration-year,2020,fixed,CWF
 trn_freight,Domestic Ship,Liquids,share-weight,2020,2100,fixed,CWF
 trn_freight,Freight Rail,BEV,share-weight,final-calibration-year,2020,fixed,CWF
@@ -58,7 +60,8 @@ trn_freight,Freight Rail,Electric,share-weight,2020,2075,s-curve,CWF
 trn_freight,Freight Rail,FCEV,share-weight,final-calibration-year,2020,fixed,CWF
 trn_freight,Freight Rail,FCEV,share-weight,2020,2075,s-curve,CWF
 trn_freight,Freight Rail,Hybrid Liquids,share-weight,final-calibration-year,2020,fixed,CWF
-trn_freight,Freight Rail,Hybrid Liquids,share-weight,2020,2075,linear,CWF
+trn_freight,Freight Rail,Hybrid Liquids,share-weight,2020,2040,s-curve,CWF
+trn_freight,Freight Rail,Hybrid Liquids,share-weight,2040,2075,linear,CWF
 trn_freight,Freight Rail,Liquids,share-weight,final-calibration-year,2020,fixed,CWF
 trn_freight,Freight Rail,Liquids,share-weight,2020,2075,linear,CWF
 trn_freight_road,Heavy truck,BEV,share-weight,final-calibration-year,2020,fixed,CWF
@@ -66,7 +69,8 @@ trn_freight_road,Heavy truck,BEV,share-weight,2020,2050,s-curve,CWF
 trn_freight_road,Heavy truck,FCEV,share-weight,final-calibration-year,2020,fixed,CWF
 trn_freight_road,Heavy truck,FCEV,share-weight,2020,2050,s-curve,CWF
 trn_freight_road,Heavy truck,Hybrid Liquids,share-weight,final-calibration-year,2020,fixed,CWF
-trn_freight_road,Heavy truck,Hybrid Liquids,share-weight,2020,2060,linear,CWF
+trn_freight_road,Heavy truck,Hybrid Liquids,share-weight,2020,2040,s-curve,CWF
+trn_freight_road,Heavy truck,Hybrid Liquids,share-weight,2040,2060,linear,CWF
 trn_freight_road,Heavy truck,Liquids,share-weight,final-calibration-year,2020,fixed,CWF
 trn_freight_road,Heavy truck,Liquids,share-weight,2020,2060,linear,CWF
 trn_freight_road,Heavy truck,NG,share-weight,final-calibration-year,2020,fixed,CWF
@@ -84,7 +88,7 @@ trn_shipping_intl,International Ship,BEV,share-weight,2020,2050,s-curve,CWF
 trn_shipping_intl,International Ship,FCEV,share-weight,final-calibration-year,2020,fixed,CWF
 trn_shipping_intl,International Ship,FCEV,share-weight,2020,2050,s-curve,CWF
 trn_shipping_intl,International Ship,Hybrid Liquids,share-weight,final-calibration-year,2020,fixed,CWF
-trn_shipping_intl,International Ship,Hybrid Liquids,share-weight,2020,2100,fixed,CWF
+trn_shipping_intl,International Ship,Hybrid Liquids,share-weight,2020,2040,s-curve,CWF
 trn_shipping_intl,International Ship,Liquids,share-weight,final-calibration-year,2020,fixed,CWF
 trn_shipping_intl,International Ship,Liquids,share-weight,2020,2100,fixed,CWF
 trn_pass_road_LDV_4W,Large Car and Truck,BEV,share-weight,final-calibration-year,2020,fixed,CWF
@@ -92,7 +96,8 @@ trn_pass_road_LDV_4W,Large Car and Truck,BEV,share-weight,2020,2035,s-curve,CWF
 trn_pass_road_LDV_4W,Large Car and Truck,FCEV,share-weight,final-calibration-year,2020,fixed,CWF
 trn_pass_road_LDV_4W,Large Car and Truck,FCEV,share-weight,2020,2035,s-curve,CWF
 trn_pass_road_LDV_4W,Large Car and Truck,Hybrid Liquids,share-weight,final-calibration-year,2020,fixed,CWF
-trn_pass_road_LDV_4W,Large Car and Truck,Hybrid Liquids,share-weight,2020,2050,linear,CWF
+trn_pass_road_LDV_4W,Large Car and Truck,Hybrid Liquids,share-weight,2020,2030,s-curve,CWF
+trn_pass_road_LDV_4W,Large Car and Truck,Hybrid Liquids,share-weight,2030,2050,linear,CWF
 trn_pass_road_LDV_4W,Large Car and Truck,Liquids,share-weight,final-calibration-year,2020,fixed,CWF
 trn_pass_road_LDV_4W,Large Car and Truck,Liquids,share-weight,2020,2050,linear,CWF
 trn_pass_road_LDV_4W,Large Car and Truck,NG,share-weight,final-calibration-year,2020,fixed,CWF
@@ -102,7 +107,8 @@ trn_freight_road,Light truck,BEV,share-weight,2020,2050,s-curve,CWF
 trn_freight_road,Light truck,FCEV,share-weight,final-calibration-year,2020,fixed,CWF
 trn_freight_road,Light truck,FCEV,share-weight,2020,2050,s-curve,CWF
 trn_freight_road,Light truck,Hybrid Liquids,share-weight,final-calibration-year,2020,fixed,CWF
-trn_freight_road,Light truck,Hybrid Liquids,share-weight,2020,2060,linear,CWF
+trn_freight_road,Light truck,Hybrid Liquids,share-weight,2020,2040,s-curve,CWF
+trn_freight_road,Light truck,Hybrid Liquids,share-weight,2040,2060,linear,CWF
 trn_freight_road,Light truck,Liquids,share-weight,final-calibration-year,2020,fixed,CWF
 trn_freight_road,Light truck,Liquids,share-weight,2020,2060,linear,CWF
 trn_freight_road,Light truck,NG,share-weight,final-calibration-year,2020,fixed,CWF
@@ -112,7 +118,8 @@ trn_freight_road,Medium truck,BEV,share-weight,2020,2050,s-curve,CWF
 trn_freight_road,Medium truck,FCEV,share-weight,final-calibration-year,2020,fixed,CWF
 trn_freight_road,Medium truck,FCEV,share-weight,2020,2050,s-curve,CWF
 trn_freight_road,Medium truck,Hybrid Liquids,share-weight,final-calibration-year,2020,fixed,CWF
-trn_freight_road,Medium truck,Hybrid Liquids,share-weight,2020,2060,linear,CWF
+trn_freight_road,Medium truck,Hybrid Liquids,share-weight,2020,2040,s-curve,CWF
+trn_freight_road,Medium truck,Hybrid Liquids,share-weight,2040,2060,linear,CWF
 trn_freight_road,Medium truck,Liquids,share-weight,final-calibration-year,2020,fixed,CWF
 trn_freight_road,Medium truck,Liquids,share-weight,2020,2060,linear,CWF
 trn_freight_road,Medium truck,NG,share-weight,final-calibration-year,2020,fixed,CWF
@@ -122,7 +129,8 @@ trn_pass_road_LDV_4W,Mini Car,BEV,share-weight,2020,2035,s-curve,CWF
 trn_pass_road_LDV_4W,Mini Car,FCEV,share-weight,final-calibration-year,2020,fixed,CWF
 trn_pass_road_LDV_4W,Mini Car,FCEV,share-weight,2020,2035,s-curve,CWF
 trn_pass_road_LDV_4W,Mini Car,Hybrid Liquids,share-weight,final-calibration-year,2020,fixed,CWF
-trn_pass_road_LDV_4W,Mini Car,Hybrid Liquids,share-weight,2020,2050,linear,CWF
+trn_pass_road_LDV_4W,Mini Car,Hybrid Liquids,share-weight,2020,2030,s-curve,CWF
+trn_pass_road_LDV_4W,Mini Car,Hybrid Liquids,share-weight,2030,2050,linear,CWF
 trn_pass_road_LDV_4W,Mini Car,Liquids,share-weight,final-calibration-year,2020,fixed,CWF
 trn_pass_road_LDV_4W,Mini Car,Liquids,share-weight,2020,2050,linear,CWF
 trn_pass_road_LDV_4W,Mini Car,NG,share-weight,final-calibration-year,2020,fixed,CWF
@@ -146,7 +154,7 @@ trn_pass_road,Bus,BEV,share-weight,2020,2050,s-curve,CWF_low
 trn_pass_road,Bus,FCEV,share-weight,final-calibration-year,2020,fixed,CWF_low
 trn_pass_road,Bus,FCEV,share-weight,2020,2050,s-curve,CWF_low
 trn_pass_road,Bus,Hybrid Liquids,share-weight,final-calibration-year,2020,fixed,CWF_low
-trn_pass_road,Bus,Hybrid Liquids,share-weight,2020,2100,fixed,CWF_low
+trn_pass_road,Bus,Hybrid Liquids,share-weight,2020,2035,s-curve,CWF_low
 trn_pass_road,Bus,Liquids,share-weight,final-calibration-year,2020,fixed,CWF_low
 trn_pass_road,Bus,Liquids,share-weight,2020,2100,fixed,CWF_low
 trn_pass_road,Bus,NG,share-weight,final-calibration-year,2020,fixed,CWF_low
@@ -156,7 +164,7 @@ trn_pass_road_LDV_4W,Car,BEV,share-weight,2020,2050,s-curve,CWF_low
 trn_pass_road_LDV_4W,Car,FCEV,share-weight,final-calibration-year,2020,fixed,CWF_low
 trn_pass_road_LDV_4W,Car,FCEV,share-weight,2020,2050,s-curve,CWF_low
 trn_pass_road_LDV_4W,Car,Hybrid Liquids,share-weight,final-calibration-year,2020,fixed,CWF_low
-trn_pass_road_LDV_4W,Car,Hybrid Liquids,share-weight,2020,2100,fixed,CWF_low
+trn_pass_road_LDV_4W,Car,Hybrid Liquids,share-weight,2020,2035,s-curve,CWF_low
 trn_pass_road_LDV_4W,Car,Liquids,share-weight,final-calibration-year,2020,fixed,CWF_low
 trn_pass_road_LDV_4W,Car,Liquids,share-weight,2020,2100,fixed,CWF_low
 trn_pass_road_LDV_4W,Car,NG,share-weight,final-calibration-year,2020,fixed,CWF_low
@@ -174,7 +182,7 @@ trn_freight,Domestic Ship,BEV,share-weight,2020,2100,s-curve,CWF_low
 trn_freight,Domestic Ship,FCEV,share-weight,final-calibration-year,2020,fixed,CWF_low
 trn_freight,Domestic Ship,FCEV,share-weight,2020,2100,s-curve,CWF_low
 trn_freight,Domestic Ship,Hybrid Liquids,share-weight,final-calibration-year,2020,fixed,CWF_low
-trn_freight,Domestic Ship,Hybrid Liquids,share-weight,2020,2100,fixed,CWF_low
+trn_freight,Domestic Ship,Hybrid Liquids,share-weight,2020,2100,s-curve,CWF_low
 trn_freight,Domestic Ship,Liquids,share-weight,final-calibration-year,2020,fixed,CWF_low
 trn_freight,Domestic Ship,Liquids,share-weight,2020,2100,fixed,CWF_low
 trn_freight,Freight Rail,BEV,share-weight,final-calibration-year,2020,fixed,CWF_low
@@ -186,7 +194,7 @@ trn_freight,Freight Rail,Electric,share-weight,2020,2100,s-curve,CWF_low
 trn_freight,Freight Rail,FCEV,share-weight,final-calibration-year,2020,fixed,CWF_low
 trn_freight,Freight Rail,FCEV,share-weight,2020,2100,s-curve,CWF_low
 trn_freight,Freight Rail,Hybrid Liquids,share-weight,final-calibration-year,2020,fixed,CWF_low
-trn_freight,Freight Rail,Hybrid Liquids,share-weight,2020,2100,fixed,CWF_low
+trn_freight,Freight Rail,Hybrid Liquids,share-weight,2020,2060,s-curve,CWF_low
 trn_freight,Freight Rail,Liquids,share-weight,final-calibration-year,2020,fixed,CWF_low
 trn_freight,Freight Rail,Liquids,share-weight,2020,2100,fixed,CWF_low
 trn_freight_road,Heavy truck,BEV,share-weight,final-calibration-year,2020,fixed,CWF_low
@@ -194,7 +202,7 @@ trn_freight_road,Heavy truck,BEV,share-weight,2020,2075,s-curve,CWF_low
 trn_freight_road,Heavy truck,FCEV,share-weight,final-calibration-year,2020,fixed,CWF_low
 trn_freight_road,Heavy truck,FCEV,share-weight,2020,2075,s-curve,CWF_low
 trn_freight_road,Heavy truck,Hybrid Liquids,share-weight,final-calibration-year,2020,fixed,CWF_low
-trn_freight_road,Heavy truck,Hybrid Liquids,share-weight,2020,2100,fixed,CWF_low
+trn_freight_road,Heavy truck,Hybrid Liquids,share-weight,2020,2050,s-curve,CWF_low
 trn_freight_road,Heavy truck,Liquids,share-weight,final-calibration-year,2020,fixed,CWF_low
 trn_freight_road,Heavy truck,Liquids,share-weight,2020,2100,fixed,CWF_low
 trn_freight_road,Heavy truck,NG,share-weight,final-calibration-year,2020,fixed,CWF_low
@@ -212,7 +220,7 @@ trn_shipping_intl,International Ship,BEV,share-weight,2020,2100,s-curve,CWF_low
 trn_shipping_intl,International Ship,FCEV,share-weight,final-calibration-year,2020,fixed,CWF_low
 trn_shipping_intl,International Ship,FCEV,share-weight,2020,2100,s-curve,CWF_low
 trn_shipping_intl,International Ship,Hybrid Liquids,share-weight,final-calibration-year,2020,fixed,CWF_low
-trn_shipping_intl,International Ship,Hybrid Liquids,share-weight,2020,2100,fixed,CWF_low
+trn_shipping_intl,International Ship,Hybrid Liquids,share-weight,2020,2100,s-curve,CWF_low
 trn_shipping_intl,International Ship,Liquids,share-weight,final-calibration-year,2020,fixed,CWF_low
 trn_shipping_intl,International Ship,Liquids,share-weight,2020,2100,fixed,CWF_low
 trn_pass_road_LDV_4W,Large Car and Truck,BEV,share-weight,final-calibration-year,2020,fixed,CWF_low
@@ -220,7 +228,7 @@ trn_pass_road_LDV_4W,Large Car and Truck,BEV,share-weight,2020,2050,s-curve,CWF_
 trn_pass_road_LDV_4W,Large Car and Truck,FCEV,share-weight,final-calibration-year,2020,fixed,CWF_low
 trn_pass_road_LDV_4W,Large Car and Truck,FCEV,share-weight,2020,2050,s-curve,CWF_low
 trn_pass_road_LDV_4W,Large Car and Truck,Hybrid Liquids,share-weight,final-calibration-year,2020,fixed,CWF_low
-trn_pass_road_LDV_4W,Large Car and Truck,Hybrid Liquids,share-weight,2020,2100,fixed,CWF_low
+trn_pass_road_LDV_4W,Large Car and Truck,Hybrid Liquids,share-weight,2020,2035,s-curve,CWF_low
 trn_pass_road_LDV_4W,Large Car and Truck,Liquids,share-weight,final-calibration-year,2020,fixed,CWF_low
 trn_pass_road_LDV_4W,Large Car and Truck,Liquids,share-weight,2020,2100,fixed,CWF_low
 trn_pass_road_LDV_4W,Large Car and Truck,NG,share-weight,final-calibration-year,2020,fixed,CWF_low
@@ -230,7 +238,7 @@ trn_freight_road,Light truck,BEV,share-weight,2020,2075,s-curve,CWF_low
 trn_freight_road,Light truck,FCEV,share-weight,final-calibration-year,2020,fixed,CWF_low
 trn_freight_road,Light truck,FCEV,share-weight,2020,2075,s-curve,CWF_low
 trn_freight_road,Light truck,Hybrid Liquids,share-weight,final-calibration-year,2020,fixed,CWF_low
-trn_freight_road,Light truck,Hybrid Liquids,share-weight,2020,2100,fixed,CWF_low
+trn_freight_road,Light truck,Hybrid Liquids,share-weight,2020,2050,s-curve,CWF_low
 trn_freight_road,Light truck,Liquids,share-weight,final-calibration-year,2020,fixed,CWF_low
 trn_freight_road,Light truck,Liquids,share-weight,2020,2100,fixed,CWF_low
 trn_freight_road,Light truck,NG,share-weight,final-calibration-year,2020,fixed,CWF_low
@@ -240,7 +248,7 @@ trn_freight_road,Medium truck,BEV,share-weight,2020,2075,s-curve,CWF_low
 trn_freight_road,Medium truck,FCEV,share-weight,final-calibration-year,2020,fixed,CWF_low
 trn_freight_road,Medium truck,FCEV,share-weight,2020,2075,s-curve,CWF_low
 trn_freight_road,Medium truck,Hybrid Liquids,share-weight,final-calibration-year,2020,fixed,CWF_low
-trn_freight_road,Medium truck,Hybrid Liquids,share-weight,2020,2100,fixed,CWF_low
+trn_freight_road,Medium truck,Hybrid Liquids,share-weight,2020,2050,s-curve,CWF_low
 trn_freight_road,Medium truck,Liquids,share-weight,final-calibration-year,2020,fixed,CWF_low
 trn_freight_road,Medium truck,Liquids,share-weight,2020,2100,fixed,CWF_low
 trn_freight_road,Medium truck,NG,share-weight,final-calibration-year,2020,fixed,CWF_low
@@ -250,7 +258,7 @@ trn_pass_road_LDV_4W,Mini Car,BEV,share-weight,2020,2050,s-curve,CWF_low
 trn_pass_road_LDV_4W,Mini Car,FCEV,share-weight,final-calibration-year,2020,fixed,CWF_low
 trn_pass_road_LDV_4W,Mini Car,FCEV,share-weight,2020,2050,s-curve,CWF_low
 trn_pass_road_LDV_4W,Mini Car,Hybrid Liquids,share-weight,final-calibration-year,2020,fixed,CWF_low
-trn_pass_road_LDV_4W,Mini Car,Hybrid Liquids,share-weight,2020,2100,fixed,CWF_low
+trn_pass_road_LDV_4W,Mini Car,Hybrid Liquids,share-weight,2020,2035,s-curve,CWF_low
 trn_pass_road_LDV_4W,Mini Car,Liquids,share-weight,final-calibration-year,2020,fixed,CWF_low
 trn_pass_road_LDV_4W,Mini Car,Liquids,share-weight,2020,2100,fixed,CWF_low
 trn_pass_road_LDV_4W,Mini Car,NG,share-weight,final-calibration-year,2020,fixed,CWF_low
@@ -274,7 +282,8 @@ trn_pass_road,Bus,BEV,share-weight,2020,2030,s-curve,CWF_high
 trn_pass_road,Bus,FCEV,share-weight,final-calibration-year,2020,fixed,CWF_high
 trn_pass_road,Bus,FCEV,share-weight,2020,2030,s-curve,CWF_high
 trn_pass_road,Bus,Hybrid Liquids,share-weight,final-calibration-year,2020,fixed,CWF_high
-trn_pass_road,Bus,Hybrid Liquids,share-weight,2020,2035,linear,CWF_high
+trn_pass_road,Bus,Hybrid Liquids,share-weight,2020,2025,s-curve,CWF_high
+trn_pass_road,Bus,Hybrid Liquids,share-weight,2025,2035,linear,CWF_high
 trn_pass_road,Bus,Liquids,share-weight,final-calibration-year,2020,fixed,CWF_high
 trn_pass_road,Bus,Liquids,share-weight,2020,2035,linear,CWF_high
 trn_pass_road,Bus,NG,share-weight,final-calibration-year,2020,fixed,CWF_high
@@ -284,7 +293,8 @@ trn_pass_road_LDV_4W,Car,BEV,share-weight,2020,2030,s-curve,CWF_high
 trn_pass_road_LDV_4W,Car,FCEV,share-weight,final-calibration-year,2020,fixed,CWF_high
 trn_pass_road_LDV_4W,Car,FCEV,share-weight,2020,2030,s-curve,CWF_high
 trn_pass_road_LDV_4W,Car,Hybrid Liquids,share-weight,final-calibration-year,2020,fixed,CWF_high
-trn_pass_road_LDV_4W,Car,Hybrid Liquids,share-weight,2020,2035,linear,CWF_high
+trn_pass_road_LDV_4W,Car,Hybrid Liquids,share-weight,2020,2025,s-curve,CWF_high
+trn_pass_road_LDV_4W,Car,Hybrid Liquids,share-weight,2025,2035,linear,CWF_high
 trn_pass_road_LDV_4W,Car,Liquids,share-weight,final-calibration-year,2020,fixed,CWF_high
 trn_pass_road_LDV_4W,Car,Liquids,share-weight,2020,2035,linear,CWF_high
 trn_pass_road_LDV_4W,Car,NG,share-weight,final-calibration-year,2020,fixed,CWF_high
@@ -302,7 +312,7 @@ trn_freight,Domestic Ship,BEV,share-weight,2020,2050,s-curve,CWF_high
 trn_freight,Domestic Ship,FCEV,share-weight,final-calibration-year,2020,fixed,CWF_high
 trn_freight,Domestic Ship,FCEV,share-weight,2020,2050,s-curve,CWF_high
 trn_freight,Domestic Ship,Hybrid Liquids,share-weight,final-calibration-year,2020,fixed,CWF_high
-trn_freight,Domestic Ship,Hybrid Liquids,share-weight,2020,2100,fixed,CWF_high
+trn_freight,Domestic Ship,Hybrid Liquids,share-weight,2020,2035,s-curve,CWF_high
 trn_freight,Domestic Ship,Liquids,share-weight,final-calibration-year,2020,fixed,CWF_high
 trn_freight,Domestic Ship,Liquids,share-weight,2020,2100,fixed,CWF_high
 trn_freight,Freight Rail,BEV,share-weight,final-calibration-year,2020,fixed,CWF_high
@@ -314,7 +324,8 @@ trn_freight,Freight Rail,Electric,share-weight,2020,2050,s-curve,CWF_high
 trn_freight,Freight Rail,FCEV,share-weight,final-calibration-year,2020,fixed,CWF_high
 trn_freight,Freight Rail,FCEV,share-weight,2020,2050,s-curve,CWF_high
 trn_freight,Freight Rail,Hybrid Liquids,share-weight,final-calibration-year,2020,fixed,CWF_high
-trn_freight,Freight Rail,Hybrid Liquids,share-weight,2020,2050,linear,CWF_high
+trn_freight,Freight Rail,Hybrid Liquids,share-weight,2020,2035,s-curve,CWF_high
+trn_freight,Freight Rail,Hybrid Liquids,share-weight,2035,2050,linear,CWF_high
 trn_freight,Freight Rail,Liquids,share-weight,final-calibration-year,2020,fixed,CWF_high
 trn_freight,Freight Rail,Liquids,share-weight,2020,2050,linear,CWF_high
 trn_freight_road,Heavy truck,BEV,share-weight,final-calibration-year,2020,fixed,CWF_high
@@ -322,7 +333,8 @@ trn_freight_road,Heavy truck,BEV,share-weight,2020,2040,s-curve,CWF_high
 trn_freight_road,Heavy truck,FCEV,share-weight,final-calibration-year,2020,fixed,CWF_high
 trn_freight_road,Heavy truck,FCEV,share-weight,2020,2040,s-curve,CWF_high
 trn_freight_road,Heavy truck,Hybrid Liquids,share-weight,final-calibration-year,2020,fixed,CWF_high
-trn_freight_road,Heavy truck,Hybrid Liquids,share-weight,2020,2040,linear,CWF_high
+trn_freight_road,Heavy truck,Hybrid Liquids,share-weight,2020,2030,s-curve,CWF_high
+trn_freight_road,Heavy truck,Hybrid Liquids,share-weight,2030,2040,linear,CWF_high
 trn_freight_road,Heavy truck,Liquids,share-weight,final-calibration-year,2020,fixed,CWF_high
 trn_freight_road,Heavy truck,Liquids,share-weight,2020,2025,linear,CWF_high
 trn_freight_road,Heavy truck,Liquids,share-weight,2025,2030,linear,CWF_high
@@ -343,7 +355,7 @@ trn_shipping_intl,International Ship,BEV,share-weight,2020,2050,s-curve,CWF_high
 trn_shipping_intl,International Ship,FCEV,share-weight,final-calibration-year,2020,fixed,CWF_high
 trn_shipping_intl,International Ship,FCEV,share-weight,2020,2050,s-curve,CWF_high
 trn_shipping_intl,International Ship,Hybrid Liquids,share-weight,final-calibration-year,2020,fixed,CWF_high
-trn_shipping_intl,International Ship,Hybrid Liquids,share-weight,2020,2100,fixed,CWF_high
+trn_shipping_intl,International Ship,Hybrid Liquids,share-weight,2020,2035,s-curve,CWF_high
 trn_shipping_intl,International Ship,Liquids,share-weight,final-calibration-year,2020,fixed,CWF_high
 trn_shipping_intl,International Ship,Liquids,share-weight,2020,2100,fixed,CWF_high
 trn_pass_road_LDV_4W,Large Car and Truck,BEV,share-weight,final-calibration-year,2020,fixed,CWF_high
@@ -351,7 +363,8 @@ trn_pass_road_LDV_4W,Large Car and Truck,BEV,share-weight,2020,2030,s-curve,CWF_
 trn_pass_road_LDV_4W,Large Car and Truck,FCEV,share-weight,final-calibration-year,2020,fixed,CWF_high
 trn_pass_road_LDV_4W,Large Car and Truck,FCEV,share-weight,2020,2030,s-curve,CWF_high
 trn_pass_road_LDV_4W,Large Car and Truck,Hybrid Liquids,share-weight,final-calibration-year,2020,fixed,CWF_high
-trn_pass_road_LDV_4W,Large Car and Truck,Hybrid Liquids,share-weight,2020,2035,linear,CWF_high
+trn_pass_road_LDV_4W,Large Car and Truck,Hybrid Liquids,share-weight,2020,2025,s-curve,CWF_high
+trn_pass_road_LDV_4W,Large Car and Truck,Hybrid Liquids,share-weight,2025,2035,linear,CWF_high
 trn_pass_road_LDV_4W,Large Car and Truck,Liquids,share-weight,final-calibration-year,2020,fixed,CWF_high
 trn_pass_road_LDV_4W,Large Car and Truck,Liquids,share-weight,2020,2035,linear,CWF_high
 trn_pass_road_LDV_4W,Large Car and Truck,NG,share-weight,final-calibration-year,2020,fixed,CWF_high
@@ -361,7 +374,8 @@ trn_freight_road,Light truck,BEV,share-weight,2020,2040,s-curve,CWF_high
 trn_freight_road,Light truck,FCEV,share-weight,final-calibration-year,2020,fixed,CWF_high
 trn_freight_road,Light truck,FCEV,share-weight,2020,2040,s-curve,CWF_high
 trn_freight_road,Light truck,Hybrid Liquids,share-weight,final-calibration-year,2020,fixed,CWF_high
-trn_freight_road,Light truck,Hybrid Liquids,share-weight,2020,2040,linear,CWF_high
+trn_freight_road,Light truck,Hybrid Liquids,share-weight,2020,2030,s-curve,CWF_high
+trn_freight_road,Light truck,Hybrid Liquids,share-weight,2030,2040,linear,CWF_high
 trn_freight_road,Light truck,Liquids,share-weight,final-calibration-year,2020,fixed,CWF_high
 trn_freight_road,Light truck,Liquids,share-weight,2020,2025,linear,CWF_high
 trn_freight_road,Light truck,Liquids,share-weight,2025,2030,linear,CWF_high
@@ -374,7 +388,8 @@ trn_freight_road,Medium truck,BEV,share-weight,2020,2040,s-curve,CWF_high
 trn_freight_road,Medium truck,FCEV,share-weight,final-calibration-year,2020,fixed,CWF_high
 trn_freight_road,Medium truck,FCEV,share-weight,2020,2040,s-curve,CWF_high
 trn_freight_road,Medium truck,Hybrid Liquids,share-weight,final-calibration-year,2020,fixed,CWF_high
-trn_freight_road,Medium truck,Hybrid Liquids,share-weight,2020,2040,linear,CWF_high
+trn_freight_road,Medium truck,Hybrid Liquids,share-weight,2020,2030,s-curve,CWF_high
+trn_freight_road,Medium truck,Hybrid Liquids,share-weight,2030,2040,linear,CWF_high
 trn_freight_road,Medium truck,Liquids,share-weight,final-calibration-year,2020,fixed,CWF_high
 trn_freight_road,Medium truck,Liquids,share-weight,2020,2025,linear,CWF_high
 trn_freight_road,Medium truck,Liquids,share-weight,2025,2030,linear,CWF_high
@@ -387,7 +402,8 @@ trn_pass_road_LDV_4W,Mini Car,BEV,share-weight,2020,2030,s-curve,CWF_high
 trn_pass_road_LDV_4W,Mini Car,FCEV,share-weight,final-calibration-year,2020,fixed,CWF_high
 trn_pass_road_LDV_4W,Mini Car,FCEV,share-weight,2020,2030,s-curve,CWF_high
 trn_pass_road_LDV_4W,Mini Car,Hybrid Liquids,share-weight,final-calibration-year,2020,fixed,CWF_high
-trn_pass_road_LDV_4W,Mini Car,Hybrid Liquids,share-weight,2020,2035,linear,CWF_high
+trn_pass_road_LDV_4W,Mini Car,Hybrid Liquids,share-weight,2020,2025,s-curve,CWF_high
+trn_pass_road_LDV_4W,Mini Car,Hybrid Liquids,share-weight,2025,2035,linear,CWF_high
 trn_pass_road_LDV_4W,Mini Car,Liquids,share-weight,final-calibration-year,2020,fixed,CWF_high
 trn_pass_road_LDV_4W,Mini Car,Liquids,share-weight,2020,2035,linear,CWF_high
 trn_pass_road_LDV_4W,Mini Car,NG,share-weight,final-calibration-year,2020,fixed,CWF_high
