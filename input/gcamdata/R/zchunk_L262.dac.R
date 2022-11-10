@@ -532,7 +532,7 @@ module_energy_L262.dac <- function(command, ...) {
       right_join(L262.StubTechCapFactor_dac %>%
                    filter(stub.technology %in% c('on-site electrolysis (solar)','on-site electrolysis (wind)')),
                    by = c('supplysector','subsector','stub.technology','year')) %>%
-      mutate(input.cost = input.cost * capex_frac_of_dac_NE_cost / capacity.factor + input.cost * (capex_frac_of_dac_NE_cost),
+      mutate(input.cost = input.cost * capex_frac_of_dac_NE_cost / capacity.factor + input.cost * (1 - capex_frac_of_dac_NE_cost),
              minicam.non.energy.input = 'direct air capture') -> L262.GlobalTechCost_dac_renewable_efuels
 
 
