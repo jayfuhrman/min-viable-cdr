@@ -54,7 +54,7 @@ module_energy_batch_transportation_UCD_CORE_xml <- function(command, ...) {
   } else if(command == driver.DECLARE_OUTPUTS) {
     #xml_files<- c("transportation_UCD_CORE.xml","transportation_UCD_SSP1.xml","transportation_UCD_SSP3.xml","transportation_UCD_SSP5.xml","transportation_UCD_highEV.xml")
     xml_files<- c("transportation_UCD_CORE.xml","transportation_UCD_SSP1.xml","transportation_UCD_SSP3.xml","transportation_UCD_SSP5.xml",
-                  "transportation_UCD_CWF.xml", "transportation_UCD_CWF_high.xml", "transportation_UCD_CWF_low.xml", "transportation_UCD_CWF_ref_shrwts.xml")
+                  "transportation_UCD_CWF_med.xml", "transportation_UCD_CWF_high.xml", "transportation_UCD_CWF_low.xml", "transportation_UCD_CWF_ref_shrwts.xml")
     names(xml_files) <- rep("XML", length(xml_files))
     return(xml_files)
   } else if(command == driver.MAKE) {
@@ -122,7 +122,7 @@ module_energy_batch_transportation_UCD_CORE_xml <- function(command, ...) {
     curr_env <- environment()
 
     #for (i in c("CORE","SSP1","SSP3","SSP5", "highEV")){
-    for (i in c("CORE","SSP1","SSP3","SSP5", "CWF", "CWF_low", "CWF_high", "CWF_ref_shrwts")){
+    for (i in c("CORE","SSP1","SSP3","SSP5", "CWF_med", "CWF_low", "CWF_high", "CWF_ref_shrwts")){
       xml_name <- paste0("transportation_UCD_", i, ".xml")
       #Read SSP specific data
       L254.tranSubsectorSpeed_SSP <- L254.tranSubsectorSpeed %>% filter(sce== i)
