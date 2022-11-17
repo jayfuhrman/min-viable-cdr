@@ -26,7 +26,8 @@ module_energy_batch_en_distribution_xml <- function(command, ...) {
               "L226.StubTechCoef_electd",
               "L226.StubTechCoef_gaspipe"))
   } else if(command == driver.DECLARE_OUTPUTS) {
-    return(c(XML = "en_distribution.xml"))
+    return(c(XML = "en_distribution.xml",
+             XML = "en_distribution_H2_peaker.xml"))
   } else if(command == driver.MAKE) {
 
     all_data <- list(...)[[1]]
@@ -102,7 +103,62 @@ module_energy_batch_en_distribution_xml <- function(command, ...) {
                      "L226.StubTechCoef_gaspipe") ->
       en_distribution.xml
 
-    return_data(en_distribution.xml)
+    create_xml("en_distribution_H2_peaker.xml") %>%
+      add_logit_tables_xml(L226.Supplysector_en, "Supplysector") %>%
+      add_logit_tables_xml(L226.SubsectorLogit_en, "SubsectorLogit") ->
+      en_distribution_H2_peaker.xml
+
+    # Some data inputs may not actually contain data. If so, do not add_xml_data.
+    if(!is.null(L226.SubsectorShrwt_en)) {
+      en_distribution_H2_peaker.xml %>%
+        add_xml_data(L226.SubsectorShrwt_en, "SubsectorShrwt") ->
+        en_distribution_H2_peaker.xml
+    }
+
+    if(!is.null(L226.SubsectorShrwtFllt_en)) {
+      en_distribution_H2_peaker.xml %>%
+        add_xml_data(L226.SubsectorShrwtFllt_en %>%
+                       mutate(share.weight = if_else(supplysector == "backup_electricity" & subsector == "hydrogen",1,share.weight)), "SubsectorShrwtFllt") ->
+        en_distribution_H2_peaker.xml
+    }
+
+    if(!is.null(L226.SubsectorInterp_en)) {
+      en_distribution_H2_peaker.xml %>%
+        add_xml_data(L226.SubsectorInterp_en, "SubsectorInterp") ->
+        en_distribution_H2_peaker.xml
+    }
+
+    if(!is.null(L226.SubsectorInterpTo_en)) {
+      en_distribution_H2_peaker.xml %>%
+        add_xml_data(L226.SubsectorInterpTo_en, "SubsectorInterpTo") ->
+        en_distribution_H2_peaker.xml
+    }
+
+    en_distribution_H2_peaker.xml %>%
+      add_xml_data(L226.StubTech_en, "StubTech") %>%
+      add_xml_data(L226.GlobalTechEff_en, "GlobalTechEff") %>%
+      add_xml_data(L226.GlobalTechCost_en, "GlobalTechCost") %>%
+      add_xml_data(L226.GlobalTechShrwt_en, "GlobalTechShrwt") %>%
+      add_xml_data(L226.StubTechCoef_elecownuse, "StubTechCoef") %>%
+      add_xml_data(L226.StubTechCoef_electd, "StubTechCoef") %>%
+      add_xml_data(L226.StubTechCoef_gaspipe, "StubTechCoef") %>%
+      add_precursors("L226.Supplysector_en",
+                     "L226.SubsectorLogit_en",
+                     "L226.SubsectorShrwt_en",
+                     "L226.SubsectorShrwtFllt_en",
+                     "L226.SubsectorInterp_en",
+                     "L226.SubsectorInterpTo_en",
+                     "L226.StubTech_en",
+                     "L226.GlobalTechEff_en",
+                     "L226.GlobalTechCost_en",
+                     "L226.GlobalTechShrwt_en",
+                     "L226.StubTechCoef_elecownuse",
+                     "L226.StubTechCoef_electd",
+                     "L226.StubTechCoef_gaspipe") ->
+      en_distribution_H2_peaker.xml
+
+    return_data(en_distribution.xml,
+                en_distribution_H2_peaker.xml)
   } else {
     stop("Unknown command")
   }
