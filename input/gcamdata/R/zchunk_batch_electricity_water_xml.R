@@ -71,7 +71,8 @@ module_water_batch_electricity_water_xml <- function(command, ...) {
              "L223.SubsectorInterpTo_elec_cwf"))
   } else if(command == driver.DECLARE_OUTPUTS) {
     return(c(XML = "electricity_water.xml",
-             XML = "electricity_water_cwf.xml"))
+             XML = "electricity_water_cwf.xml",
+             XML = "grid_management_cwf.xml"))
   } else if(command == driver.MAKE) {
 
     all_data <- list(...)[[1]]
@@ -373,7 +374,17 @@ module_water_batch_electricity_water_xml <- function(command, ...) {
                      "L223.GlobalTechCapFac_elec") ->
       electricity_water_cwf.xml
 
-    return_data(electricity_water.xml, electricity_water_cwf.xml)
+    L2233.GlobalIntTechBackup_elec_cool <- L2233.GlobalIntTechBackup_elec_cool %>%
+      mutate(backup.capacity.factor = energy.BACKUP_CAPACITY_FACTOR_LOW,
+             capacity.limit = energy.CAPACITY_LIMIT_HI)
+
+    create_xml("grid_management_cwf.xml") %>%
+      add_node_equiv_xml("sector") %>%
+      add_node_equiv_xml("technology") %>%
+      add_xml_data(L2233.GlobalIntTechBackup_elec_cool, "GlobalIntTechBackup") %>%
+      add_precursors("L2233.GlobalIntTechBackup_elec_cool") -> grid_management_cwf.xml
+
+    return_data(electricity_water.xml, electricity_water_cwf.xml,grid_management_cwf.xml)
   } else {
     stop("Unknown command")
   }

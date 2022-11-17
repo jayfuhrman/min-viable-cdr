@@ -522,6 +522,9 @@ energy.WIND_CURVE_MIDPOINT <- 0.5
 energy.WIND_MIN_POTENTIAL <- 0.001
 energy.WIND_ELECTROLYSIS_KGH2_D <- 50000    # kg of h2 produced per day at a wind-electrolysis plant
 
+energy.BACKUP_CAPACITY_FACTOR_LOW <- 0.025
+energy.CAPACITY_LIMIT_HI <- 0.8
+
 # Digits for rounding into XMLs
 energy.DIGITS_CALOUTPUT        <- 7
 energy.DIGITS_CALPRODUCTION    <- 7
