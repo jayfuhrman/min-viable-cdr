@@ -213,6 +213,12 @@ protected:
         //! The market supply.
         DEFINE_VARIABLE( SIMPLE | STATE, "supply", mSupply, Value ),
                 
+        //! The market demand error correction term.
+        DEFINE_VARIABLE( SIMPLE | STATE, "demand-correction", mDemandCorrection, Value ),
+        
+        //! The market supply error correction term.
+        DEFINE_VARIABLE( SIMPLE | STATE, "supply-correction", mSupplyCorrection, Value ),
+                
         //! The year associated with this market.
         DEFINE_VARIABLE( SIMPLE, "year", mYear, int ),
         
