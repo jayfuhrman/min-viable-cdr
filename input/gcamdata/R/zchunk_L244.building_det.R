@@ -36,8 +36,10 @@ module_energy_L244.building_det <- function(command, ...) {
              FILE = "energy/A_regions",
              FILE = "energy/A44.sector",
              FILE = "energy/A44.subsector_interp",
+             FILE = "energy/A44.subsector_interp_low_fossil",
              FILE = "energy/A44.subsector_logit",
              FILE = "energy/A44.subsector_shrwt",
+             FILE = "energy/A44.subsector_shrwt_low_fossil",
              FILE = "energy/A44.fuelprefElasticity",
              FILE = "energy/A44.fuelprefElasticity_SSP3",
              FILE = "energy/A44.fuelprefElasticity_SSP4",
@@ -86,9 +88,13 @@ module_energy_L244.building_det <- function(command, ...) {
              "L244.Supplysector_bld",
              "L244.FinalEnergyKeyword_bld",
              "L244.SubsectorShrwt_bld",
+             "L244.SubsectorShrwt_bld_low_fossil",
              "L244.SubsectorShrwtFllt_bld",
+             "L244.SubsectorShrwtFllt_bld_low_fossil",
              "L244.SubsectorInterp_bld",
+             "L244.SubsectorInterp_bld_low_fossil",
              "L244.SubsectorInterpTo_bld",
+             "L244.SubsectorInterpTo_bld_low_fossil",
              "L244.SubsectorLogit_bld",
              "L244.FuelPrefElast_bld",
              "L244.StubTech_bld",
@@ -156,8 +162,10 @@ module_energy_L244.building_det <- function(command, ...) {
     A_regions <- get_data(all_data, "energy/A_regions")
     A44.sector <- get_data(all_data, "energy/A44.sector", strip_attributes = TRUE)
     A44.subsector_interp <- get_data(all_data, "energy/A44.subsector_interp", strip_attributes = TRUE)
+    A44.subsector_interp_low_fossil <- get_data(all_data, "energy/A44.subsector_interp_low_fossil", strip_attributes = TRUE)
     A44.subsector_logit <- get_data(all_data, "energy/A44.subsector_logit", strip_attributes = TRUE)
     A44.subsector_shrwt <- get_data(all_data, "energy/A44.subsector_shrwt", strip_attributes = TRUE)
+    A44.subsector_shrwt_low_fossil <- get_data(all_data, "energy/A44.subsector_shrwt_low_fossil", strip_attributes = TRUE)
     A44.fuelprefElasticity <- get_data(all_data, "energy/A44.fuelprefElasticity", strip_attributes = TRUE)
     A44.fuelprefElasticity_SSP3 <- get_data(all_data, "energy/A44.fuelprefElasticity_SSP3", strip_attributes = TRUE)
     A44.fuelprefElasticity_SSP4 <- get_data(all_data, "energy/A44.fuelprefElasticity_SSP4", strip_attributes = TRUE)
@@ -645,6 +653,18 @@ module_energy_L244.building_det <- function(command, ...) {
         write_to_all_regions(LEVEL2_DATA_NAMES[["SubsectorShrwtFllt"]], GCAM_region_names = GCAM_region_names) %>%
         semi_join(L244.Tech_bld, by = c("region", "supplysector", "subsector"))
     }
+    if(any(!is.na(A44.subsector_shrwt_low_fossil$year))) {
+      L244.SubsectorShrwt_bld_low_fossil <- A44.subsector_shrwt_low_fossil %>%
+        filter(!is.na(year)) %>%
+        write_to_all_regions(LEVEL2_DATA_NAMES[["SubsectorShrwt"]], GCAM_region_names = GCAM_region_names) %>%
+        semi_join(L244.Tech_bld, by = c("region", "supplysector", "subsector"))
+    }
+    if(any(!is.na(A44.subsector_shrwt_low_fossil$year.fillout))) {
+      L244.SubsectorShrwtFllt_bld_low_fossil <- A44.subsector_shrwt_low_fossil %>%
+        filter(!is.na(year.fillout)) %>%
+        write_to_all_regions(LEVEL2_DATA_NAMES[["SubsectorShrwtFllt"]], GCAM_region_names = GCAM_region_names) %>%
+        semi_join(L244.Tech_bld, by = c("region", "supplysector", "subsector"))
+    }
 
     # L244.SubsectorInterp_bld and L244.SubsectorInterpTo_bld: Subsector shareweight interpolation of building sector
     if(any(is.na(A44.subsector_interp$to.value))) {
@@ -655,6 +675,19 @@ module_energy_L244.building_det <- function(command, ...) {
     }
     if(any(!is.na(A44.subsector_interp$to.value))) {
       L244.SubsectorInterpTo_bld <- A44.subsector_interp %>%
+        filter(!is.na(to.value)) %>%
+        write_to_all_regions(LEVEL2_DATA_NAMES[["SubsectorInterpTo"]], GCAM_region_names = GCAM_region_names) %>%
+        semi_join(L244.Tech_bld, by = c("region", "supplysector", "subsector"))
+    }
+
+    if(any(is.na(A44.subsector_interp_low_fossil$to.value))) {
+      L244.SubsectorInterp_bld_low_fossil <- A44.subsector_interp_low_fossil %>%
+        filter(is.na(to.value)) %>%
+        write_to_all_regions(LEVEL2_DATA_NAMES[["SubsectorInterp"]], GCAM_region_names = GCAM_region_names) %>%
+        semi_join(L244.Tech_bld, by = c("region", "supplysector", "subsector"))
+    }
+    if(any(!is.na(A44.subsector_interp_low_fossil$to.value))) {
+      L244.SubsectorInterpTo_bld_low_fossil <- A44.subsector_interp_low_fossil %>%
         filter(!is.na(to.value)) %>%
         write_to_all_regions(LEVEL2_DATA_NAMES[["SubsectorInterpTo"]], GCAM_region_names = GCAM_region_names) %>%
         semi_join(L244.Tech_bld, by = c("region", "supplysector", "subsector"))
@@ -1070,6 +1103,20 @@ module_energy_L244.building_det <- function(command, ...) {
         L244.SubsectorShrwt_bld
     }
 
+    if(exists("L244.SubsectorShrwt_bld_low_fossil")) {
+      L244.SubsectorShrwt_bld_low_fossil %>%
+        add_title("Subsector shareweights for building sector") %>%
+        add_units("Unitless") %>%
+        add_comments("A44.subsector_shrwt written to all regions") %>%
+        add_legacy_name("L244.SubsectorShrwt_bld_low_fossil") %>%
+        add_precursors("energy/A44.subsector_shrwt_low_fossil", "common/GCAM_region_names", "L144.end_use_eff")  ->
+        L244.SubsectorShrwt_bld_low_fossil
+    } else {
+      missing_data() %>%
+        add_legacy_name("L244.SubsectorShrwt_bld_low_fossil") ->
+        L244.SubsectorShrwt_bld_low_fossil
+    }
+
     if(exists("L244.SubsectorShrwtFllt_bld")) {
       L244.SubsectorShrwtFllt_bld %>%
         add_title("Subsector shareweights for building sector") %>%
@@ -1082,6 +1129,20 @@ module_energy_L244.building_det <- function(command, ...) {
       missing_data() %>%
         add_legacy_name("L244.SubsectorShrwtFllt_bld") ->
         L244.SubsectorShrwtFllt_bld
+    }
+
+    if(exists("L244.SubsectorShrwtFllt_bld_low_fossil")) {
+      L244.SubsectorShrwtFllt_bld_low_fossil %>%
+        add_title("Subsector shareweights for building sector") %>%
+        add_units("Unitless") %>%
+        add_comments("A44.subsector_shrwt written to all regions") %>%
+        add_legacy_name("L244.SubsectorShrwtFllt_bld_low_fossil") %>%
+        add_precursors("energy/A44.subsector_shrwt_low_fossil", "common/GCAM_region_names", "L144.end_use_eff")  ->
+        L244.SubsectorShrwtFllt_bld_low_fossil
+    } else {
+      missing_data() %>%
+        add_legacy_name("L244.SubsectorShrwtFllt_bld_low_fossil") ->
+        L244.SubsectorShrwtFllt_bld_low_fossil
     }
 
     if(exists("L244.SubsectorInterp_bld")) {
@@ -1097,6 +1158,19 @@ module_energy_L244.building_det <- function(command, ...) {
         add_legacy_name("L244.SubsectorInterp_bld") ->
         L244.SubsectorInterp_bld
     }
+    if(exists("L244.SubsectorInterp_bld_low_fossil")) {
+      L244.SubsectorInterp_bld_low_fossil %>%
+        add_title("Subsector shareweight interpolation for building sector") %>%
+        add_units("NA") %>%
+        add_comments("A44.subsector_interp written to all regions") %>%
+        add_legacy_name("L244.SubsectorInterp_bld") %>%
+        add_precursors("energy/A44.subsector_interp_low_fossil", "common/GCAM_region_names", "L144.end_use_eff")  ->
+        L244.SubsectorInterp_bld_low_fossil
+    } else {
+      missing_data() %>%
+        add_legacy_name("L244.SubsectorInterp_bld_low_fossil") ->
+        L244.SubsectorInterp_bld_low_fossil
+    }
 
     if(exists("L244.SubsectorInterpTo_bld")) {
       L244.SubsectorInterpTo_bld %>%
@@ -1110,6 +1184,19 @@ module_energy_L244.building_det <- function(command, ...) {
       missing_data() %>%
         add_legacy_name("L244.SubsectorInterpTo_bld") ->
         L244.SubsectorInterpTo_bld
+    }
+    if(exists("L244.SubsectorInterpTo_bld_low_fossil")) {
+      L244.SubsectorInterpTo_bld_low_fossil %>%
+        add_title("Subsector shareweight interpolation for building sector") %>%
+        add_units("NA") %>%
+        add_comments("A44.subsector_interp written to all regions") %>%
+        add_legacy_name("L244.SubsectorInterpTo_bld_low_fossil") %>%
+        add_precursors("energy/A44.subsector_interp_low_fossil", "common/GCAM_region_names", "L144.end_use_eff")  ->
+        L244.SubsectorInterpTo_bld_low_fossil
+    } else {
+      missing_data() %>%
+        add_legacy_name("L244.SubsectorInterpTo_bld_low_fossil") ->
+        L244.SubsectorInterpTo_bld_low_fossil
     }
 
     L244.SubsectorLogit_bld %>%
@@ -1281,8 +1368,8 @@ module_energy_L244.building_det <- function(command, ...) {
     return_data(L244.SubregionalShares, L244.PriceExp_IntGains, L244.Floorspace, L244.DemandFunction_serv, L244.DemandFunction_flsp,
                 L244.Satiation_flsp, L244.SatiationAdder, L244.ThermalBaseService, L244.GenericBaseService, L244.ThermalServiceSatiation,
                 L244.GenericServiceSatiation, L244.Intgains_scalar, L244.ShellConductance_bld,
-                L244.Supplysector_bld, L244.FinalEnergyKeyword_bld, L244.SubsectorShrwt_bld, L244.SubsectorShrwtFllt_bld, L244.SubsectorInterp_bld,
-                L244.SubsectorInterpTo_bld, L244.FuelPrefElast_bld,
+                L244.Supplysector_bld, L244.FinalEnergyKeyword_bld, L244.SubsectorShrwt_bld, L244.SubsectorShrwt_bld_low_fossil, L244.SubsectorShrwtFllt_bld, L244.SubsectorShrwtFllt_bld_low_fossil, L244.SubsectorInterp_bld, L244.SubsectorInterp_bld_low_fossil,
+                L244.SubsectorInterpTo_bld, L244.SubsectorInterpTo_bld_low_fossil, L244.FuelPrefElast_bld,
                 L244.StubTech_bld, L244.StubTechEff_bld, L244.StubTechCalInput_bld, L244.GlobalTechShrwt_bld,
                 L244.GlobalTechCost_bld, L244.DeleteGenericService, L244.Satiation_flsp_SSP1, L244.SatiationAdder_SSP1,
                 L244.GenericServiceSatiation_SSP1, L244.Satiation_flsp_SSP2,

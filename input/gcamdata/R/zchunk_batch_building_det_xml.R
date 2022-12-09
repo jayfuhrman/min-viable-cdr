@@ -16,6 +16,10 @@ module_energy_batch_building_det_xml <- function(command, ...) {
              "L244.SubsectorInterp_bld",
              "L244.SubsectorShrwtFllt_bld",
              "L244.SubsectorShrwt_bld",
+             "L244.SubsectorInterpTo_bld_low_fossil",
+             "L244.SubsectorInterp_bld_low_fossil",
+             "L244.SubsectorShrwtFllt_bld_low_fossil",
+             "L244.SubsectorShrwt_bld_low_fossil",
              "L244.FinalEnergyKeyword_bld",
              "L244.Supplysector_bld",
              "L244.ShellConductance_bld",
@@ -50,7 +54,8 @@ module_energy_batch_building_det_xml <- function(command, ...) {
              "L244.GompFnParam_cwf"))
   } else if(command == driver.DECLARE_OUTPUTS) {
     return(c(XML = "building_det.xml",
-             XML = "building_det_cwf.xml"))
+             XML = "building_det_cwf.xml",
+             XML = "building_det_cwf_low_fossil.xml"))
   } else if(command == driver.MAKE) {
 
     all_data <- list(...)[[1]]
@@ -60,6 +65,10 @@ module_energy_batch_building_det_xml <- function(command, ...) {
     L244.SubsectorInterp_bld <- get_data(all_data, "L244.SubsectorInterp_bld")
     L244.SubsectorShrwtFllt_bld <- get_data(all_data, "L244.SubsectorShrwtFllt_bld")
     L244.SubsectorShrwt_bld <- get_data(all_data, "L244.SubsectorShrwt_bld")
+    L244.SubsectorInterpTo_bld_low_fossil <- get_data(all_data, "L244.SubsectorInterpTo_bld_low_fossil")
+    L244.SubsectorInterp_bld_low_fossil <- get_data(all_data, "L244.SubsectorInterp_bld_low_fossil")
+    L244.SubsectorShrwtFllt_bld_low_fossil <- get_data(all_data, "L244.SubsectorShrwtFllt_bld_low_fossil")
+    L244.SubsectorShrwt_bld_low_fossil <- get_data(all_data, "L244.SubsectorShrwt_bld_low_fossil")
     L244.FinalEnergyKeyword_bld <- get_data(all_data, "L244.FinalEnergyKeyword_bld")
     L244.Supplysector_bld <- get_data(all_data, "L244.Supplysector_bld")
     L244.ShellConductance_bld <- get_data(all_data, "L244.ShellConductance_bld")
@@ -173,6 +182,44 @@ module_energy_batch_building_det_xml <- function(command, ...) {
                      "L244.PriceExp_IntGains") ->
       building_det_cwf.xml
 
+    create_xml("building_det_cwf_low_fossil.xml") %>%
+      add_xml_data(L244.FinalEnergyKeyword_bld, "FinalEnergyKeyword") %>%
+      add_logit_tables_xml(L244.Supplysector_bld, "Supplysector") %>%
+      add_xml_data(L244.ShellConductance_bld_cwf, "ShellConductance") %>% # CWF version
+      add_xml_data(L244.Intgains_scalar, "Intgains_scalar") %>%
+      add_xml_data(L244.GenericServiceSatiation, "GenericServiceSatiation") %>%
+      add_xml_data(L244.ThermalServiceSatiation, "ThermalServiceSatiation") %>%
+      add_xml_data(L244.GenericBaseService, "GenericBaseService") %>%
+      add_xml_data(L244.ThermalBaseService, "ThermalBaseService") %>%
+      add_xml_data(L244.SatiationAdder_cwf, "SatiationAdder") %>% # CWF version
+      add_xml_data(L244.Satiation_flsp_cwf, "Satiation_flsp") %>% # CWF version
+      add_xml_data(L244.GompFnParam_cwf, "GompFnParam") %>% # CWF version
+      add_xml_data(L244.DemandFunction_flsp, "DemandFunction_flsp") %>%
+      add_xml_data(L244.DemandFunction_serv, "DemandFunction_serv") %>%
+      add_xml_data(L244.Floorspace, "Floorspace") %>%
+      add_xml_data(L244.PriceExp_IntGains, "PriceExp_IntGains") %>%
+      add_xml_data(L244.SubregionalShares, "SubregionalShares") %>%
+      add_logit_tables_xml(L244.SubsectorLogit_bld, "SubsectorLogit") %>%
+      add_xml_data(L244.FuelPrefElast_bld, "FuelPrefElast") %>%
+      add_xml_data(L244.StubTech_bld, "StubTech") %>%
+      add_xml_data(L244.StubTechEff_bld_cwf, "StubTechEff") %>% # CWF version
+      add_xml_data(L244.StubTechCalInput_bld, "StubTechCalInput") %>%
+      add_xml_data(L244.StubTechIntGainOutputRatio_cwf, "StubTechIntGainOutputRatio") %>% # CWF version
+      add_xml_data(L244.GlobalTechShrwt_bld, "GlobalTechShrwt") %>%
+      add_xml_data(L244.GlobalTechCost_bld, "GlobalTechCost") %>%
+      add_precursors("L244.SubsectorInterpTo_bld_low_fossil", "L244.SubsectorInterp_bld_low_fossil" , "L244.SubsectorShrwtFllt_bld_low_fossil",
+                     "L244.SubsectorShrwt_bld_low_fossil", "L244.FinalEnergyKeyword_bld", "L244.Supplysector_bld",
+                     "L244.ShellConductance_bld_cwf", "L244.Intgains_scalar", "L244.GenericServiceSatiation",
+                     "L244.ThermalServiceSatiation", "L244.GenericBaseService", "L244.ThermalBaseService", "L244.SatiationAdder_cwf",
+                     "L244.Satiation_flsp_cwf", "L244.GompFnParam_cwf",
+                     "L244.DemandFunction_flsp", "L244.DemandFunction_serv",
+                     "L244.Floorspace", "L244.SubregionalShares", "L244.SubsectorLogit_bld",
+                     "L244.FuelPrefElast_bld", "L244.StubTech_bld", "L244.StubTechEff_bld_cwf",
+                     "L244.StubTechCalInput_bld", "L244.StubTechIntGainOutputRatio_cwf", "L244.GlobalTechShrwt_bld",
+                     "L244.GlobalTechCost_bld", "L244.DeleteThermalService", "L244.DeleteGenericService",
+                     "L244.PriceExp_IntGains") ->
+      building_det_cwf_low_fossil.xml
+
     # Some data inputs may not actually contain data. If so, do not add_xml_data.
     if(nrow(L244.DeleteThermalService) > 0) {
       building_det.xml %>%
@@ -182,6 +229,10 @@ module_energy_batch_building_det_xml <- function(command, ...) {
       building_det_cwf.xml %>%
         add_xml_data(L244.DeleteThermalService, "DeleteThermalService") ->
         building_det_cwf.xml
+
+      building_det_cwf_low_fossil.xml %>%
+        add_xml_data(L244.DeleteThermalService, "DeleteThermalService") ->
+        building_det_cwf_low_fossil.xml
     }
 
     if(!is.null(L244.DeleteGenericService)) {
@@ -192,6 +243,10 @@ module_energy_batch_building_det_xml <- function(command, ...) {
       building_det_cwf.xml %>%
         add_xml_data(L244.DeleteGenericService, "DeleteGenericService") ->
         building_det_cwf.xml
+
+      building_det_cwf_low_fossil.xml %>%
+        add_xml_data(L244.DeleteGenericService, "DeleteGenericService") ->
+        building_det_cwf_low_fossil.xml
     }
     if(!is.null(L244.SubsectorShrwt_bld)) {
       building_det.xml %>%
@@ -202,6 +257,12 @@ module_energy_batch_building_det_xml <- function(command, ...) {
         add_xml_data(L244.SubsectorShrwt_bld, "SubsectorShrwt") ->
         building_det_cwf.xml
     }
+    if(!is.null(L244.SubsectorShrwt_bld_low_fossil)) {
+
+      building_det_cwf_low_fossil.xml %>%
+        add_xml_data(L244.SubsectorShrwt_bld_low_fossil, "SubsectorShrwt") ->
+        building_det_cwf_low_fossil.xml
+    }
     if(!is.null(L244.SubsectorShrwtFllt_bld)) {
       building_det.xml %>%
         add_xml_data(L244.SubsectorShrwtFllt_bld, "SubsectorShrwtFllt") ->
@@ -210,6 +271,11 @@ module_energy_batch_building_det_xml <- function(command, ...) {
       building_det_cwf.xml %>%
         add_xml_data(L244.SubsectorShrwtFllt_bld, "SubsectorShrwtFllt") ->
         building_det_cwf.xml
+    }
+    if(!is.null(L244.SubsectorShrwtFllt_bld_low_fossil)) {
+      building_det_cwf_low_fossil.xml %>%
+        add_xml_data(L244.SubsectorShrwtFllt_bld_low_fossil, "SubsectorShrwtFllt") ->
+        building_det_cwf_low_fossil.xml
     }
     if(!is.null(L244.SubsectorInterp_bld)) {
       building_det.xml %>%
@@ -220,6 +286,11 @@ module_energy_batch_building_det_xml <- function(command, ...) {
         add_xml_data(L244.SubsectorInterp_bld, "SubsectorInterp") ->
         building_det_cwf.xml
     }
+    if(!is.null(L244.SubsectorInterp_bld_low_fossil)) {
+      building_det_cwf_low_fossil.xml %>%
+        add_xml_data(L244.SubsectorInterp_bld_low_fossil, "SubsectorInterp") ->
+        building_det_cwf_low_fossil.xml
+    }
     if(!is.null(L244.SubsectorInterpTo_bld)) {
       building_det.xml %>%
         add_xml_data(L244.SubsectorInterpTo_bld, "SubsectorInterp") ->
@@ -229,8 +300,13 @@ module_energy_batch_building_det_xml <- function(command, ...) {
         add_xml_data(L244.SubsectorInterpTo_bld, "SubsectorInterp") ->
         building_det_cwf.xml
     }
+    if(!is.null(L244.SubsectorInterpTo_bld_low_fossil)) {
+      building_det_cwf_low_fossil.xml %>%
+        add_xml_data(L244.SubsectorInterpTo_bld_low_fossil, "SubsectorInterp") ->
+        building_det_cwf_low_fossil.xml
+    }
 
-    return_data(building_det.xml, building_det_cwf.xml)
+    return_data(building_det.xml, building_det_cwf.xml, building_det_cwf_low_fossil.xml)
   } else {
     stop("Unknown command")
   }
