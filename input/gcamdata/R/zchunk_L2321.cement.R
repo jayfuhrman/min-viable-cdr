@@ -229,9 +229,6 @@ module_energy_L2321.cement <- function(command, ...) {
     #       Calculate here in two steps:
     #       (1) calculate the additional CCS costs per unit of carbon produced in 1975$
     #       (2) calculate the quantity of CO2 produced per unit of cement produced (in kgC per kg cement)
-    cement_CCS_cost_total_1975USDtC <- energy.CEMENT_CCS_COST_2000USDTCO2 * gdp_deflator(1975, base_year = 2000) * emissions.CONV_C_CO2
-    CO2_storage_cost_1975USDtC <- energy.CO2_STORAGE_COST_1990_USDTC * gdp_deflator(1975, base_year = 1990)
-    cement_CCS_cost_1975USDtC <- cement_CCS_cost_total_1975USDtC - CO2_storage_cost_1975USDtC
 
     L2321.GlobalTechCapture_cement %>%
       pull(remove.fraction) %>%
@@ -249,15 +246,18 @@ module_energy_L2321.cement <- function(command, ...) {
       mean ->
       PrimaryFuelCO2Coef_mean # temporary value
 
-    CO2_IO_kgCkgcement <- coef_mean * PrimaryFuelCO2Coef_mean
-    CO2stored_IO_kgCkgcement <- CO2_IO_kgCkgcement * cement_CO2_capture_frac
-    cement_CCS_cost_75USD_tcement <- cement_CCS_cost_1975USDtC * CO2stored_IO_kgCkgcement / CONV_T_KG
+    # non-fuel cost adder for cement CCS from CEMCAP spreadsheet model 2018, using a Euro to USD exchange rate of 1.18
+    # Edoardo De Lena, Marizio Spinelli, Matteo Romano, Stefania Osk Gardarsdottir, Simon Roussanaly, & Mari Voldsund. (2018).
+    # CEMCAP economic model spreadsheet. Zenodo. https://doi.org/10.5281/zenodo.1475804
+    cement_CCS_cost_75USD_tcement <-  37.86 * gdp_deflator(1975, base_year = 2018) / CONV_T_KG
 
     # Adjust the non-energy costs in the table for model input
     L2321.GlobalTechCost_cement %>%
-      filter(technology %in% L2321.GlobalTechCapture_cement[["technology"]]) %>%
+      filter(technology %in% L2321.GlobalTechCapture_cement[["technology"]],
+             !(sector.name %in% c('process heat cement CCS'))) %>%
       mutate(input.cost = input.cost + cement_CCS_cost_75USD_tcement) %>%
-      bind_rows(filter(L2321.GlobalTechCost_cement, !(technology %in% L2321.GlobalTechCapture_cement[["technology"]]))) %>%
+      bind_rows(filter(L2321.GlobalTechCost_cement, !(technology %in% L2321.GlobalTechCapture_cement[["technology"]])),
+                filter(L2321.GlobalTechCost_cement, sector.name %in% c('process heat cement CCS'))) %>%
       mutate(input.cost = round(input.cost, energy.DIGITS_COST)) ->
       L2321.GlobalTechCost_cement
 

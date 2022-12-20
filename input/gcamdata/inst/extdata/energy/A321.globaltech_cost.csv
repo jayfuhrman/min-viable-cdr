@@ -11,3 +11,8 @@ process heat cement,coal,coal,non-energy,1,1,1,1
 process heat cement,gas,gas,non-energy,1,1,1,1
 process heat cement,refined liquids,refined liquids,non-energy,1,1,1,1
 process heat cement,hydrogen,hydrogen,non-energy,1,1,1,1
+process heat cement CCS,biomass,biomass CCS,non-energy,1,1,1,1
+process heat cement CCS,coal,coal CCS,non-energy,1,1,1,1
+process heat cement CCS,gas,gas CCS,non-energy,1,1,1,1
+process heat cement CCS,refined liquids,refined liquids CCS,non-energy,1,1,1,1
+process heat cement CCS,hydrogen,hydrogen,non-energy,1,1,1,1

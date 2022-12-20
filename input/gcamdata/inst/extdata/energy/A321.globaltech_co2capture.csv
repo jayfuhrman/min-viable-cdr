@@ -5,3 +5,7 @@
 # ----------
 supplysector,subsector,technology,1971,2100
 cement,cement,cement CCS,0.9,0.9
+process heat cement CCS,biomass,biomass CCS,0.9,0.9
+process heat cement CCS,coal,coal CCS,0.9,0.9
+process heat cement CCS,gas,gas CCS,0.9,0.9
+process heat cement CCS,refined liquids,refined liquids CCS,0.9,0.9
