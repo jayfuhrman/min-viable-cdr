@@ -12,10 +12,3 @@ process heat cement,refined liquids,share-weight,final-calibration-year,end-year
 process heat cement,hydrogen,share-weight,start-year,2020,,fixed
 process heat cement,hydrogen,share-weight,2020,2050,,linear
 process heat cement,hydrogen,share-weight,2050,end-year,,fixed
-process heat cement CCS,biomass,share-weight,final-calibration-year,end-year,,fixed
-process heat cement CCS,coal,share-weight,final-calibration-year,end-year,,fixed
-process heat cement CCS,gas,share-weight,final-calibration-year,end-year,,fixed
-process heat cement CCS,refined liquids,share-weight,final-calibration-year,end-year,,fixed
-process heat cement CCS,hydrogen,share-weight,start-year,2020,,fixed
-process heat cement CCS,hydrogen,share-weight,2020,2050,,linear
-process heat cement CCS,hydrogen,share-weight,2050,end-year,,fixed

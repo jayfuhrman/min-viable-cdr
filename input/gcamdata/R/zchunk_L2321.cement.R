@@ -254,10 +254,10 @@ module_energy_L2321.cement <- function(command, ...) {
     # Adjust the non-energy costs in the table for model input
     L2321.GlobalTechCost_cement %>%
       filter(technology %in% L2321.GlobalTechCapture_cement[["technology"]],
-             !(sector.name %in% c('process heat cement CCS'))) %>%
+             !(sector.name %in% c('process heat cement'))) %>%
       mutate(input.cost = input.cost + cement_CCS_cost_75USD_tcement) %>%
       bind_rows(filter(L2321.GlobalTechCost_cement, !(technology %in% L2321.GlobalTechCapture_cement[["technology"]])),
-                filter(L2321.GlobalTechCost_cement, sector.name %in% c('process heat cement CCS'))) %>%
+                filter(L2321.GlobalTechCost_cement, sector.name %in% c('process heat cement'))) %>%
       mutate(input.cost = round(input.cost, energy.DIGITS_COST)) ->
       L2321.GlobalTechCost_cement
 
