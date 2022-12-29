@@ -15,3 +15,4 @@ process heat cement CCS,gas,gas CCS,1,1,1,1,1
 process heat cement,refined liquids,refined liquids,1,1,1,1,1
 process heat cement CCS,refined liquids,refined liquids CCS,1,1,1,1,1
 process heat cement,hydrogen,hydrogen,0,0,0,1,1
+process heat cement CCS,hydrogen,hydrogen,1,1,1,1,1

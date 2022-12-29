@@ -19,3 +19,4 @@ process heat cement CCS,biomass,biomass CCS,delivered biomass,1.25,1.25,1.25
 process heat cement CCS,coal,coal CCS,delivered coal,1.25,1.25,1.25
 process heat cement CCS,gas,gas CCS,wholesale gas,1.25,1.25,1.25
 process heat cement CCS,refined liquids,refined liquids CCS,refined liquids industrial,1.25,1.25,1.25
+process heat cement CCS,hydrogen,hydrogen,H2 industrial,1.25,1.25,1.25

@@ -16,3 +16,4 @@ process heat cement CCS,biomass,share-weight,start-year,end-year,1,fixed
 process heat cement CCS,coal,share-weight,start-year,end-year,1,fixed
 process heat cement CCS,gas,share-weight,start-year,end-year,1,fixed
 process heat cement CCS,refined liquids,share-weight,start-year,end-year,1,fixed
+process heat cement CCS,hydrogen,share-weight,start-year,end-year,1,fixed
