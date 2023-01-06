@@ -1,0 +1,10 @@
+# File: A23.globaltech_interp_no_new_unabated_fossil.csv
+# Title: Electricity technology share weight interpolation
+# Units: None
+# Source: None (GCAM assumptions). 
+# Comments: Phase-out of new unabated fossil generation
+# Column types: ccccccc 
+# ----------
+supplysector,subsector,technology,apply.to,from.year,to.year,interpolation.function
+electricity,solar,CSP_storage,share-weight,final-calibration-year,end-year,linear
+electricity,wind,wind_offshore,share-weight,final-calibration-year,2050,linear

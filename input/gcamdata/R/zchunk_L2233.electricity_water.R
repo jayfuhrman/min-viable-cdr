@@ -52,6 +52,7 @@ module_water_L2233.electricity_water <- function(command, ...) {
              FILE = "energy/calibrated_techs",
              FILE = "energy/A23.globalinttech",
              FILE = "energy/A23.globaltech_shrwt",
+             FILE = "energy/A23.globaltech_shrwt_no_new_unabated_fossil",
              FILE = "energy/A23.sector",
              FILE = "water/elec_tech_water_map",
              FILE = "water/water_td_sectors",
@@ -112,7 +113,8 @@ module_water_L2233.electricity_water <- function(command, ...) {
              "L2233.PrimaryRenewKeyword_elec_cool",
              "L2233.PrimaryRenewKeywordInt_elec_cool",
              "L2233.DeleteCreditInput_elec",
-             "L2233.CreditInput_elec"))
+             "L2233.CreditInput_elec",
+             "L2233.GlobalTechShrwt_elecPassthru_no_new_unabated_fossil"))
   } else if(command == driver.MAKE) {
 
     all_data <- list(...)[[1]]
@@ -132,6 +134,7 @@ module_water_L2233.electricity_water <- function(command, ...) {
     calibrated_techs <- get_data(all_data, "energy/calibrated_techs")
     A23.globalinttech <- get_data(all_data, "energy/A23.globalinttech")
     A23.globaltech_shrwt <- get_data(all_data, "energy/A23.globaltech_shrwt")
+    A23.globaltech_shrwt_no_new_unabated_fossil <- get_data(all_data, "energy/A23.globaltech_shrwt_no_new_unabated_fossil")
     A23.sector <- get_data(all_data, "energy/A23.sector")
     elec_tech_water_map <- get_data(all_data, "water/elec_tech_water_map",strip_attributes = TRUE)
     water_td_sectors <- get_data(all_data, "water/water_td_sectors", strip_attributes = TRUE)
@@ -144,7 +147,6 @@ module_water_L2233.electricity_water <- function(command, ...) {
     L223.StubTechEff_elec <- get_data(all_data, "L223.StubTechEff_elec",strip_attributes = TRUE)
     L223.StubTechSecOut_desal <- get_data(all_data, "L223.StubTechSecOut_desal", strip_attributes = TRUE)
     L270.CreditInput_elec <- get_data(all_data, "L270.CreditInput_elec",strip_attributes = TRUE)
-
     # Use get_data function with sapply to read in all "L223." inputs at once
     get_data_rev <- function(name, all_data) get_data(all_data, name)
     L223_data <- sapply(paste0("L223.", L223_fileNames), get_data_rev, all_data = all_data)
@@ -208,6 +210,33 @@ module_water_L2233.electricity_water <- function(command, ...) {
     L2233.GlobalTechEffShrwt_elecPassthru %>%
       select(LEVEL2_DATA_NAMES[["GlobalTechShrwt"]]) ->
       L2233.GlobalTechShrwt_elecPassthru # --OUTPUT--
+
+    #repeat for fossil phaseout
+    A23.globaltech_shrwt_no_new_unabated_fossil %>%
+      gather_years(value_col = "share.weight") %>%
+      complete(nesting(supplysector, subsector, technology),
+               year = c(year, MODEL_YEARS)) %>%
+      # ^^ fill out with all model years...
+      group_by(supplysector, subsector, technology) %>%
+      mutate(share.weight = approx_fun(year, share.weight, rule = 1)) %>%
+      # ^^ ... and interpolate the share weights using existing years
+      ungroup() %>%
+      filter(year %in% MODEL_YEARS) %>%
+      rename(sector.name = supplysector,
+             subsector.name = subsector) %>%
+      # ^^ rename for upcoming join...
+      right_join(L2233.GlobalTechEffShrwt_elecPassthru %>% select(-share.weight),
+                 by = c("year", "sector.name", "subsector.name", "technology")) ->
+      L2233.GlobalTechEffShrwt_elecPassthru
+    # ^^ this tibble is subsetted to give the following two outputs...
+
+    L2233.GlobalTechEffShrwt_elecPassthru %>%
+      select(LEVEL2_DATA_NAMES[["GlobalTechEff"]]) ->
+      L2233.GlobalTechEff_elecPassthru # --OUTPUT--
+
+    L2233.GlobalTechEffShrwt_elecPassthru %>%
+      select(LEVEL2_DATA_NAMES[["GlobalTechShrwt"]]) ->
+      L2233.GlobalTechShrwt_elecPassthru_no_new_unabated_fossil # --OUTPUT--
 
     L1231.out_EJ_R_elec_F_tech_Yh %>%
       mutate(year = as.integer(year)) %>%
@@ -801,6 +830,14 @@ module_water_L2233.electricity_water <- function(command, ...) {
       add_precursors("energy/A23.globaltech_shrwt", "water/elec_tech_water_map") ->
       L2233.GlobalTechShrwt_elecPassthru
 
+    L2233.GlobalTechShrwt_elecPassthru_no_new_unabated_fossil %>%
+      add_title("Share-weights of pass-through technologies in the electricity sector") %>%
+      add_units("units") %>%
+      add_comments("Composed directly from input data") %>%
+      add_legacy_name("L2233.GlobalTechShrwt_elecPassthru_no_new_unabated_fossil") %>%
+      add_precursors("energy/A23.globaltech_shrwt_no_new_unabated_fossil", "water/elec_tech_water_map") ->
+      L2233.GlobalTechShrwt_elecPassthru_no_new_unabated_fossil
+
     L2233.StubTechProd_elecPassthru %>%
       add_title("Calibrated electricity flow through the pass-through technologies") %>%
       add_units("EJ") %>%
@@ -1115,7 +1152,8 @@ module_water_L2233.electricity_water <- function(command, ...) {
                 L2233.PrimaryRenewKeyword_elec_cool,
                 L2233.PrimaryRenewKeywordInt_elec_cool,
                 L2233.DeleteCreditInput_elec,
-                L2233.CreditInput_elec)
+                L2233.CreditInput_elec,
+                L2233.GlobalTechShrwt_elecPassthru_no_new_unabated_fossil)
   } else {
     stop("Unknown command")
   }

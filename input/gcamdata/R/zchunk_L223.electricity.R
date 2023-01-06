@@ -80,7 +80,9 @@ module_energy_L223.electricity <- function(command, ...) {
              "L102.gdp_mil90usd_GCAM3_ctry_Y",
              FILE = "energy/A23.subsector_shrwt_renew_R_cwf_adj",
              FILE = "energy/A23.subsector_interp_cwf_adj",
-             FILE = "energy/A23.subsector_shrwt_nuc_R_cwf"))
+             FILE = "energy/A23.subsector_shrwt_nuc_R_cwf",
+             FILE = "energy/A23.globaltech_shrwt_no_new_unabated_fossil",
+             FILE = "energy/A23.globaltech_interp_no_new_unabated_fossil"))
   } else if(command == driver.DECLARE_OUTPUTS) {
     return(c("L223.Supplysector_elec",
              "L223.ElecReserve",
@@ -144,7 +146,9 @@ module_energy_L223.electricity <- function(command, ...) {
              "L223.SubsectorShrwt_renew_cwf",
              "L223.SubsectorInterp_elec_cwf",
              "L223.SubsectorShrwt_nuc_cwf",
-             "L223.SubsectorInterpTo_elec_cwf"))
+             "L223.SubsectorInterpTo_elec_cwf",
+             "L223.GlobalTechShrwt_elec_no_new_unabated_fossil",
+             "L223.GlobalTechInterp_elec_no_new_unabated_fossil"))
   } else if(command == driver.MAKE) {
 
     all_data <- list(...)[[1]]
@@ -197,10 +201,12 @@ module_energy_L223.electricity <- function(command, ...) {
     L1231.eff_R_elec_F_tech_Yh <- get_data(all_data, "L1231.eff_R_elec_F_tech_Yh")
     L1232.desalsecout_R_elec_F_tech <- get_data(all_data, "L1232.desalsecout_R_elec_F_tech", strip_attributes = TRUE)
     L102.gdp_mil90usd_GCAM3_ctry_Y <- get_data(all_data, "L102.gdp_mil90usd_GCAM3_ctry_Y")
+    #cwf addons
     A23.subsector_shrwt_renew_R_cwf_adj <- get_data(all_data, "energy/A23.subsector_shrwt_renew_R_cwf_adj")
     A23.subsector_interp_cwf_adj <- get_data(all_data, "energy/A23.subsector_interp_cwf_adj", strip_attributes = TRUE)
     A23.subsector_shrwt_nuc_R_cwf <- get_data(all_data, "energy/A23.subsector_shrwt_nuc_R_cwf", strip_attributes = TRUE)
-
+    A23.globaltech_shrwt_no_new_unabated_fossil <- get_data(all_data, "energy/A23.globaltech_shrwt_no_new_unabated_fossil", strip_attributes = TRUE)
+    A23.globaltech_interp_no_new_unabated_fossil <- get_data(all_data, "energy/A23.globaltech_interp_no_new_unabated_fossil", strip_attributes = TRUE)
     # ============================
     # 2a. Supplysector information
     # ============================
@@ -598,6 +604,31 @@ module_energy_L223.electricity <- function(command, ...) {
       anti_join(A23.globalinttech, by = c("sector.name" = "supplysector", "subsector.name" = "subsector", "technology")) ->
       L223.GlobalTechShrwt_elec
 
+    #repeat for fossil phaseout version
+    A23.globaltech_shrwt_no_new_unabated_fossil %>%
+      gather_years(value_col = "share.weight") %>%
+      complete(nesting(supplysector, subsector, technology), year = c(year, MODEL_BASE_YEARS, MODEL_FUTURE_YEARS)) %>%
+      arrange(supplysector, year) %>%
+      group_by(supplysector, subsector, technology) %>%
+      mutate(share.weight = approx_fun(year, share.weight, rule = 1)) %>%
+      ungroup() %>%
+      filter(year %in% MODEL_YEARS) %>%
+      rename(sector.name = supplysector, subsector.name = subsector) ->
+      L223.GlobalTechShrwt_elec_all
+    # reorders columns to match expected model interface input
+    L223.GlobalTechShrwt_elec_all <- L223.GlobalTechShrwt_elec_all[c(LEVEL2_DATA_NAMES[["GlobalTechYr"]], "share.weight")]
+
+    # Subsets the intermittent technologies by checking it against the list in A23.globalinttech
+    L223.GlobalTechShrwt_elec_all %>%
+      semi_join(A23.globalinttech, by = c("sector.name" = "supplysector", "subsector.name" = "subsector", "technology")) %>%
+      rename(intermittent.technology = technology) ->
+      L223.GlobalIntTechShrwt_elec
+
+    # Subsets the non-intermittent technologies by checking against any not listed in A23.globalinttech
+    L223.GlobalTechShrwt_elec_all %>%
+      anti_join(A23.globalinttech, by = c("sector.name" = "supplysector", "subsector.name" = "subsector", "technology")) ->
+      L223.GlobalTechShrwt_elec_no_new_unabated_fossil
+
     # Interpolation rules for L223.GlobalTechInterp_elec
     # --------------------------------------------------
 
@@ -608,6 +639,14 @@ module_energy_L223.electricity <- function(command, ...) {
       # strips attributes from assumptions file
       mutate(sector.name = sector.name) ->
       L223.GlobalTechInterp_elec
+
+    #repeat for fossil phaseout version
+    A23.globaltech_interp_no_new_unabated_fossil %>%
+      set_years() %>%
+      rename(sector.name = supplysector, subsector.name = subsector) %>%
+      # strips attributes from assumptions file
+      mutate(sector.name = sector.name) ->
+      L223.GlobalTechInterp_elec_no_new_unabated_fossil
 
     # Keywords of primary renewable electric generation technologies
     # --------------------------------------------------------------
@@ -1289,6 +1328,14 @@ module_energy_L223.electricity <- function(command, ...) {
       add_precursors("energy/A23.globaltech_shrwt", "energy/A23.globalinttech") ->
       L223.GlobalTechShrwt_elec
 
+    L223.GlobalTechShrwt_elec_no_new_unabated_fossil %>%
+      add_title("Global shareweights for non-intermittent technologies for the electricity sector") %>%
+      add_units("unitless") %>%
+      add_comments("Interpolated from model assumptions in A23.globaltech_shrwt_no_new_unabated_fossil") %>%
+      add_legacy_name("L223.GlobalTechShrwt_elec_no_new_unabated_fossil") %>%
+      add_precursors("energy/A23.globaltech_shrwt_no_new_unabated_fossil", "energy/A23.globalinttech") ->
+      L223.GlobalTechShrwt_elec_no_new_unabated_fossil
+
     L223.GlobalTechInterp_elec %>%
       add_title("Interpolation rules for electricity technologies") %>%
       add_units("unitless") %>%
@@ -1296,6 +1343,14 @@ module_energy_L223.electricity <- function(command, ...) {
       add_legacy_name("L223.GlobalTechInterp_elec") %>%
       add_precursors("energy/A23.globaltech_interp") ->
       L223.GlobalTechInterp_elec
+
+    L223.GlobalTechInterp_elec_no_new_unabated_fossil %>%
+      add_title("Interpolation rules for electricity technologies") %>%
+      add_units("unitless") %>%
+      add_comments("Model years applied to assumptions in A23.globaltech_interp_no_new_unabated_fossil") %>%
+      add_legacy_name("L223.GlobalTechInterp_elec_no_new_unabated_fossil") %>%
+      add_precursors("energy/A23.globaltech_interp_no_new_unabated_fossil") ->
+      L223.GlobalTechInterp_elec_no_new_unabated_fossil
 
     L223.GlobalIntTechShrwt_elec %>%
       add_title("Global shareweights for intermittent technologies for the electricity sector") %>%
@@ -1690,7 +1745,8 @@ module_energy_L223.electricity <- function(command, ...) {
         L223.GlobalTechCapital_sol_low, L223.GlobalIntTechCapital_sol_low, L223.GlobalTechCapital_wind_low,
         L223.GlobalIntTechCapital_wind_low, L223.GlobalTechCapital_geo_low, L223.GlobalTechCapital_nuc_low,
         L223.GlobalTechCapital_bio_low, L223.SubsectorShrwt_renew_cwf, L223.SubsectorInterp_elec_cwf,
-     L223.SubsectorShrwt_nuc_cwf, L223.SubsectorInterpTo_elec_cwf)
+     L223.SubsectorShrwt_nuc_cwf, L223.SubsectorInterpTo_elec_cwf,
+     L223.GlobalTechShrwt_elec_no_new_unabated_fossil,L223.GlobalTechInterp_elec_no_new_unabated_fossil)
   } else {
     stop("Unknown command")
   }
