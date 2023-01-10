@@ -4,7 +4,7 @@
 # Source: None (assumptions)
 # Column types: cccnnn
 # ----------
-region,supplysector,subsector,2020,2065
+region,supplysector,subsector,2020,2025
 Africa_Eastern,electricity,geothermal,0.02,1
 Africa_Northern,electricity,geothermal,0.02,1
 Africa_Southern,electricity,geothermal,0.02,1
