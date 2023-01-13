@@ -75,7 +75,8 @@ module_water_batch_electricity_water_xml <- function(command, ...) {
     return(c(XML = "electricity_water.xml",
              XML = "electricity_water_cwf.xml",
              XML = "grid_management_cwf.xml",
-             XML = "electricity_water_cwf_no_new_unabated_fossil.xml"))
+             XML = "electricity_water_cwf_no_new_unabated_fossil.xml",
+             XML = "accelerated_fossil_retirement.xml"))
   } else if(command == driver.MAKE) {
 
     all_data <- list(...)[[1]]
@@ -499,8 +500,36 @@ module_water_batch_electricity_water_xml <- function(command, ...) {
       add_xml_data(L2233.GlobalIntTechBackup_elec_cool, "GlobalIntTechBackup") %>%
       add_precursors("L2233.GlobalIntTechBackup_elec_cool") -> grid_management_cwf.xml
 
-    return_data(electricity_water.xml, electricity_water_cwf.xml,grid_management_cwf.xml,electricity_water_cwf_no_new_unabated_fossil.xml)
-  } else {
+    L2233.GlobalTechSCurve_elec_cool <- L2233.GlobalTechSCurve_elec_cool %>%
+      filter(sector.name %in% c('elec_coal (conv pul)',
+                                'elec_gas (steam/CT)',
+                                'elec_gas (CC)',
+                                'elec_refined liquids (steam/CT)')) %>%
+      mutate(lifetime = lifetime / 2,
+             half.life = half.life / 2)
+
+    L2233.GlobalTechSCurve_elec_cool %>%
+      bind_rows(L2233.GlobalTechSCurve_elec_cool %>%
+                  mutate(year = 2020)) -> L2233.GlobalTechSCurve_elec_cool
+
+    L2233.GlobalTechLifetime_elec_cool <- L2233.GlobalTechLifetime_elec_cool %>%
+      filter(sector.name %in% c('elec_coal (conv pul)',
+                                'elec_gas (steam/CT)',
+                                'elec_gas (CC)',
+                                'elec_refined liquids (steam/CT)',
+                                'elec_coal (IGCC)',
+                                'elec_refined liquids (CC)')) %>%
+      mutate(lifetime = lifetime / 2)
+
+    create_xml("accelerated_fossil_retirement.xml") %>%
+      add_node_equiv_xml("sector") %>%
+      add_node_equiv_xml("technology") %>%
+      add_xml_data(L2233.GlobalTechSCurve_elec_cool, "GlobalTechSCurve") %>%
+      add_xml_data(L2233.GlobalTechLifetime_elec_cool, "GlobalTechLifetime") %>%
+      add_precursors("L2233.GlobalIntTechBackup_elec_cool") -> accelerated_fossil_retirement.xml
+
+    return_data(electricity_water.xml, electricity_water_cwf.xml,grid_management_cwf.xml,electricity_water_cwf_no_new_unabated_fossil.xml,accelerated_fossil_retirement.xml)
+    } else {
     stop("Unknown command")
   }
 }
