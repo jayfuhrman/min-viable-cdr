@@ -58,6 +58,8 @@ comm cooling,electricity,start-year,,1
 comm cooling,electricity,2050,,1
 comm cooling,electricity,end-year,,1
 comm cooling,gas,start-year,,1
+comm cooling,gas,2050,,0
+comm cooling,gas,end-year,,0
 comm others,biomass,start-year,,1
 comm others,coal,start-year,,1
 comm others,coal,2050,,0
