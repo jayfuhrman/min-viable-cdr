@@ -109,7 +109,7 @@
 
 			<Value name = "heat">../input/gcamdata/xml/heat.xml</Value>
 			<Value name = "hydrogen">../input/gcamdata/xml/hydrogen.xml</Value>
-			<Value name = "energy_distribution">../input/gcamdata/xml/en_distribution_H2_peaker.xml</Value>
+			<Value name = "energy_distribution">../input/gcamdata/xml/en_distribution.xml</Value>
 
 			<Value name = "other_industry">../input/gcamdata/xml/other_industry_cwf.xml</Value>
 			<Value name = "industry_income_elas">../input/gcamdata/xml/other_industry_incelas_cwf.xml</Value>
@@ -219,8 +219,6 @@
 			<!--Value name = "dac_constraint">../input/extra/dac_constraint/dac_cwf_constraint.xml</Value-->
  	 		<!--Value name = "dac_mkt">../input/extra/dac_constraint/dac_constraint_mkt.xml</Value-->
 
-			<!--no gas forecourt hydrogen-->
-			<Value name = "hydrogen">../input/gcamdata/xml/hydrogen_no_gas_forecourt.xml</Value>
 
 		</FileSet>
 
@@ -239,7 +237,7 @@
 
 			<Value name = "heat">../input/gcamdata/xml/heat.xml</Value>
 			<Value name = "hydrogen">../input/gcamdata/xml/hydrogen.xml</Value>
-			<Value name = "energy_distribution">../input/gcamdata/xml/en_distribution_H2_peaker.xml</Value>
+			<Value name = "energy_distribution">../input/gcamdata/xml/en_distribution.xml</Value>
 
 			<Value name = "other_industry">../input/gcamdata/xml/other_industry_cwf.xml</Value>
 			<Value name = "industry_income_elas">../input/gcamdata/xml/other_industry_incelas_cwf.xml</Value>
@@ -349,9 +347,6 @@
 			<!--Value name = "dac_constraint">../input/extra/dac_constraint/dac_cwf_constraint.xml</Value-->
  	 		<!--Value name = "dac_mkt">../input/extra/dac_constraint/dac_constraint_mkt.xml</Value-->
 
-			<!--no gas forecourt hydrogen-->
-			<Value name = "hydrogen">../input/gcamdata/xml/hydrogen_no_gas_forecourt.xml</Value>
-
 			<!--transport alt fuels-->
 			<Value name = "med_ship">../input/extra/developments_working/transport/GCAM_6p0_addons/medium_ship_alt_fuel_frac_FT-bio-efuel-credits_2.xml</Value>
 			<Value name = "med_aviation">../input/extra/developments_working/transport/GCAM_6p0_addons/medium_aviation_alt_fuel_frac_FT-bio-efuel-credits_2.xml</Value>
@@ -373,7 +368,7 @@
 
 			<Value name = "heat">../input/gcamdata/xml/heat.xml</Value>
 			<Value name = "hydrogen">../input/gcamdata/xml/hydrogen.xml</Value>
-			<Value name = "energy_distribution">../input/gcamdata/xml/en_distribution_H2_peaker.xml</Value>
+			<Value name = "energy_distribution">../input/gcamdata/xml/en_distribution.xml</Value>
 
 			<Value name = "other_industry">../input/gcamdata/xml/other_industry_cwf.xml</Value>
 			<Value name = "industry_income_elas">../input/gcamdata/xml/other_industry_incelas_cwf.xml</Value>
@@ -483,9 +478,6 @@
 			<!--Value name = "dac_constraint">../input/extra/dac_constraint/dac_cwf_constraint.xml</Value-->
  	 		<!--Value name = "dac_mkt">../input/extra/dac_constraint/dac_constraint_mkt.xml</Value-->
 
-			<!--no gas forecourt hydrogen-->
-			<Value name = "hydrogen">../input/gcamdata/xml/hydrogen_no_gas_forecourt.xml</Value>
-
 
 		</FileSet>
 
@@ -503,7 +495,7 @@
 
 			<Value name = "heat">../input/gcamdata/xml/heat.xml</Value>
 			<Value name = "hydrogen">../input/gcamdata/xml/hydrogen.xml</Value>
-			<Value name = "energy_distribution">../input/gcamdata/xml/en_distribution_H2_peaker.xml</Value>
+			<Value name = "energy_distribution">../input/gcamdata/xml/en_distribution.xml</Value>
 
 			<Value name = "other_industry">../input/gcamdata/xml/other_industry_cwf.xml</Value>
 			<Value name = "industry_income_elas">../input/gcamdata/xml/other_industry_incelas_cwf.xml</Value>
@@ -612,9 +604,6 @@
  	 		<Value name = "mkt">../input/extra/bio_constraint/bio_ceiling_mkt_firstsecondallgen.xml</Value>
 			<!--Value name = "dac_constraint">../input/extra/dac_constraint/dac_cwf_constraint.xml</Value-->
  	 		<!--Value name = "dac_mkt">../input/extra/dac_constraint/dac_constraint_mkt.xml</Value-->
-
-			<!--no gas forecourt hydrogen-->
-			<Value name = "hydrogen">../input/gcamdata/xml/hydrogen_no_gas_forecourt.xml</Value>
 
 			<!--transport alt fuels-->
 			<Value name = "high_ship">../input/extra/developments_working/transport/GCAM_6p0_addons/high_ship_alt_fuel_frac_FT-bio-efuel-credits_2.xml</Value>
