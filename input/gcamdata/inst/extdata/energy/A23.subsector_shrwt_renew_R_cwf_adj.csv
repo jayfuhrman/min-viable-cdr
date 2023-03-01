@@ -2,7 +2,7 @@
 # Title: Region-specific renewable electric subsector shareweights by region to adjust for CWF case. The years in this file need to match with years in the shareweight interpolation files (e.g. A23.subsector_interp_cwf_adj.csv)
 # Units: Unitless share-weights
 # Source: None (assumptions)
-# Column types: cccnnn
+# Column types: cccnn
 # ----------
 region,supplysector,subsector,2020,2025
 Africa_Eastern,electricity,geothermal,0.02,1
