@@ -2,7 +2,7 @@
 # Title: Region-specific nuclear electric subsector shareweights by region for CWF case
 # Units: Unitless share-weights
 # Source: CWF assumptions
-# Column types: ccccnn
+# Column types: cccnn
 # ----------
 region,supplysector,subsector,2020,2100
 Africa_Eastern,electricity,nuclear,0.25,0
