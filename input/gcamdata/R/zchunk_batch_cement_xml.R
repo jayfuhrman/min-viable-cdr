@@ -36,7 +36,8 @@ module_energy_batch_cement_xml <- function(command, ...) {
 			 "L2321.StubTechCoef_cement_cwf"))
   } else if(command == driver.DECLARE_OUTPUTS) {
     return(c(XML = "cement.xml",
-             XML = "cement_cwf.xml"))
+             XML = "cement_cwf.xml",
+             XML = "cement_all_CCS_post2030.xml"))
   } else if(command == driver.MAKE) {
 
     all_data <- list(...)[[1]]
@@ -133,7 +134,15 @@ module_energy_batch_cement_xml <- function(command, ...) {
                      "L2321.PriceElasticity_cement") ->
       cement_cwf.xml
 
-    return_data(cement.xml, cement_cwf.xml)
+    L2321.GlobalTechShrwt_cement_cwf <- L2321.GlobalTechShrwt_cement %>%
+      mutate(share.weight = if_else(technology == 'cement' & year > 2030, 0,share.weight))
+
+    create_xml("cement_CCS_2030.xml") %>%
+      add_xml_data(L2321.GlobalTechShrwt_cement_cwf, "GlobalTechShrwt") %>%
+      add_precursors('L2321.GlobalTechShrwt_cement') ->
+      cement_all_CCS_post2030.xml
+
+    return_data(cement.xml, cement_cwf.xml,cement_all_CCS_post2030.xml)
   } else {
     stop("Unknown command")
   }
